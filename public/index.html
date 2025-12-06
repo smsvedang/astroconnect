@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AstroConnect – Astro Description</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1f2937, #020617);
+      color: #f9fafb;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+    .app {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    header {
+      padding: 16px 24px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to right, rgba(30, 64, 175, 0.5), rgba(147, 51, 234, 0.5));
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon {
+      width: 36px; height: 36px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #fbbf24, #f97316);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px; color: #111827;
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
+    }
+    .brand-text h1 { font-size: 20px; font-weight: 700; }
+    .brand-text p { font-size: 12px; opacity: 0.9; }
+    .small-note { font-size: 11px; max-width: 220px; text-align: right; opacity: 0.9; }
+    .dot { width: 6px; height: 6px; border-radius: 999px; background: #22c55e; box-shadow: 0 0 10px #22c55e; display: inline-block; margin-right: 4px; }
+    main { display: flex; flex-wrap: wrap; }
+    .left, .right { padding: 24px; width: 100%; }
+    @media (min-width: 900px) {
+      .left, .right { width: 50%; }
+      .left { border-right: 1px solid rgba(148, 163, 184, 0.2); }
+    }
+    .section-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .section-subtitle { font-size: 13px; color: #9ca3af; margin-bottom: 20px; }
+    form { display: flex; flex-direction: column; gap: 14px; }
+    label { font-size: 13px; font-weight: 500; margin-bottom: 4px; display: inline-block; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    input, select, textarea {
+      padding: 9px 11px; border-radius: 10px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9); color: #f9fafb;
+      font-size: 13px; outline: none;
+      transition: border 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+    input::placeholder, textarea::placeholder { color: #6b7280; font-size: 12px; }
+    input:focus, select:focus, textarea:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.6);
+      background: rgba(15, 23, 42, 1);
+    }
+    .inline-fields { display: flex; gap: 12px; flex-wrap: wrap; }
+    .inline-fields .field { flex: 1 1 120px; }
+    .btn-primary {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: none;
+      font-size: 14px; font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(to right, #4f46e5, #ec4899);
+      color: #f9fafb;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 15px 25px rgba(79, 70, 229, 0.4);
+      transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 20px 35px rgba(79, 70, 229, 0.6);
+    }
+    .btn-primary:active { transform: translateY(0); box-shadow: 0 10px 18px rgba(79, 70, 229, 0.5); }
+    .btn-secondary {
+      margin-top: 12px; padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.9); color: #e5e7eb;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background 0.15s, border 0.15s, transform 0.15s;
+      text-decoration: none;
+    }
+    .btn-secondary:hover {
+      background: rgba(31, 41, 55, 1);
+      border-color: rgba(209, 213, 219, 0.8);
+      transform: translateY(-1px);
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      color: #e5e7eb;
+      margin-bottom: 8px;
+    }
+    .pill span { font-size: 9px; opacity: 0.8; }
+    .result-card {
+      background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.25), rgba(15, 23, 42, 1));
+      border-radius: 18px;
+      padding: 16px 16px 18px;
+      border: 1px solid rgba(75, 85, 99, 0.8);
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.7);
+      min-height: 220px;
+      position: relative;
+      overflow: hidden;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .watermark {
+      position: absolute;
+      bottom: -20px;
+      right: -10px;
+      font-size: 42px;
+      font-weight: 800;
+      color: rgba(55, 65, 81, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      pointer-events: none;
+    }
+    .placeholder { font-size: 12px; color: #9ca3af; display: flex; flex-direction: column; gap: 6px; }
+    .placeholder li { margin-left: 18px; }
+    footer {
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+      padding: 12px 20px 14px;
+      font-size: 11px;
+      color: #9ca3af;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.95);
+    }
+    .error { font-size: 11px; color: #f97373; margin-top: 4px; }
+    .status { font-size: 12px; color: #e5e7eb; margin-top: 6px; }
+
+    .report-lang-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      margin-bottom: 8px;
+      color: #e5e7eb;
+    }
+    .report-lang-toggle select {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.9);
+      color: #f9fafb;
+      font-size: 11px;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="brand-icon">ॐ</div>
+        <div class="brand-text">
+          <h1>AstroConnect</h1>
+          <p>Astrological guidance based on your birth details</p>
+        </div>
+      </div>
+      <div class="small-note">
+        <span class="dot"></span>Online · WhatsApp Consult Available<br />
+        <strong>+91 7974517991</strong>
+      </div>
+    </header>
+
+    <main>
+      <!-- LEFT: FORM -->
+      <section class="left">
+        <div class="pill">
+          ✨ <span>Step 1 · Fill your birth details</span>
+        </div>
+        <h2 class="section-title">Generate Your Astro Description</h2>
+        <p class="section-subtitle">
+          Enter your birth details. You’ll get a detailed description in English and Hindi based on your inputs.
+        </p>
+
+        <form id="astro-form">
+          <div class="field">
+            <label for="name">Full Name</label>
+            <input id="name" name="name" type="text" placeholder="e.g. Vedang Soni" required />
+          </div>
+
+          <div class="inline-fields">
+            <div class="field">
+              <label for="gender">Gender</label>
+              <select id="gender" name="gender" required>
+                <option value="">Select</option>
+                <option value="Male">Male / पुरुष</option>
+                <option value="Female">Female / महिला</option>
+                <option value="Other">Other / अन्य</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="dob">Date of Birth</label>
+              <input id="dob" name="dob" type="date" required />
+            </div>
+
+            <div class="field">
+              <label for="tob">Time of Birth</label>
+              <input id="tob" name="tob" type="time" required />
+            </div>
+          </div>
+
+          <!-- PIN + CITY + STATE -->
+          <div class="inline-fields">
+            <div class="field">
+              <label for="pincode">Pincode</label>
+              <input
+                id="pincode"
+                name="pincode"
+                type="text"
+                maxlength="6"
+                placeholder="e.g. 311001"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <label for="city">City (auto or manual)</label>
+              <input
+                id="city"
+                name="city"
+                type="text"
+                list="city-list"
+                placeholder="Start typing city name..."
+                required
+              />
+              <datalist id="city-list"></datalist>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="state">State</label>
+            <input
+              id="state"
+              name="state"
+              type="text"
+              placeholder="Auto-filled from PIN / city"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="country">Country</label>
+            <input id="country" name="country" type="text" value="India" required />
+          </div>
+
+          <div class="field">
+            <label for="notes">Any specific concern? (Optional)</label>
+            <textarea id="notes" name="notes" rows="2" placeholder="e.g. Career, marriage, studies, mental stress"></textarea>
+          </div>
+
+          <div id="error-message" class="error" style="display:none;"></div>
+          <div id="status" class="status"></div>
+
+          <button type="submit" class="btn-primary" id="btn-generate">
+            🔮 Get Your Description
+          </button>
+        </form>
+      </section>
+
+      <!-- RIGHT: RESULT -->
+      <section class="right">
+        <div class="pill">
+          📜 <span>Step 2 · Read your description</span>
+        </div>
+        <h2 class="section-title">Your Astro Personality Report</h2>
+        <p class="section-subtitle">
+          Read your personality, strengths, challenges and guidance based on the birth details you have shared.
+        </p>
+
+        <!-- language switch for report -->
+        <div class="report-lang-toggle">
+          <span>Report language / रिपोर्ट भाषा:</span>
+          <select id="report-lang">
+            <option value="both">English + Hindi</option>
+            <option value="en">English only</option>
+            <option value="hi">हिन्दी only</option>
+          </select>
+        </div>
+
+        <div id="result-card" class="result-card">
+          <div id="result-content" class="placeholder">
+            <p><strong>Waiting for your details…</strong></p>
+            <ul>
+              <li>Fill the form on the left</li>
+              <li>Click on <b>“Get Your Description”</b></li>
+            </ul>
+          </div>
+          <div class="watermark">ASTRO</div>
+        </div>
+
+        <a id="whatsapp-button" class="btn-secondary" target="_blank">
+          💬 Talk to Astrologer on WhatsApp
+        </a>
+      </section>
+    </main>
+
+    <footer>
+      <div>
+        © <span id="year"></span> AstroConnect. For guidance only, not a substitute for professional advice.
+      </div>
+      <div>
+        If you feel mentally disturbed or anxious, please also reach out to a trusted person or professional counsellor.
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // --- Helpers: Zodiac & Life Path ---
+    function getZodiacSign(month, day) {
+      if ((month === 2 && day >= 21) || (month === 3 && day <= 19)) return "Aries";
+      if ((month === 3 && day >= 20) || (month === 4 && day <= 20)) return "Taurus";
+      if ((month === 4 && day >= 21) || (month === 5 && day <= 20)) return "Gemini";
+      if ((month === 5 && day >= 21) || (month === 6 && day <= 22)) return "Cancer";
+      if ((month === 6 && day >= 23) || (month === 7 && day <= 22)) return "Leo";
+      if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "Virgo";
+      if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "Libra";
+      if ((month === 9 && day >= 23) || (month === 10 && day <= 21)) return "Scorpio";
+      if ((month === 10 && day >= 22) || (month === 11 && day <= 21)) return "Sagittarius";
+      if ((month === 11 && day >= 22) || (month === 0 && day <= 19)) return "Capricorn";
+      if ((month === 0 && day >= 20) || (month === 1 && day <= 18)) return "Aquarius";
+      return "Pisces";
+    }
+
+    function getLifePathNumber(date) {
+      const digits = date.getFullYear().toString() + (date.getMonth() + 1) + date.getDate();
+      let sum = 0;
+      for (let ch of digits) sum += parseInt(ch, 10);
+      while (sum > 9) {
+        let temp = 0;
+        for (let ch of sum.toString()) temp += parseInt(ch, 10);
+        sum = temp;
+      }
+      return sum;
+    }
+
+    // DOM references
+    const form = document.getElementById("astro-form");
+    const resultContent = document.getElementById("result-content");
+    const errorMessage = document.getElementById("error-message");
+    const status = document.getElementById("status");
+    const whatsappButton = document.getElementById("whatsapp-button");
+    const yearSpan = document.getElementById("year");
+
+    const pincodeInput = document.getElementById("pincode");
+    const cityInput = document.getElementById("city");
+    const stateInput = document.getElementById("state");
+    const countryInput = document.getElementById("country");
+    const cityList = document.getElementById("city-list");
+    const reportLangSelect = document.getElementById("report-lang");
+
+    yearSpan.textContent = new Date().getFullYear();
+
+    const whatsappBase = "https://wa.me/917974517991";
+
+    function setDefaultWhatsAppLink() {
+      const text = "Namaste, I want a detailed astrological consultation based on my birth details.";
+      whatsappButton.href = whatsappBase + "?text=" + encodeURIComponent(text);
+    }
+    setDefaultWhatsAppLink();
+
+    // --- City data (flattened from nested JSON) ---
+    let citiesData = [];      // raw JSON from file
+    let citiesFlat = [];      // [{pincode, city, state, district, country}]
+
+    function flattenCities(raw) {
+      const list = [];
+      if (!raw || typeof raw !== "object") return list;
+
+      // Supports structure like: { "State": { "District": { "Place": "PIN", ... }, ... }, ... }
+      for (const [stateName, districts] of Object.entries(raw)) {
+        if (!districts || typeof districts !== "object") continue;
+        for (const [districtName, places] of Object.entries(districts)) {
+          if (!places || typeof places !== "object") continue;
+          for (const [placeName, pinRaw] of Object.entries(places)) {
+            const pin = String(pinRaw || "").trim();
+            const city = String(placeName || "").trim();
+            const state = String(stateName || "").trim();
+            const district = String(districtName || "").trim();
+            if (!pin || !city) continue;
+            list.push({
+              pincode: pin,
+              city,
+              state,
+              district,
+              country: "India"
+            });
+          }
+        }
+      }
+      return list;
+    }
+
+    async function loadCities() {
+      try {
+        const res = await fetch("/cities.json");
+        if (!res.ok) throw new Error("Could not load cities.json");
+        citiesData = await res.json();
+        citiesFlat = flattenCities(citiesData);
+
+        const seen = new Set();
+        cityList.innerHTML = "";
+        for (const c of citiesFlat) {
+          const key = `${c.city}|${c.state}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+
+          const opt = document.createElement("option");
+          opt.value = c.city;
+          opt.label = c.state ? `${c.city}, ${c.state}` : c.city;
+          cityList.appendChild(opt);
+        }
+        console.log("Loaded cities.json, flattened entries:", citiesFlat.length);
+      } catch (err) {
+        console.error("Error loading cities.json:", err);
+        status.textContent = "Could not load city list. You can still type manually.";
+      }
+    }
+
+    loadCities();
+
+    // --- Autofill city/state from pincode using citiesFlat ---
+    pincodeInput.addEventListener("blur", () => {
+      const pin = pincodeInput.value.trim();
+      if (pin.length !== 6) return;
+
+      if (!Array.isArray(citiesFlat) || citiesFlat.length === 0) {
+        status.textContent = "City list not loaded, please type city/state manually.";
+        return;
+      }
+
+      const match = citiesFlat.find(c => c.pincode === pin);
+      if (match) {
+        cityInput.value = match.city || "";
+        stateInput.value = match.state || (match.district || "");
+        countryInput.value = match.country || "India";
+        status.textContent = "City & state auto-filled from PIN.";
+      } else {
+        status.textContent = "PIN not found in list, please type city/state manually.";
+      }
+    });
+
+    // --- Autofill pincode/state from city using citiesFlat ---
+    cityInput.addEventListener("blur", () => {
+      const cityName = cityInput.value.trim().toLowerCase();
+      if (!cityName) return;
+
+      if (!Array.isArray(citiesFlat) || citiesFlat.length === 0) {
+        status.textContent = "City list not loaded, please type details manually.";
+        return;
+      }
+
+      // First find all entries with same city name (case-insensitive)
+      let matches = citiesFlat.filter(c => c.city.toLowerCase() === cityName);
+
+      if (matches.length === 0) {
+        status.textContent = "City not found in list, please fill pincode/state manually.";
+        return;
+      }
+
+      // If state is already filled, prefer same state/district
+      const stateVal = stateInput.value.trim().toLowerCase();
+      let chosen = null;
+
+      if (stateVal) {
+        chosen = matches.find(
+          c =>
+            (c.state && c.state.toLowerCase() === stateVal) ||
+            (c.district && c.district.toLowerCase() === stateVal)
+        );
+      }
+
+      if (!chosen) {
+        chosen = matches[0]; // fallback to first match
+      }
+
+      if (chosen) {
+        if (!pincodeInput.value.trim()) {
+          pincodeInput.value = chosen.pincode;
+        }
+        if (!stateInput.value.trim()) {
+          stateInput.value = chosen.state || chosen.district || "";
+        }
+        if (!countryInput.value.trim()) {
+          countryInput.value = chosen.country || "India";
+        }
+        status.textContent = "Pincode & state auto-filled from city.";
+      }
+    });
+
+    // --- Report language toggle state ---
+    let descriptionFull = "";
+    let descriptionEN = "";
+    let descriptionHI = "";
+    let displayLang = "both";
+
+    function splitDescription(text) {
+      // Try to split using [ENGLISH] and [हिन्दी] markers
+      let en = "";
+      let hi = "";
+      const enIndex = text.indexOf("[ENGLISH]");
+      const hiIndex = text.indexOf("[हिन्दी]");
+
+      if (hiIndex !== -1) {
+        const enPart = enIndex !== -1 ? text.slice(enIndex + "[ENGLISH]".length, hiIndex) : text.slice(0, hiIndex);
+        const hiPart = text.slice(hiIndex + "[हिन्दी]".length);
+        en = enPart.trim();
+        hi = hiPart.trim();
+      } else {
+        // Fallback: no clear split, treat all as English
+        en = text.trim();
+        hi = "";
+      }
+      return { en, hi };
+    }
+
+    function renderDescription() {
+      if (!descriptionFull) return;
+      let content = "";
+      if (displayLang === "both" || (!descriptionEN && !descriptionHI)) {
+        content = descriptionFull;
+      } else if (displayLang === "en") {
+        content = descriptionEN || descriptionFull;
+      } else if (displayLang === "hi") {
+        content = descriptionHI || descriptionFull;
+      }
+      resultContent.textContent = content;
+    }
+
+    reportLangSelect.addEventListener("change", () => {
+      displayLang = reportLangSelect.value; // "both", "en", "hi"
+      renderDescription();
+    });
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      errorMessage.style.display = "none";
+      errorMessage.textContent = "";
+      status.textContent = "";
+
+      const name = document.getElementById("name").value.trim();
+      const gender = document.getElementById("gender").value;
+      const dobInput = document.getElementById("dob").value;
+      const tob = document.getElementById("tob").value;
+      const pincodeValue = pincodeInput.value.trim();
+      const cityValue = cityInput.value.trim();
+      const stateValue = stateInput.value.trim();
+      const countryValue = countryInput.value.trim() || "India";
+      const notes = document.getElementById("notes").value.trim();
+
+      if (!name || !gender || !dobInput || !tob || !pincodeValue || !cityValue || !stateValue) {
+        errorMessage.textContent = "Please fill all required fields.";
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      const dob = new Date(dobInput);
+      if (isNaN(dob.getTime())) {
+        errorMessage.textContent = "Invalid date of birth.";
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      const month = dob.getMonth();
+      const day = dob.getDate();
+      const zodiac = getZodiacSign(month, day);
+      const lifePath = getLifePathNumber(dob);
+
+      const payload = {
+        name,
+        gender,
+        dob: dobInput,
+        tob,
+        city: cityValue,
+        state: stateValue,
+        pincode: pincodeValue,
+        country: countryValue,
+        notes,
+        zodiac,
+        lifePath
+      };
+
+      try {
+        status.textContent = "Preparing your description…";
+        const response = await fetch("/api/astro", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({}));
+          throw new Error(err.error || "Server error");
+        }
+
+        const data = await response.json();
+        const text = data.description || "No description received from server.";
+
+        descriptionFull = text;
+        const parts = splitDescription(text);
+        descriptionEN = parts.en;
+        descriptionHI = parts.hi;
+
+        renderDescription();
+
+        const waMessage =
+`Namaste, I just generated my astro description on your website.
+
+Name: ${name}
+Gender: ${gender}
+Date of Birth: ${dobInput}
+Time of Birth: ${tob}
+Place of Birth: ${cityValue}, ${stateValue}, ${countryValue}
+Pincode: ${pincodeValue}
+Sun sign (approx): ${zodiac}
+Life Path Number: ${lifePath}
+Concern: ${notes || "Not specifically mentioned"}
+
+Please check my detailed horoscope / kundli and guide me personally.`;
+
+        whatsappButton.href = whatsappBase + "?text=" + encodeURIComponent(waMessage);
+        status.textContent = "Description generated. Use the language switch above to view English / Hindi.";
+      } catch (err) {
+        console.error(err);
+        status.textContent = "";
+        errorMessage.textContent =
+          "Could not generate description right now. Please try again.";
+        errorMessage.style.display = "block";
+        setDefaultWhatsAppLink();
+      }
+    });
+  </script>
+</body>
+</html>

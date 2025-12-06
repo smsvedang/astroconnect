@@ -1,0 +1,53 @@
+# Node modules
+node_modules/
+
+# Environment Variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build Outputs
+dist/
+build/
+.cache/
+.tmp/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+
+# Local runtime files
+*.pid
+*.seed
+*.pid.lock
+
+# Optional npm cache directory
+.npm/
+
+# Optional eslint cache
+.eslintcache
+
+# Coverage directory used by testing tools
+coverage/
+
+# Temporary files
+*.swp
+*.swo
+*.tmp
+
+# Frontend generated bundles (if using React/Vue inside project)
+public/*.map
+public/static/

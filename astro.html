@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Astrologer — Chart & Significator Uploader</title>
+  <style>
+    html,body{margin:0;padding:0;font-family:Inter,system-ui,Segoe UI,Roboto;background:#f8fafc;color:#0b1220}
+    .container{max-width:900px;margin:24px auto;padding:20px}
+    h1{font-size:24px;margin:0 0 6px 0}
+    .card{background:#fff;border-radius:14px;padding:18px;box-shadow:0 4px 14px rgba(0,0,0,0.08);margin-bottom:16px}
+    label{font-weight:700;margin-bottom:4px;display:block}
+    input[type=text],input[type=tel]{width:100%;padding:10px;margin-bottom:12px;border-radius:8px;border:1px solid #d6dae3;font-size:14px}
+    input[type=file]{margin-bottom:6px}
+    .preview{max-height:200px;margin-top:10px;border-radius:6px;width:100%;object-fit:contain;background:#f0f3f8}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{border:1px solid #e5e7eb;padding:6px}
+    th{background:#f1f5f9}
+    .btn{background:#4f46e5;color:white;padding:10px 14px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
+    .btn.ghost{background:#e0e7ff;color:#273036}
+    .status{margin-left:12px;color:#555}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Astrologer Upload Form</h1>
+
+  <form id="astroForm" class="card" onsubmit="return handleSubmit(event)">
+
+    <!-- PERSONAL DETAILS -->
+    <label>Name</label>
+    <input id="name" type="text" placeholder="Full Name" required />
+
+    <label>Phone Number</label>
+    <input id="phone" type="tel" placeholder="+91 9XXXXXXXXX" required />
+
+    <!-- CHART IMAGES -->
+    <label>Lagna Chart (image)</label>
+    <input type="file" id="lagnaImg" accept="image/*" required />
+    <img id="lagnaPreview" class="preview" />
+
+    <label>KP Chart (image)</label>
+    <input type="file" id="kpImg" accept="image/*" required />
+    <img id="kpPreview" class="preview" />
+
+    <!-- PLANETS -->
+    <h3>9 Grah — Nakshatra</h3>
+    <div id="planets" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
+
+    <!-- HOUSES -->
+    <h3>12 Houses — Significators (L1..L4)</h3>
+    <table id="housesTable">
+      <thead><tr><th>House</th><th>L1</th><th>L2</th><th>L3</th><th>L4</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <div style="display:flex;gap:10px;margin-top:14px;align-items:center">
+      <button class="btn" type="submit">Upload & Save</button>
+      <button type="button" class="btn ghost" onclick="resetForm()">Reset</button>
+      <span id="status" class="status"></span>
+    </div>
+
+  </form>
+
+</div>
+
+<script>
+// PLANET LIST
+const planetNames = ['Sun','Moon','Mars','Mercury','Jupiter','Venus','Saturn','Rahu','Ketu'];
+
+// Render planets
+const planetsDiv = document.getElementById('planets');
+planetNames.forEach((p,i)=>{
+  const box = document.createElement('div');
+  box.innerHTML = `<label>${p}</label><input type="text" id="planet_${i}_nak" placeholder="Nakshatra" />`;
+  planetsDiv.appendChild(box);
+});
+
+// Render houses
+const housesTbody = document.querySelector('#housesTable tbody');
+for(let h=1;h<=12;h++){
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${h}</td><td><input id='house_${h}_l1'></td><td><input id='house_${h}_l2'></td><td><input id='house_${h}_l3'></td><td><input id='house_${h}_l4'></td>`;
+  housesTbody.appendChild(tr);
+}
+
+// Preview Images
+lagnaImg.onchange = e=>preview(e.target.files[0],'lagnaPreview');
+kpImg.onchange = e=>preview(e.target.files[0],'kpPreview');
+function preview(file,id){ const img=document.getElementById(id); img.src = file ? URL.createObjectURL(file) : ''; }
+
+// RESET FORM
+function resetForm(){ document.getElementById('astroForm').reset(); lagnaPreview.src=''; kpPreview.src=''; document.getElementById('status').textContent=''; }
+
+// BASE64
+function toBase64(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
+
+// SUBMIT
+async function handleSubmit(e){
+  e.preventDefault();
+  const status = document.getElementById('status');
+
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzWf_byUV4Bpk0MXEpRfbSnpKnO8p4KUTcDI5yaroH7zA7sxo60aoBpgUfNNTH0ErIM/exec"; // ← YOU WILL FILL THIS
+  if(!WEB_APP_URL){ status.textContent = "Web App URL missing"; return; }
+
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const lagnaFile = lagnaImg.files[0];
+  const kpFile = kpImg.files[0];
+
+  if(!name || !phone || !lagnaFile || !kpFile){ status.textContent = "Fill all fields"; return; }
+
+  status.textContent = "Processing...";
+
+  try{
+    const [lagna64, kp64] = await Promise.all([toBase64(lagnaFile), toBase64(kpFile)]);
+
+    const planets = {};
+    planetNames.forEach((p,i)=> planets[p] = document.getElementById(`planet_${i}_nak`).value || "");
+
+    const houses = [];
+    for(let h=1;h<=12;h++){
+      houses.push({
+        L1:document.getElementById(`house_${h}_l1`).value||"",
+        L2:document.getElementById(`house_${h}_l2`).value||"",
+        L3:document.getElementById(`house_${h}_l3`).value||"",
+        L4:document.getElementById(`house_${h}_l4`).value||""
+      });
+    }
+
+    const payload = {
+      name, phone,
+      lagnaImage: lagna64.split(',')[1], lagnaType: lagnaFile.type,
+      kpImage: kp64.split(',')[1], kpType: kpFile.type,
+      planets, houses
+    };
+
+    const res = await fetch(WEB_APP_URL,{
+      method:"POST",
+      headers:{"Content-Type":"text/plain"},
+      body: JSON.stringify(payload)
+    });
+
+    if(!res.ok){ status.textContent = "Server error: "+res.status; return; }
+
+    const json = await res.json();
+    if(json.status === "success"){ status.textContent = "Uploaded Successfully"; resetForm(); }
+    else{ status.textContent = "Server error"; }
+
+  }catch(err){ status.textContent = "Failed: "+err.message; }
+}
+</script>
+
+</body>
+</html>
