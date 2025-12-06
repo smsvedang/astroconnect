@@ -1,10 +1,9 @@
-// api/astro.js
+// api/astro.js  (ESM – because "type": "module" in package.json)
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-// Same prompt builder jaisa server.js me tha,
-// bas text me AI/LLM ka zikr nahi:
+// Prompt builder
 function buildPrompt(data) {
   const {
     name,
@@ -63,6 +62,7 @@ Keep it supportive, realistic and 100% non-fearful.
 `;
 }
 
+// Vercel API Route – default export
 export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
