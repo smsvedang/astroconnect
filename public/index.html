@@ -278,20 +278,6 @@
             </div>
           </div>
 
-          <!-- PIN + CITY + STATE -->
-          <div class="inline-fields">
-            <div class="field">
-              <label for="pincode">Pincode</label>
-              <input
-                id="pincode"
-                name="pincode"
-                type="text"
-                maxlength="6"
-                placeholder="e.g. 311001"
-                required
-              />
-            </div>
-
             <div class="field city-field">
               <label for="city">City (auto or manual)</label>
               <input
@@ -384,7 +370,7 @@
   </div>
 
   <script>
-/* ---------------------- ZODIAC + LIFE PATH ------------------------ */
+// ---------------------- ZODIAC + LIFE PATH ------------------------
 function getZodiacSign(month, day) {
   if ((month === 2 && day >= 21) || (month === 3 && day <= 19)) return "Aries";
   if ((month === 3 && day >= 20) || (month === 4 && day <= 20)) return "Taurus";
@@ -405,60 +391,52 @@ function getLifePathNumber(date) {
   let sum = 0;
   for (let ch of digits) sum += parseInt(ch, 10);
   while (sum > 9) {
-    let temp = 0;
-    for (let c of sum.toString()) temp += parseInt(c, 10);
-    sum = temp;
+    let t = 0;
+    for (let c of sum.toString()) t += parseInt(c, 10);
+    sum = t;
   }
   return sum;
 }
 
-/* ---------------------- DOM ELEMENTS ------------------------ */
+// ---------------------- DOM ELEMENTS ------------------------
 const form = document.getElementById("astro-form");
 const resultContent = document.getElementById("result-content");
 const errorMessage = document.getElementById("error-message");
 const status = document.getElementById("status");
 const whatsappButton = document.getElementById("whatsapp-button");
-const yearSpan = document.getElementById("year");
 
-const pincodeInput = document.getElementById("pincode");
 const cityInput = document.getElementById("city");
 const citySuggestionsEl = document.getElementById("city-suggestions");
 const stateInput = document.getElementById("state");
 const countryInput = document.getElementById("country");
-const reportLangSelect = document.getElementById("report-lang");
 
+const reportLangSelect = document.getElementById("report-lang");
+const yearSpan = document.getElementById("year");
 yearSpan.textContent = new Date().getFullYear();
 
 const whatsappBase = "https://wa.me/917974517991";
 
-/* -------------------- DEFAULT WHATSAPP ---------------------- */
+// ---------------------- DEFAULT WHATSAPP ----------------------
 function setDefaultWhatsAppLink() {
   const text = "Namaste, I want a detailed astrological consultation.";
   whatsappButton.href = whatsappBase + "?text=" + encodeURIComponent(text);
 }
 setDefaultWhatsAppLink();
 
-/* ---------------------- CITY JSON LOADING ------------------------ */
-
+// ---------------------- CITY JSON LOADING ------------------------
 let citiesData = [];
 let citiesFlat = [];
 
 function flattenCities(raw) {
-  const list = [];
-  for (const [stateName, districts] of Object.entries(raw)) {
-    for (const [districtName, places] of Object.entries(districts)) {
-      for (const [placeName, pincode] of Object.entries(places)) {
-        list.push({
-          city: placeName,
-          state: stateName,
-          district: districtName,
-          pincode: String(pincode),
-          country: "India"
-        });
+  const arr = [];
+  for (const [state, districts] of Object.entries(raw)) {
+    for (const [district, places] of Object.entries(districts)) {
+      for (const [city, _pin] of Object.entries(places)) {
+        arr.push({ city, state, district, country: "India" });
       }
     }
   }
-  return list;
+  return arr;
 }
 
 async function loadCities() {
@@ -467,17 +445,14 @@ async function loadCities() {
     const json = await res.json();
     citiesData = json;
     citiesFlat = flattenCities(json);
-    console.log("Loaded cities:", citiesFlat.length);
   } catch (err) {
-    console.error("City load error:", err);
-    status.textContent = "Unable to load cities list.";
+    console.error("City load failed:", err);
+    status.textContent = "Unable to load city list. Type manually.";
   }
 }
-
 loadCities();
 
-/* ---------------------- SUGGESTION CONTROL ------------------------ */
-
+// ---------------------- CITY SUGGESTION CONTROLS ------------------------
 function hideCitySuggestions() {
   citySuggestionsEl.classList.remove("visible");
   citySuggestionsEl.innerHTML = "";
@@ -485,61 +460,37 @@ function hideCitySuggestions() {
 
 function showCitySuggestions(matches) {
   citySuggestionsEl.innerHTML = "";
+
   matches.forEach(c => {
-    const div = document.createElement("div");
-    div.className = "city-suggestion-item";
-    div.innerHTML = `
+    const el = document.createElement("div");
+    el.className = "city-suggestion-item";
+    el.innerHTML = `
       <strong>${c.city}</strong>
-      <small>${c.state}, ${c.pincode}</small>
+      <small>${c.state}</small>
     `;
 
-    /* 🔥 IMPORTANT FIX – mousedown prevents blur first */
-    div.addEventListener("mousedown", (e) => {
+    // *** FIX: mousedown ensures selection before blur ***
+    el.addEventListener("mousedown", e => {
       e.preventDefault();
       e.stopPropagation();
 
       cityInput.value = c.city;
-      pincodeInput.value = c.pincode;
       stateInput.value = c.state;
       countryInput.value = c.country;
 
-      status.textContent = "City, pincode & state auto-filled.";
-
+      status.textContent = "City & state auto-filled.";
       hideCitySuggestions();
     });
 
-    citySuggestionsEl.appendChild(div);
+    citySuggestionsEl.appendChild(el);
   });
 
   citySuggestionsEl.classList.add("visible");
 }
 
-/* ---------------------- PINCODE → CITY AUTO ------------------------ */
-
-pincodeInput.addEventListener("blur", () => {
-  const pin = pincodeInput.value.trim();
-  if (pin.length !== 6) return;
-
-  const match = citiesFlat.find(c => c.pincode === pin);
-  if (match) {
-    cityInput.value = match.city;
-    stateInput.value = match.state;
-    countryInput.value = match.country;
-
-    status.textContent = "Auto-filled from PIN.";
-  } else {
-    status.textContent = "PIN not found, please type manually.";
-  }
-});
-
-/* ---------------------- CITY → PINCODE AUTO + SUGGESTIONS ------------------------ */
-
 cityInput.addEventListener("input", () => {
   const q = cityInput.value.trim().toLowerCase();
-  if (q.length < 2) {
-    hideCitySuggestions();
-    return;
-  }
+  if (q.length < 2) return hideCitySuggestions();
 
   const matches = citiesFlat
     .filter(c => c.city.toLowerCase().startsWith(q))
@@ -549,21 +500,21 @@ cityInput.addEventListener("input", () => {
   else hideCitySuggestions();
 });
 
-/* FIXED blur – does not hide before click */
+// Prevent closing before click
 cityInput.addEventListener("blur", () => {
   setTimeout(() => {
     if (!citySuggestionsEl.matches(":hover")) hideCitySuggestions();
   }, 200);
 });
 
-document.addEventListener("mousedown", (e) => {
+// Click outside closes
+document.addEventListener("mousedown", e => {
   if (!citySuggestionsEl.contains(e.target) && e.target !== cityInput) {
     hideCitySuggestions();
   }
 });
 
-/* ---------------------- REPORT LANGUAGE ------------------------ */
-
+// ---------------------- REPORT LANGUAGE ------------------------
 let descriptionFull = "";
 let descriptionEN = "";
 let descriptionHI = "";
@@ -579,20 +530,17 @@ function splitDescription(text) {
   } else {
     en = text.trim();
   }
-
   return { en, hi };
 }
 
 reportLangSelect.addEventListener("change", () => {
   const lang = reportLangSelect.value;
-
   if (lang === "both") resultContent.textContent = descriptionFull;
   else if (lang === "en") resultContent.textContent = descriptionEN || descriptionFull;
   else if (lang === "hi") resultContent.textContent = descriptionHI || descriptionFull;
 });
 
-/* ---------------------- SUBMIT HANDLER ------------------------ */
-
+// ---------------------- SUBMIT HANDLER ------------------------
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
   errorMessage.style.display = "none";
@@ -602,13 +550,12 @@ form.addEventListener("submit", async function (e) {
   const gender = document.getElementById("gender").value;
   const dobInput = document.getElementById("dob").value;
   const tob = document.getElementById("tob").value;
-  const pincodeValue = pincodeInput.value.trim();
   const cityValue = cityInput.value.trim();
   const stateValue = stateInput.value.trim();
   const countryValue = countryInput.value.trim() || "India";
   const notes = document.getElementById("notes").value.trim();
 
-  if (!name || !gender || !dobInput || !tob || !pincodeValue || !cityValue || !stateValue) {
+  if (!name || !gender || !dobInput || !tob || !cityValue || !stateValue) {
     errorMessage.textContent = "Please fill all required fields.";
     errorMessage.style.display = "block";
     return;
@@ -619,14 +566,15 @@ form.addEventListener("submit", async function (e) {
   const lifePath = getLifePathNumber(dob);
 
   const payload = {
-    name, gender, dob: dobInput, tob,
+    name, gender,
+    dob: dobInput, tob,
     city: cityValue, state: stateValue,
-    pincode: pincodeValue, country: countryValue,
+    country: countryValue,
     notes, zodiac, lifePath
   };
 
   try {
-    status.textContent = "Preparing your description…";
+    status.textContent = "Generating your description…";
 
     const response = await fetch("/api/astro", {
       method: "POST",
@@ -645,20 +593,19 @@ form.addEventListener("submit", async function (e) {
     resultContent.textContent = text;
 
     const waMessage =
-`Namaste, I just generated my astro description:
+`Namaste, I generated my astro description:
 
 Name: ${name}
 DOB: ${dobInput}
 TOB: ${tob}
 Place: ${cityValue}, ${stateValue}, ${countryValue}
-Pincode: ${pincodeValue}
 
 Concern: ${notes || "Not mentioned"}
 
 Please guide me further.`;
 
     whatsappButton.href = whatsappBase + "?text=" + encodeURIComponent(waMessage);
-    status.textContent = "Description generated successfully.";
+    status.textContent = "Description generated.";
 
   } catch (err) {
     console.error(err);
