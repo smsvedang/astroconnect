@@ -1,28 +1,31 @@
 {
-  "name": "maa",
+  "name": "astroconnect",
   "version": "1.0.0",
-  "description": "",
+  "description": "AstroConnect – Vedic Astrology Birth Details Interpreter",
   "type": "module",
-  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "vercel-build": "echo 'Nothing to build for Vercel static hosting'",
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/smsvedang/astro.git"
+    "url": "git+https://github.com/smsvedang/astroconnect.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "astrology",
+    "astroconnect",
+    "vedic",
+    "horoscope",
+    "birth-chart"
+  ],
+  "author": "Vedang",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/smsvedang/astro/issues"
+    "url": "https://github.com/smsvedang/astroconnect/issues"
   },
-  "homepage": "https://github.com/smsvedang/astro#readme",
+  "homepage": "https://astroconnect-five.vercel.app",
   "dependencies": {
-    "@google/generative-ai": "^0.24.1",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1"
+    "@google/generative-ai": "^0.21.0"
   }
 }
