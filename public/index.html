@@ -384,334 +384,289 @@
   </div>
 
   <script>
-    // --- Helpers: Zodiac & Life Path ---
-    function getZodiacSign(month, day) {
-      if ((month === 2 && day >= 21) || (month === 3 && day <= 19)) return "Aries";
-      if ((month === 3 && day >= 20) || (month === 4 && day <= 20)) return "Taurus";
-      if ((month === 4 && day >= 21) || (month === 5 && day <= 20)) return "Gemini";
-      if ((month === 5 && day >= 21) || (month === 6 && day <= 22)) return "Cancer";
-      if ((month === 6 && day >= 23) || (month === 7 && day <= 22)) return "Leo";
-      if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "Virgo";
-      if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "Libra";
-      if ((month === 9 && day >= 23) || (month === 10 && day <= 21)) return "Scorpio";
-      if ((month === 10 && day >= 22) || (month === 11 && day <= 21)) return "Sagittarius";
-      if ((month === 11 && day >= 22) || (month === 0 && day <= 19)) return "Capricorn";
-      if ((month === 0 && day >= 20) || (month === 1 && day <= 18)) return "Aquarius";
-      return "Pisces";
-    }
+/* ---------------------- ZODIAC + LIFE PATH ------------------------ */
+function getZodiacSign(month, day) {
+  if ((month === 2 && day >= 21) || (month === 3 && day <= 19)) return "Aries";
+  if ((month === 3 && day >= 20) || (month === 4 && day <= 20)) return "Taurus";
+  if ((month === 4 && day >= 21) || (month === 5 && day <= 20)) return "Gemini";
+  if ((month === 5 && day >= 21) || (month === 6 && day <= 22)) return "Cancer";
+  if ((month === 6 && day >= 23) || (month === 7 && day <= 22)) return "Leo";
+  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "Virgo";
+  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "Libra";
+  if ((month === 9 && day >= 23) || (month === 10 && day <= 21)) return "Scorpio";
+  if ((month === 10 && day >= 22) || (month === 11 && day <= 21)) return "Sagittarius";
+  if ((month === 11 && day >= 22) || (month === 0 && day <= 19)) return "Capricorn";
+  if ((month === 0 && day >= 20) || (month === 1 && day <= 18)) return "Aquarius";
+  return "Pisces";
+}
 
-    function getLifePathNumber(date) {
-      const digits = date.getFullYear().toString() + (date.getMonth() + 1) + date.getDate();
-      let sum = 0;
-      for (let ch of digits) sum += parseInt(ch, 10);
-      while (sum > 9) {
-        let temp = 0;
-        for (let ch of sum.toString()) temp += parseInt(ch, 10);
-        sum = temp;
-      }
-      return sum;
-    }
+function getLifePathNumber(date) {
+  const digits = date.getFullYear().toString() + (date.getMonth() + 1) + date.getDate();
+  let sum = 0;
+  for (let ch of digits) sum += parseInt(ch, 10);
+  while (sum > 9) {
+    let temp = 0;
+    for (let c of sum.toString()) temp += parseInt(c, 10);
+    sum = temp;
+  }
+  return sum;
+}
 
-    // DOM references
-    const form = document.getElementById("astro-form");
-    const resultContent = document.getElementById("result-content");
-    const errorMessage = document.getElementById("error-message");
-    const status = document.getElementById("status");
-    const whatsappButton = document.getElementById("whatsapp-button");
-    const yearSpan = document.getElementById("year");
+/* ---------------------- DOM ELEMENTS ------------------------ */
+const form = document.getElementById("astro-form");
+const resultContent = document.getElementById("result-content");
+const errorMessage = document.getElementById("error-message");
+const status = document.getElementById("status");
+const whatsappButton = document.getElementById("whatsapp-button");
+const yearSpan = document.getElementById("year");
 
-    const pincodeInput = document.getElementById("pincode");
-    const cityInput = document.getElementById("city");
-    const citySuggestionsEl = document.getElementById("city-suggestions");
-    const stateInput = document.getElementById("state");
-    const countryInput = document.getElementById("country");
-    const reportLangSelect = document.getElementById("report-lang");
+const pincodeInput = document.getElementById("pincode");
+const cityInput = document.getElementById("city");
+const citySuggestionsEl = document.getElementById("city-suggestions");
+const stateInput = document.getElementById("state");
+const countryInput = document.getElementById("country");
+const reportLangSelect = document.getElementById("report-lang");
 
-    yearSpan.textContent = new Date().getFullYear();
+yearSpan.textContent = new Date().getFullYear();
 
-    const whatsappBase = "https://wa.me/917974517991";
+const whatsappBase = "https://wa.me/917974517991";
 
-    function setDefaultWhatsAppLink() {
-      const text = "Namaste, I want a detailed astrological consultation based on my birth details.";
-      whatsappButton.href = whatsappBase + "?text=" + encodeURIComponent(text);
-    }
-    setDefaultWhatsAppLink();
+/* -------------------- DEFAULT WHATSAPP ---------------------- */
+function setDefaultWhatsAppLink() {
+  const text = "Namaste, I want a detailed astrological consultation.";
+  whatsappButton.href = whatsappBase + "?text=" + encodeURIComponent(text);
+}
+setDefaultWhatsAppLink();
 
-    // --- City data (flattened from nested JSON) ---
-    let citiesData = [];      // raw JSON from file
-    let citiesFlat = [];      // [{pincode, city, state, district, country}]
+/* ---------------------- CITY JSON LOADING ------------------------ */
 
-    function flattenCities(raw) {
-      const list = [];
-      if (!raw || typeof raw !== "object") return list;
+let citiesData = [];
+let citiesFlat = [];
 
-      // structure: { "State": { "District": { "Place": "PIN", ... }, ... }, ... }
-      for (const [stateName, districts] of Object.entries(raw)) {
-        if (!districts || typeof districts !== "object") continue;
-        for (const [districtName, places] of Object.entries(districts)) {
-          if (!places || typeof places !== "object") continue;
-          for (const [placeName, pinRaw] of Object.entries(places)) {
-            const pin = String(pinRaw || "").trim();
-            const city = String(placeName || "").trim();
-            const state = String(stateName || "").trim();
-            const district = String(districtName || "").trim();
-            if (!pin || !city) continue;
-            list.push({
-              pincode: pin,
-              city,
-              state,
-              district,
-              country: "India"
-            });
-          }
-        }
-      }
-      return list;
-    }
-
-    async function loadCities() {
-      try {
-        const res = await fetch("/cities.json");
-        if (!res.ok) throw new Error("Could not load cities.json");
-        citiesData = await res.json();
-        citiesFlat = flattenCities(citiesData);
-        console.log("Loaded cities.json, flattened entries:", citiesFlat.length);
-      } catch (err) {
-        console.error("Error loading cities.json:", err);
-        status.textContent = "Could not load city list. You can still type manually.";
-      }
-    }
-
-    loadCities();
-
-    // --- Helper: hide / show city suggestions
-    function hideCitySuggestions() {
-      citySuggestionsEl.classList.remove("visible");
-      citySuggestionsEl.innerHTML = "";
-    }
-
-    function showCitySuggestions(matches) {
-      if (!matches || matches.length === 0) {
-        hideCitySuggestions();
-        return;
-      }
-      citySuggestionsEl.innerHTML = "";
-      matches.forEach((c) => {
-        const div = document.createElement("div");
-        div.className = "city-suggestion-item";
-        div.innerHTML = `
-          <strong>${c.city}</strong>
-          <small>${c.district ? c.district + ", " : ""}${c.state} • ${c.pincode}</small>
-        `;
-        div.addEventListener("click", () => {
-          cityInput.value = c.city;
-          if (!pincodeInput.value.trim()) pincodeInput.value = c.pincode;
-          if (!stateInput.value.trim()) stateInput.value = c.state || c.district || "";
-          if (!countryInput.value.trim()) countryInput.value = c.country || "India";
-          status.textContent = "City, pincode & state auto-filled from list.";
-          hideCitySuggestions();
+function flattenCities(raw) {
+  const list = [];
+  for (const [stateName, districts] of Object.entries(raw)) {
+    for (const [districtName, places] of Object.entries(districts)) {
+      for (const [placeName, pincode] of Object.entries(places)) {
+        list.push({
+          city: placeName,
+          state: stateName,
+          district: districtName,
+          pincode: String(pincode),
+          country: "India"
         });
-        citySuggestionsEl.appendChild(div);
-      });
-      citySuggestionsEl.classList.add("visible");
+      }
     }
+  }
+  return list;
+}
 
-    // --- Autofill city/state from pincode using citiesFlat ---
-    pincodeInput.addEventListener("blur", () => {
-      const pin = pincodeInput.value.trim();
-      if (pin.length !== 6) return;
+async function loadCities() {
+  try {
+    const res = await fetch("/cities.json");
+    const json = await res.json();
+    citiesData = json;
+    citiesFlat = flattenCities(json);
+    console.log("Loaded cities:", citiesFlat.length);
+  } catch (err) {
+    console.error("City load error:", err);
+    status.textContent = "Unable to load cities list.";
+  }
+}
 
-      if (!Array.isArray(citiesFlat) || citiesFlat.length === 0) {
-        status.textContent = "City list not loaded, please type city/state manually.";
-        return;
-      }
+loadCities();
 
-      const match = citiesFlat.find(c => c.pincode === pin);
-      if (match) {
-        cityInput.value = match.city || "";
-        stateInput.value = match.state || (match.district || "");
-        countryInput.value = match.country || "India";
-        status.textContent = "City & state auto-filled from PIN.";
-      } else {
-        status.textContent = "PIN not found in list, please type city/state manually.";
-      }
-    });
+/* ---------------------- SUGGESTION CONTROL ------------------------ */
 
-    // --- City input: live suggestions + reverse autofill ---
-    cityInput.addEventListener("input", () => {
-      const q = cityInput.value.trim().toLowerCase();
-      if (q.length < 2 || !Array.isArray(citiesFlat) || citiesFlat.length === 0) {
-        hideCitySuggestions();
-        return;
-      }
-      const seen = new Set();
-      const matches = [];
-      for (const c of citiesFlat) {
-        if (c.city.toLowerCase().startsWith(q)) {
-          const key = `${c.city}|${c.state}|${c.pincode}`;
-          if (seen.has(key)) continue;
-          seen.add(key);
-          matches.push(c);
-        }
-        if (matches.length >= 20) break;
-      }
-      showCitySuggestions(matches);
-    });
+function hideCitySuggestions() {
+  citySuggestionsEl.classList.remove("visible");
+  citySuggestionsEl.innerHTML = "";
+}
 
-    cityInput.addEventListener("blur", () => {
-      // small delay so click on suggestion still registers
-      setTimeout(() => {
-        hideCitySuggestions();
-      }, 150);
-    });
+function showCitySuggestions(matches) {
+  citySuggestionsEl.innerHTML = "";
+  matches.forEach(c => {
+    const div = document.createElement("div");
+    div.className = "city-suggestion-item";
+    div.innerHTML = `
+      <strong>${c.city}</strong>
+      <small>${c.state}, ${c.pincode}</small>
+    `;
 
-    document.addEventListener("click", (e) => {
-      if (e.target !== cityInput && !citySuggestionsEl.contains(e.target)) {
-        hideCitySuggestions();
-      }
-    });
-
-    // --- Report language toggle state ---
-    let descriptionFull = "";
-    let descriptionEN = "";
-    let descriptionHI = "";
-    let displayLang = "both";
-
-    function splitDescription(text) {
-      // Try to split using [ENGLISH] and [हिन्दी] markers
-      let en = "";
-      let hi = "";
-      const enIndex = text.indexOf("[ENGLISH]");
-      const hiIndex = text.indexOf("[हिन्दी]");
-
-      if (hiIndex !== -1) {
-        const enPart = enIndex !== -1 ? text.slice(enIndex + "[ENGLISH]".length, hiIndex) : text.slice(0, hiIndex);
-        const hiPart = text.slice(hiIndex + "[हिन्दी]".length);
-        en = enPart.trim();
-        hi = hiPart.trim();
-      } else {
-        // Fallback: no clear split, treat all as English
-        en = text.trim();
-        hi = "";
-      }
-      return { en, hi };
-    }
-
-    function renderDescription() {
-      if (!descriptionFull) return;
-      let content = "";
-      if (displayLang === "both" || (!descriptionEN && !descriptionHI)) {
-        content = descriptionFull;
-      } else if (displayLang === "en") {
-        content = descriptionEN || descriptionFull;
-      } else if (displayLang === "hi") {
-        content = descriptionHI || descriptionFull;
-      }
-      resultContent.textContent = content;
-    }
-
-    reportLangSelect.addEventListener("change", () => {
-      displayLang = reportLangSelect.value; // "both", "en", "hi"
-      renderDescription();
-    });
-
-    form.addEventListener("submit", async function (e) {
+    /* 🔥 IMPORTANT FIX – mousedown prevents blur first */
+    div.addEventListener("mousedown", (e) => {
       e.preventDefault();
-      errorMessage.style.display = "none";
-      errorMessage.textContent = "";
-      status.textContent = "";
+      e.stopPropagation();
 
-      const name = document.getElementById("name").value.trim();
-      const gender = document.getElementById("gender").value;
-      const dobInput = document.getElementById("dob").value;
-      const tob = document.getElementById("tob").value;
-      const pincodeValue = pincodeInput.value.trim();
-      const cityValue = cityInput.value.trim();
-      const stateValue = stateInput.value.trim();
-      const countryValue = countryInput.value.trim() || "India";
-      const notes = document.getElementById("notes").value.trim();
+      cityInput.value = c.city;
+      pincodeInput.value = c.pincode;
+      stateInput.value = c.state;
+      countryInput.value = c.country;
 
-      if (!name || !gender || !dobInput || !tob || !pincodeValue || !cityValue || !stateValue) {
-        errorMessage.textContent = "Please fill all required fields.";
-        errorMessage.style.display = "block";
-        return;
-      }
+      status.textContent = "City, pincode & state auto-filled.";
 
-      const dob = new Date(dobInput);
-      if (isNaN(dob.getTime())) {
-        errorMessage.textContent = "Invalid date of birth.";
-        errorMessage.style.display = "block";
-        return;
-      }
+      hideCitySuggestions();
+    });
 
-      const month = dob.getMonth();
-      const day = dob.getDate();
-      const zodiac = getZodiacSign(month, day);
-      const lifePath = getLifePathNumber(dob);
+    citySuggestionsEl.appendChild(div);
+  });
 
-      const payload = {
-        name,
-        gender,
-        dob: dobInput,
-        tob,
-        city: cityValue,
-        state: stateValue,
-        pincode: pincodeValue,
-        country: countryValue,
-        notes,
-        zodiac,
-        lifePath
-      };
+  citySuggestionsEl.classList.add("visible");
+}
 
-      try {
-        status.textContent = "Preparing your description…";
-        const response = await fetch("/api/astro", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
+/* ---------------------- PINCODE → CITY AUTO ------------------------ */
 
-        if (!response.ok) {
-          const err = await response.json().catch(() => ({}));
-          throw new Error(err.error || "Server error");
-        }
+pincodeInput.addEventListener("blur", () => {
+  const pin = pincodeInput.value.trim();
+  if (pin.length !== 6) return;
 
-        const data = await response.json();
-        const text = data.description || "No description received from server.";
+  const match = citiesFlat.find(c => c.pincode === pin);
+  if (match) {
+    cityInput.value = match.city;
+    stateInput.value = match.state;
+    countryInput.value = match.country;
 
-        descriptionFull = text;
-        const parts = splitDescription(text);
-        descriptionEN = parts.en;
-        descriptionHI = parts.hi;
+    status.textContent = "Auto-filled from PIN.";
+  } else {
+    status.textContent = "PIN not found, please type manually.";
+  }
+});
 
-        renderDescription();
+/* ---------------------- CITY → PINCODE AUTO + SUGGESTIONS ------------------------ */
 
-        const waMessage =
-`Namaste, I just generated my astro description on your website.
+cityInput.addEventListener("input", () => {
+  const q = cityInput.value.trim().toLowerCase();
+  if (q.length < 2) {
+    hideCitySuggestions();
+    return;
+  }
+
+  const matches = citiesFlat
+    .filter(c => c.city.toLowerCase().startsWith(q))
+    .slice(0, 20);
+
+  if (matches.length) showCitySuggestions(matches);
+  else hideCitySuggestions();
+});
+
+/* FIXED blur – does not hide before click */
+cityInput.addEventListener("blur", () => {
+  setTimeout(() => {
+    if (!citySuggestionsEl.matches(":hover")) hideCitySuggestions();
+  }, 200);
+});
+
+document.addEventListener("mousedown", (e) => {
+  if (!citySuggestionsEl.contains(e.target) && e.target !== cityInput) {
+    hideCitySuggestions();
+  }
+});
+
+/* ---------------------- REPORT LANGUAGE ------------------------ */
+
+let descriptionFull = "";
+let descriptionEN = "";
+let descriptionHI = "";
+
+function splitDescription(text) {
+  const enIndex = text.indexOf("[ENGLISH]");
+  const hiIndex = text.indexOf("[हिन्दी]");
+  let en = "", hi = "";
+
+  if (hiIndex !== -1) {
+    en = text.slice(enIndex + 9, hiIndex).trim();
+    hi = text.slice(hiIndex + 7).trim();
+  } else {
+    en = text.trim();
+  }
+
+  return { en, hi };
+}
+
+reportLangSelect.addEventListener("change", () => {
+  const lang = reportLangSelect.value;
+
+  if (lang === "both") resultContent.textContent = descriptionFull;
+  else if (lang === "en") resultContent.textContent = descriptionEN || descriptionFull;
+  else if (lang === "hi") resultContent.textContent = descriptionHI || descriptionFull;
+});
+
+/* ---------------------- SUBMIT HANDLER ------------------------ */
+
+form.addEventListener("submit", async function (e) {
+  e.preventDefault();
+  errorMessage.style.display = "none";
+  status.textContent = "";
+
+  const name = document.getElementById("name").value.trim();
+  const gender = document.getElementById("gender").value;
+  const dobInput = document.getElementById("dob").value;
+  const tob = document.getElementById("tob").value;
+  const pincodeValue = pincodeInput.value.trim();
+  const cityValue = cityInput.value.trim();
+  const stateValue = stateInput.value.trim();
+  const countryValue = countryInput.value.trim() || "India";
+  const notes = document.getElementById("notes").value.trim();
+
+  if (!name || !gender || !dobInput || !tob || !pincodeValue || !cityValue || !stateValue) {
+    errorMessage.textContent = "Please fill all required fields.";
+    errorMessage.style.display = "block";
+    return;
+  }
+
+  const dob = new Date(dobInput);
+  const zodiac = getZodiacSign(dob.getMonth(), dob.getDate());
+  const lifePath = getLifePathNumber(dob);
+
+  const payload = {
+    name, gender, dob: dobInput, tob,
+    city: cityValue, state: stateValue,
+    pincode: pincodeValue, country: countryValue,
+    notes, zodiac, lifePath
+  };
+
+  try {
+    status.textContent = "Preparing your description…";
+
+    const response = await fetch("/api/astro", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    const text = data.description || "No description received.";
+
+    descriptionFull = text;
+    const parts = splitDescription(text);
+    descriptionEN = parts.en;
+    descriptionHI = parts.hi;
+
+    resultContent.textContent = text;
+
+    const waMessage =
+`Namaste, I just generated my astro description:
 
 Name: ${name}
-Gender: ${gender}
-Date of Birth: ${dobInput}
-Time of Birth: ${tob}
-Place of Birth: ${cityValue}, ${stateValue}, ${countryValue}
+DOB: ${dobInput}
+TOB: ${tob}
+Place: ${cityValue}, ${stateValue}, ${countryValue}
 Pincode: ${pincodeValue}
-Sun sign (approx): ${zodiac}
-Life Path Number: ${lifePath}
-Concern: ${notes || "Not specifically mentioned"}
 
-Please check my detailed horoscope / kundli and guide me personally.`;
+Concern: ${notes || "Not mentioned"}
 
-        whatsappButton.href = whatsappBase + "?text=" + encodeURIComponent(waMessage);
-        status.textContent = "Description generated. Use the language switch above to view English / Hindi.";
-      } catch (err) {
-        console.error(err);
-        status.textContent = "";
-        errorMessage.textContent =
-          "Could not generate description right now. Please check backend / API key or try again.";
-        errorMessage.style.display = "block";
-        setDefaultWhatsAppLink();
-      }
-    });
-  </script>
+Please guide me further.`;
+
+    whatsappButton.href = whatsappBase + "?text=" + encodeURIComponent(waMessage);
+    status.textContent = "Description generated successfully.";
+
+  } catch (err) {
+    console.error(err);
+    errorMessage.textContent = "Could not generate description. Please try again.";
+    errorMessage.style.display = "block";
+    setDefaultWhatsAppLink();
+  }
+});
+</script>
 </body>
 </html>
