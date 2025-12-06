@@ -177,6 +177,49 @@
       font-size: 11px;
       outline: none;
     }
+
+    /* City suggestions dropdown (custom, below input) */
+    .city-field {
+      position: relative;
+    }
+    #city-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: 4px;
+      background: rgba(15, 23, 42, 0.98);
+      border-radius: 10px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      max-height: 230px;
+      overflow-y: auto;
+      z-index: 50;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6);
+      display: none;
+    }
+    #city-suggestions.visible {
+      display: block;
+    }
+    .city-suggestion-item {
+      padding: 8px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+    }
+    .city-suggestion-item:last-child {
+      border-bottom: none;
+    }
+    .city-suggestion-item:hover {
+      background: rgba(30, 64, 175, 0.45);
+    }
+    .city-suggestion-item strong {
+      display: block;
+    }
+    .city-suggestion-item small {
+      display: block;
+      font-size: 11px;
+      color: #9ca3af;
+    }
   </style>
 </head>
 <body>
@@ -249,17 +292,17 @@
               />
             </div>
 
-            <div class="field">
+            <div class="field city-field">
               <label for="city">City (auto or manual)</label>
               <input
                 id="city"
                 name="city"
                 type="text"
-                list="city-list"
                 placeholder="Start typing city name..."
+                autocomplete="off"
                 required
               />
-              <datalist id="city-list"></datalist>
+              <div id="city-suggestions"></div>
             </div>
           </div>
 
@@ -379,9 +422,9 @@
 
     const pincodeInput = document.getElementById("pincode");
     const cityInput = document.getElementById("city");
+    const citySuggestionsEl = document.getElementById("city-suggestions");
     const stateInput = document.getElementById("state");
     const countryInput = document.getElementById("country");
-    const cityList = document.getElementById("city-list");
     const reportLangSelect = document.getElementById("report-lang");
 
     yearSpan.textContent = new Date().getFullYear();
@@ -402,7 +445,7 @@
       const list = [];
       if (!raw || typeof raw !== "object") return list;
 
-      // Supports structure like: { "State": { "District": { "Place": "PIN", ... }, ... }, ... }
+      // structure: { "State": { "District": { "Place": "PIN", ... }, ... }, ... }
       for (const [stateName, districts] of Object.entries(raw)) {
         if (!districts || typeof districts !== "object") continue;
         for (const [districtName, places] of Object.entries(districts)) {
@@ -432,19 +475,6 @@
         if (!res.ok) throw new Error("Could not load cities.json");
         citiesData = await res.json();
         citiesFlat = flattenCities(citiesData);
-
-        const seen = new Set();
-        cityList.innerHTML = "";
-        for (const c of citiesFlat) {
-          const key = `${c.city}|${c.state}`;
-          if (seen.has(key)) continue;
-          seen.add(key);
-
-          const opt = document.createElement("option");
-          opt.value = c.city;
-          opt.label = c.state ? `${c.city}, ${c.state}` : c.city;
-          cityList.appendChild(opt);
-        }
         console.log("Loaded cities.json, flattened entries:", citiesFlat.length);
       } catch (err) {
         console.error("Error loading cities.json:", err);
@@ -453,6 +483,38 @@
     }
 
     loadCities();
+
+    // --- Helper: hide / show city suggestions
+    function hideCitySuggestions() {
+      citySuggestionsEl.classList.remove("visible");
+      citySuggestionsEl.innerHTML = "";
+    }
+
+    function showCitySuggestions(matches) {
+      if (!matches || matches.length === 0) {
+        hideCitySuggestions();
+        return;
+      }
+      citySuggestionsEl.innerHTML = "";
+      matches.forEach((c) => {
+        const div = document.createElement("div");
+        div.className = "city-suggestion-item";
+        div.innerHTML = `
+          <strong>${c.city}</strong>
+          <small>${c.district ? c.district + ", " : ""}${c.state} • ${c.pincode}</small>
+        `;
+        div.addEventListener("click", () => {
+          cityInput.value = c.city;
+          if (!pincodeInput.value.trim()) pincodeInput.value = c.pincode;
+          if (!stateInput.value.trim()) stateInput.value = c.state || c.district || "";
+          if (!countryInput.value.trim()) countryInput.value = c.country || "India";
+          status.textContent = "City, pincode & state auto-filled from list.";
+          hideCitySuggestions();
+        });
+        citySuggestionsEl.appendChild(div);
+      });
+      citySuggestionsEl.classList.add("visible");
+    }
 
     // --- Autofill city/state from pincode using citiesFlat ---
     pincodeInput.addEventListener("blur", () => {
@@ -475,51 +537,37 @@
       }
     });
 
-    // --- Autofill pincode/state from city using citiesFlat ---
+    // --- City input: live suggestions + reverse autofill ---
+    cityInput.addEventListener("input", () => {
+      const q = cityInput.value.trim().toLowerCase();
+      if (q.length < 2 || !Array.isArray(citiesFlat) || citiesFlat.length === 0) {
+        hideCitySuggestions();
+        return;
+      }
+      const seen = new Set();
+      const matches = [];
+      for (const c of citiesFlat) {
+        if (c.city.toLowerCase().startsWith(q)) {
+          const key = `${c.city}|${c.state}|${c.pincode}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          matches.push(c);
+        }
+        if (matches.length >= 20) break;
+      }
+      showCitySuggestions(matches);
+    });
+
     cityInput.addEventListener("blur", () => {
-      const cityName = cityInput.value.trim().toLowerCase();
-      if (!cityName) return;
+      // small delay so click on suggestion still registers
+      setTimeout(() => {
+        hideCitySuggestions();
+      }, 150);
+    });
 
-      if (!Array.isArray(citiesFlat) || citiesFlat.length === 0) {
-        status.textContent = "City list not loaded, please type details manually.";
-        return;
-      }
-
-      // First find all entries with same city name (case-insensitive)
-      let matches = citiesFlat.filter(c => c.city.toLowerCase() === cityName);
-
-      if (matches.length === 0) {
-        status.textContent = "City not found in list, please fill pincode/state manually.";
-        return;
-      }
-
-      // If state is already filled, prefer same state/district
-      const stateVal = stateInput.value.trim().toLowerCase();
-      let chosen = null;
-
-      if (stateVal) {
-        chosen = matches.find(
-          c =>
-            (c.state && c.state.toLowerCase() === stateVal) ||
-            (c.district && c.district.toLowerCase() === stateVal)
-        );
-      }
-
-      if (!chosen) {
-        chosen = matches[0]; // fallback to first match
-      }
-
-      if (chosen) {
-        if (!pincodeInput.value.trim()) {
-          pincodeInput.value = chosen.pincode;
-        }
-        if (!stateInput.value.trim()) {
-          stateInput.value = chosen.state || chosen.district || "";
-        }
-        if (!countryInput.value.trim()) {
-          countryInput.value = chosen.country || "India";
-        }
-        status.textContent = "Pincode & state auto-filled from city.";
+    document.addEventListener("click", (e) => {
+      if (e.target !== cityInput && !citySuggestionsEl.contains(e.target)) {
+        hideCitySuggestions();
       }
     });
 
@@ -659,7 +707,7 @@ Please check my detailed horoscope / kundli and guide me personally.`;
         console.error(err);
         status.textContent = "";
         errorMessage.textContent =
-          "Could not generate description right now. Please try again.";
+          "Could not generate description right now. Please check backend / API key or try again.";
         errorMessage.style.display = "block";
         setDefaultWhatsAppLink();
       }
