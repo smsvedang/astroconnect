@@ -1,6 +1,7 @@
 {
   "name": "astroconnect",
   "version": "1.0.0",
+  "type": "module",
   "description": "AstroConnect – Vedic Astrology Birth Details Interpreter",
   "scripts": {
     "start": "node server.js",
