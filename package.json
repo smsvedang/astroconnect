@@ -2,9 +2,7 @@
   "name": "astroconnect",
   "version": "1.0.0",
   "description": "AstroConnect – Vedic Astrology Birth Details Interpreter",
-  "type": "module",
   "scripts": {
-    "vercel-build": "echo 'Nothing to build for Vercel static hosting'",
     "start": "node server.js",
     "dev": "node server.js"
   },
