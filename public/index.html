@@ -2,30 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>AstroEra – AI Powered Vedic Astrology</title>
+<title>AstroEra – AI Powered Vedic Astrology | by Vedang Soni</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<meta name="google-site-verification" content="vMQeKXKG1Tik-KT3r47NCOf6LVaDQ8K9FpktamJr3T0" />
-<!-- Google tag (gtag.js) --><!--Analytics-->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-EYKZW2JHVR"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-EYKZW2JHVR');
-</script>
-
 <!-- SEO -->
-<meta name="description" content="AstroEra – AI-powered Vedic Astrology insights. Generate your Kundli-based personality report instantly.">
-<meta name="keywords" content="AstroEra, kundli, astrology, vedic, horoscope, AI kundli, birth chart, astro report">
+<meta name="description" content="AstroEra – AI-powered Vedic Astrology insights. Generate your Kundli-based personality report instantly in English or Hinglish.">
+<meta name="keywords" content="AstroEra, kundli, astrology, vedic, horoscope, AI kundli, birth chart, astro report, Hinglish astrology">
 <meta property="og:title" content="AstroEra – AI Powered Vedic Astrology" />
-<meta property="og:description" content="Generate AI-powered English & Hinglish Kundli reports instantly." />
+<meta property="og:description" content="Generate AI-powered astrology reports instantly in English or Hinglish." />
 <meta property="og:type" content="website" />
 <meta name="theme-color" content="#4f46e5" />
 
 <style>
-/* ROOT VARIABLES */
 :root {
   --bg: #020617;
   --fg: #ffffff;
@@ -36,7 +24,6 @@
   --grad1: #4f46e5;
   --grad2: #ec4899;
   --radius: 20px;
-  --blur: 18px;
 }
 
 body.light {
@@ -47,8 +34,7 @@ body.light {
   --border: rgba(0,0,0,0.18);
 }
 
-/* GLOBAL */
-* {margin:0;padding:0;box-sizing:border-box;font-family:"Inter",sans-serif;}
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Inter",sans-serif; }
 
 body {
   background:var(--bg);
@@ -61,7 +47,7 @@ body {
   transition:0.4s;
 }
 
-/* INTRO SCREEN */
+/* INTRO */
 #intro-screen {
   position:fixed; inset:0;
   display:flex; justify-content:center; align-items:center;
@@ -110,12 +96,8 @@ body {
   50% {opacity:1;}
   100% {opacity:.4;}
 }
-.intro-exit {
-  animation:introFade .6s forwards;
-}
-@keyframes introFade {
-  to {opacity:0; visibility:hidden;}
-}
+.intro-exit { animation:introFade .6s forwards; }
+@keyframes introFade { to {opacity:0; visibility:hidden;} }
 
 /* MAIN APP */
 .app {
@@ -128,7 +110,7 @@ body {
   opacity:0; transform:translateY(40px);
   transition:0.6s;
 }
-.app.visible {opacity:1; transform:translateY(0);}
+.app.visible { opacity:1; transform:translateY(0); }
 
 /* HEADER */
 header {
@@ -139,7 +121,7 @@ header {
   align-items:center;
   color:white;
 }
-.brand {display:flex; gap:12px; align-items:center;}
+.brand { display:flex; gap:12px; align-items:center; }
 .brand-icon {
   width:45px;height:45px;
   background:#fbbf24;
@@ -151,23 +133,18 @@ header {
   font-size:22px;
   font-weight:900;
 }
-.theme-toggle {font-size:28px; cursor:pointer;}
+.theme-toggle { font-size:28px; cursor:pointer; }
 
 /* LAYOUT */
-main {
-  display:flex; flex-wrap:wrap;
-}
-.left, .right {
-  width:100%;
-  padding:24px;
-}
+main { display:flex; flex-wrap:wrap; }
+.left, .right { width:100%; padding:24px; }
 @media(min-width:850px){
   .left, .right { width:50%; }
   .left { border-right:1px solid var(--border); }
 }
 
 /* FORM */
-form {display:flex; flex-direction:column; gap:15px;}
+form { display:flex; flex-direction:column; gap:15px; }
 
 input, textarea, select {
   padding:12px;
@@ -176,31 +153,23 @@ input, textarea, select {
   color:var(--fg);
   transition:0.25s;
 }
-
-/* Inputs slightly glass, selects solid */
-input, textarea {
-  background:rgba(255,255,255,0.14);
-}
-select {
-  background:#0f172a;          /* solid for dark mode */
-}
+input, textarea { background:rgba(255,255,255,0.14); }
+select { background:#0f172a; }
 body.light select {
-  background:#ffffff;          /* solid for light mode */
+  background:#ffffff;
   color:#111827;
   border-color:rgba(0,0,0,0.2);
 }
-
 input:focus, textarea:focus, select:focus {
   border-color:var(--primary);
   transform:scale(1.02);
 }
-
 .btn-primary {
   padding:13px;
   border:none;
   border-radius:999px;
   cursor:pointer;
-  background:linear-gradient(to right, var(--grad1), var(--grad2));
+  background:linear-gradient(to right,var(--grad1),var(--grad2));
   color:white;
   font-weight:600;
 }
@@ -256,7 +225,7 @@ input:focus, textarea:focus, select:focus {
   font-size:14px;
 }
 
-/* SIMPLE SPINNER */
+/* LOADER */
 .loader {
   width:42px;
   height:42px;
@@ -266,7 +235,7 @@ input:focus, textarea:focus, select:focus {
   animation:spin .8s linear infinite;
   margin:20px auto;
 }
-@keyframes spin {to{transform:rotate(360deg);}}
+@keyframes spin { to {transform:rotate(360deg);} }
 
 /* FLOATING BAR */
 .floating-bar {
@@ -279,8 +248,8 @@ input:focus, textarea:focus, select:focus {
   backdrop-filter:blur(10px);
   z-index:900;
 }
-.action-btn {cursor:pointer; text-align:center;}
-.action-btn span {font-size:22px; display:block;}
+.action-btn { cursor:pointer; text-align:center; }
+.action-btn span { font-size:22px; display:block; }
 
 /* FOOTER */
 footer {
@@ -292,11 +261,11 @@ footer {
   border-top:1px solid var(--border);
 }
 
-/* PRINT (kept for fallback) */
+/* PRINT FALLBACK */
 @media print {
-  body {background:white !important; color:black !important; padding:0;}
-  .floating-bar, header, footer, #intro-screen {display:none !important;}
-  #mainApp {box-shadow:none !important; border:none !important; padding:0 !important;}
+  body { background:white !important; color:black !important; padding:0; }
+  .floating-bar, header, footer, #intro-screen { display:none !important; }
+  #mainApp { box-shadow:none !important; border:none !important; padding:0 !important; }
   #print-container {
     display:block !important;
     padding:40px;
@@ -315,7 +284,6 @@ footer {
 <div id="intro-screen">
   <div class="intro-aura"></div>
   <div class="intro-aura aura2"></div>
-
   <div class="intro-center">
     <div id="enterOm" class="intro-om">ॐ</div>
     <div class="tap-text">Tap to Enter</div>
@@ -430,15 +398,36 @@ footer {
 <!-- Hidden print container (for fallback) -->
 <div id="print-container" style="display:none;"></div>
 
-<!-- jsPDF CDN (no integrity for reliability) -->
+<!-- jsPDF CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-/* ====== GLOBAL VOICE STATE ====== */
+/* ===== GLOBAL STATE ===== */
 let synth = window.speechSynthesis;
 let currentUtter = null;
 let voicesLoaded = false;
 
+let descriptionFull = "";
+let descriptionEN = "";
+let descriptionHI = "";
+let descriptionHing = "";
+
+const resultCard = document.getElementById("result-card");
+
+/* ===== INTRO TAP ===== */
+document.getElementById("enterOm").onclick = () => {
+  const intro = document.getElementById("intro-screen");
+  intro.classList.add("intro-exit");
+
+  loadVoicesOnce();
+
+  setTimeout(() => {
+    intro.remove();
+    document.getElementById("mainApp").classList.add("visible");
+  }, 650);
+};
+
+/* ===== VOICES ===== */
 function loadVoicesOnce() {
   if (!synth) return;
   const voices = synth.getVoices();
@@ -450,21 +439,19 @@ function loadVoicesOnce() {
   };
 }
 
-/* INTRO TAP */
-document.getElementById("enterOm").onclick = () => {
-  const intro = document.getElementById("intro-screen");
-  intro.classList.add("intro-exit");
+function getEnglishVoice() {
+  if (!synth) return null;
+  const voices = synth.getVoices();
+  if (!voices || !voices.length) return null;
+  return (
+    voices.find(v => v.lang.toLowerCase().includes("en-in")) ||
+    voices.find(v => v.lang.toLowerCase().includes("en-us")) ||
+    voices.find(v => v.lang.toLowerCase().includes("en-gb")) ||
+    voices[0]
+  );
+}
 
-  // Init voices inside user gesture (important for mobile)
-  loadVoicesOnce();
-
-  setTimeout(() => {
-    intro.remove();
-    document.getElementById("mainApp").classList.add("visible");
-  }, 650);
-};
-
-/* THEME TOGGLE */
+/* ===== THEME ===== */
 const themeToggle = document.getElementById("themeToggle");
 let theme = localStorage.getItem("theme") || "dark";
 applyTheme();
@@ -478,14 +465,13 @@ function applyTheme(){
     themeToggle.textContent = "🌙";
   }
 }
-
 themeToggle.onclick = () => {
   theme = theme === "dark" ? "light" : "dark";
   localStorage.setItem("theme", theme);
   applyTheme();
 };
 
-/* CITY SEARCH */
+/* ===== CITY SEARCH ===== */
 let citiesFlat = [];
 (async () => {
   try {
@@ -541,14 +527,13 @@ cityInput.addEventListener("input", () => {
   });
   citySug.style.display="block";
 });
-
 document.addEventListener("mousedown",e=>{
   if(!citySug.contains(e.target) && e.target!==cityInput){
     citySug.style.display="none";
   }
 });
 
-/* ASTRO HELPERS */
+/* ===== ASTRO HELPERS ===== */
 function getZodiac(m,d){
   if((m===2&&d>=21)||(m===3&&d<=19))return"Aries";
   if((m===3&&d>=20)||(m===4&&d<=20))return"Taurus";
@@ -593,13 +578,46 @@ function cleanText(txt){
     .replace(/\s{2,}/g," ");
 }
 
-/* REPORT GENERATION */
-let descriptionFull="", descriptionEN="", descriptionHI="";
-const resultCard=document.getElementById("result-card");
+/* H3 STYLE HINGLISH (ULTRA CLEAN) */
+function hindiToHinglish(str) {
+  if (!str) return "";
 
-document.getElementById("astro-form").onsubmit=async(e)=>{
+  const map = {
+    "अ": "a", "आ": "a", "इ": "i", "ई": "i",
+    "उ": "u", "ऊ": "u", "ए": "e", "ऐ": "e",
+    "ओ": "o", "औ": "o",
+    "क": "k", "ख": "kh", "ग": "g", "घ": "gh",
+    "च": "ch", "छ": "chh", "ज": "j", "झ": "jh",
+    "ट": "t", "ठ": "th", "ड": "d", "ढ": "dh",
+    "त": "t", "थ": "th", "द": "d", "ध": "dh",
+    "न": "n", "प": "p", "फ": "ph", "ब": "b", "भ": "bh",
+    "म": "m", "य": "y", "र": "r", "ल": "l",
+    "व": "v", "श": "sh", "ष": "sh", "स": "s", "ह": "h",
+    "ृ": "ri", "ं": "n", "ः": "h", "ँ": "n"
+  };
+
+  let raw = "";
+  for (let ch of str) {
+    raw += map[ch] || ch;
+  }
+
+  let out = raw;
+
+  // Light smoothing for very common Hindi words (R3 style)
+  out = out.replace(/\binsaan\b/gi, "insan");
+  out = out.replace(/\bparinaam\b/gi, "parinam");
+  out = out.replace(/\bjeevan\b/gi, "jeevan");
+  out = out.replace(/\bsoch\b/gi, "soch");
+  out = out.replace(/\bvyakti\b/gi, "vyakti");
+
+  out = out.replace(/\s{2,}/g," ").trim();
+  return out;
+}
+
+/* ===== FORM SUBMIT ===== */
+document.getElementById("astro-form").onsubmit = async (e) => {
   e.preventDefault();
-  resultCard.innerHTML=`<div class="loader"></div>`;
+  resultCard.innerHTML = `<div class="loader"></div>`;
 
   const name=document.getElementById("name").value;
   const gender=document.getElementById("gender").value;
@@ -616,87 +634,42 @@ document.getElementById("astro-form").onsubmit=async(e)=>{
 
   const payload={name,gender,dob,tob,city,state,country,notes,zodiac,lifePath};
 
-  const res=await fetch("/api/astro",{
+  const res = await fetch("/api/astro",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify(payload)
   });
 
-  const data=await res.json();
-  let text=data.description||"";
-  text=cleanText(text);
-  descriptionFull=text;
+  const data = await res.json();
+  let text = data.description || "";
+  text = cleanText(text);
+  descriptionFull = text;
 
-  const parts=splitDescription(text);
-  descriptionEN=cleanText(parts.en);
-  descriptionHI=cleanText(parts.hi);
+  const parts = splitDescription(text);
+  descriptionEN = cleanText(parts.en);
+  descriptionHI = cleanText(parts.hi);
+  descriptionHing = hindiToHinglish(descriptionHI || descriptionFull);
 
-  // default English
-  document.getElementById("report-lang").value="en";
-  resultCard.textContent=descriptionEN||descriptionFull;
+  document.getElementById("report-lang").value = "en";
+  resultCard.textContent = descriptionEN || descriptionFull;
 
-  document.getElementById("whatsapp-button").href=
-    "https://wa.me/917974517991?text="+encodeURIComponent(text);
+  document.getElementById("whatsapp-button").href =
+    "https://wa.me/917974517991?text=" + encodeURIComponent(
+      descriptionEN || descriptionHing || descriptionFull
+    );
 };
 
-/* HINGLISH CONVERSION */
-function hindiToHinglish(str) {
-  if (!str) return "";
-
-  const map = {
-    "अ": "a", "आ": "aa", "इ": "i", "ई": "ee", "उ": "u", "ऊ": "oo",
-    "ए": "e", "ऐ": "ai", "ओ": "o", "औ": "au",
-
-    "क": "k", "ख": "kh", "ग": "g", "घ": "gh",
-    "च": "ch", "छ": "chh", "ज": "j", "झ": "jh",
-    "ट": "t", "ठ": "th", "ड": "d", "ढ": "dh",
-    "त": "t", "थ": "th", "द": "d", "ध": "dh",
-    "न": "n", "प": "p", "फ": "ph", "ब": "b", "भ": "bh",
-    "म": "m", "य": "y", "र": "r", "ल": "l",
-    "व": "v", "श": "sh", "ष": "sh", "स": "s", "ह": "h",
-
-    "ृ": "ri",
-    "ं": "n",
-    "ः": "h",
-    "ँ": "n"
-  };
-
-  let raw = "";
-  for (let ch of str) {
-    raw += map[ch] || ch;
-  }
-
-  let out = raw;
-  out = out.replace(/\s{2,}/g, " ").trim();
-  return out;
-}
-
-/* LANGUAGE SWITCH (English / Hinglish) */
-document.getElementById("report-lang").onchange=()=>{
-  const lang=document.getElementById("report-lang").value;
-  if(lang==="en"){
-    resultCard.textContent=descriptionEN||descriptionFull;
+/* ===== LANGUAGE SWITCH (ENGLISH / HINGLISH) ===== */
+document.getElementById("report-lang").onchange = () => {
+  const lang = document.getElementById("report-lang").value;
+  if(lang === "en"){
+    resultCard.textContent = descriptionEN || descriptionFull;
   } else {
-    // Hinglish display from Hindi part
-    const base = descriptionHI || descriptionFull;
-    resultCard.textContent = hindiToHinglish(base);
+    resultCard.textContent = descriptionHing || hindiToHinglish(descriptionFull);
   }
 };
 
-/* ===== NATURAL HINGLISH / ENGLISH TTS ===== */
-function getEnglishVoice() {
-  if (!synth) return null;
-  const voices = synth.getVoices();
-  if (!voices || !voices.length) return null;
-
-  return (
-    voices.find(v => v.lang.toLowerCase().includes("en-in")) ||
-    voices.find(v => v.lang.toLowerCase().includes("en-us")) ||
-    voices.find(v => v.lang.toLowerCase().includes("en-gb")) ||
-    voices[0]
-  );
-}
-
+/* ===== TTS (ENGLISH + HINGLISH) ===== */
 function speakNow() {
   if (!synth) {
     alert("Voice not supported.");
@@ -704,40 +677,38 @@ function speakNow() {
   }
   if (!voicesLoaded) loadVoicesOnce();
 
-  const lang=document.getElementById("report-lang").value;
+  const lang = document.getElementById("report-lang").value;
 
-  let text="";
-  if(lang==="en"){
+  let text = "";
+  if (lang === "en") {
     text = descriptionEN || descriptionFull;
   } else {
-    const base = descriptionHI || descriptionFull;
-    text = hindiToHinglish(base);
+    text = descriptionHing || hindiToHinglish(descriptionFull);
   }
 
-  if(!text || !text.trim()){
+  if (!text || !text.trim()) {
     alert("Generate report first.");
     return;
   }
 
-  const englishVoice = getEnglishVoice();
-  if (!englishVoice) {
+  const voice = getEnglishVoice();
+  if (!voice) {
     alert("No English voice found on this device.");
     return;
   }
 
-  if(currentUtter) synth.cancel();
+  if (currentUtter) synth.cancel();
 
-  const utter=new SpeechSynthesisUtterance(text);
-  utter.voice=englishVoice;
-  utter.lang="en-IN";
-  utter.rate=1.0;
-  utter.pitch=1.0;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.voice = voice;
+  utter.lang = "en-IN";
+  utter.rate = 1.0;
+  utter.pitch = 1.0;
 
-  currentUtter=utter;
+  currentUtter = utter;
   synth.speak(utter);
 }
 
-/* BUTTON HANDLERS */
 document.getElementById("voicePlay").onclick = () => {
   if (!synth) {
     alert("Voice not supported.");
@@ -746,50 +717,44 @@ document.getElementById("voicePlay").onclick = () => {
   if (synth.paused && currentUtter) synth.resume();
   else speakNow();
 };
-
 document.getElementById("voicePause").onclick = () => {
   if (synth && synth.speaking) synth.pause();
 };
-
 document.getElementById("voiceStop").onclick = () => {
   if (synth) synth.cancel();
   currentUtter = null;
 };
 
-/* COPY / SHARE */
-document.getElementById("copyReport").onclick=()=>{
-  navigator.clipboard.writeText(descriptionFull||"");
+/* ===== COPY / SHARE ===== */
+document.getElementById("copyReport").onclick = () => {
+  navigator.clipboard.writeText(descriptionFull || "");
   alert("Copied!");
 };
 
-document.getElementById("shareReport").onclick=()=>{
-  if(navigator.share){
-    navigator.share({title:"AstroEra Report",text:descriptionFull});
-  }else{
-    navigator.clipboard.writeText(descriptionFull||"");
+document.getElementById("shareReport").onclick = () => {
+  if (navigator.share) {
+    navigator.share({ title:"AstroEra Report", text:descriptionFull });
+  } else {
+    navigator.clipboard.writeText(descriptionFull || "");
     alert("Copied!");
   }
 };
 
-/* REAL PDF (jsPDF) WITH SAFE FALLBACK */
-document.getElementById("downloadPDF").onclick=()=>{
+/* ===== PDF (jsPDF) WITH FALLBACK ===== */
+document.getElementById("downloadPDF").onclick = () => {
   const lang=document.getElementById("report-lang").value;
   let text="";
   if(lang==="en"){
     text = descriptionEN || descriptionFull;
   } else {
-    const base = descriptionHI || descriptionFull;
-    text = hindiToHinglish(base);
+    text = descriptionHing || hindiToHinglish(descriptionFull);
   }
 
   if(!text){alert("Generate report first.");return;}
 
   let jsPDFConstructor = null;
-  if (window.jspdf && window.jspdf.jsPDF) {
-    jsPDFConstructor = window.jspdf.jsPDF;
-  } else if (window.jsPDF) {
-    jsPDFConstructor = window.jsPDF;
-  }
+  if (window.jspdf && window.jspdf.jsPDF) jsPDFConstructor = window.jspdf.jsPDF;
+  else if (window.jsPDF) jsPDFConstructor = window.jsPDF;
 
   if (!jsPDFConstructor) {
     const w = window.open("", "_blank");
@@ -799,11 +764,11 @@ document.getElementById("downloadPDF").onclick=()=>{
     return;
   }
 
-  const doc=new jsPDFConstructor({unit:"pt",format:"a4"});
-  const pageWidth=doc.internal.pageSize.getWidth();
-  const pageHeight=doc.internal.pageSize.getHeight();
-  const marginX=40;
-  let y=60;
+  const doc = new jsPDFConstructor({unit:"pt",format:"a4"});
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const marginX = 40;
+  let y = 60;
 
   doc.setFont("Helvetica","bold");
   doc.setFontSize(22);
