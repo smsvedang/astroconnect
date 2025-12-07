@@ -1,10 +1,23 @@
-// api/astro.js  (ESM – because "type": "module" in package.json)
+// api/astro.js
+// Vercel / Next.js style serverless function (ESM)
+// Uses @google/generative-ai
+
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const apiKey = process.env.GEMINI_API_KEY;
+if (!apiKey) {
+  console.error("GEMINI_API_KEY is missing in environment.");
+}
 
-// Prompt builder
-function buildPrompt(data) {
+const genAI = new GoogleGenerativeAI(apiKey);
+
+// Recommended fast + good model
+// If 2.5 not available on your key, swap to "gemini-2.0-flash".
+const model = genAI.getGenerativeModel({
+  model: "gemini-2.5-flash",
+});
+
+function buildPrompt(payload) {
   const {
     name,
     gender,
@@ -12,88 +25,119 @@ function buildPrompt(data) {
     tob,
     city,
     state,
-    pincode,
     country,
     notes,
     zodiac,
-    lifePath
-  } = data;
+    lifePath,
+  } = payload;
 
   return `
-You are an experienced Vedic astrologer and counsellor.
-User has filled birth details on a website. 
-Give a clear, structured reading in a friendly tone.
+You are an experienced Vedic astrologer. You speak in a warm, practical and grounded tone.
 
-IMPORTANT:
-- This is guidance only, NOT medical, financial, or legal advice.
-- Be gentle, practical, and avoid fear-based predictions.
-- Do NOT mention anything about being a model or AI, just speak like a human astrologer.
+User birth details:
+- Name: ${name || "Unknown"}
+- Gender: ${gender || "Unknown"}
+- Date of Birth: ${dob || "Unknown"}
+- Time of Birth: ${tob || "Unknown"}
+- Birth Place: ${city || "Unknown"}, ${state || ""}, ${country || ""}
+- Zodiac (Sun sign): ${zodiac || "Unknown"}
+- Life Path Number (Numerology): ${lifePath || "Unknown"}
+- Main concern / question: ${notes || "Not specified"}
 
-User birth data:
-- Name: ${name}
-- Gender: ${gender}
-- Date of Birth (YYYY-MM-DD): ${dob}
-- Time of Birth (HH:MM, 24h): ${tob}
-- Birth Place: ${city}, ${state}, ${country} (${pincode})
-- Sun sign (approx, from DOB): ${zodiac}
-- Simple life path number: ${lifePath}
-- User concern / question: ${notes || "Not specifically mentioned"}
+IMPORTANT INSTRUCTIONS (MUST FOLLOW):
 
-Write the answer in 2 languages:
+1) Structure your answer in exactly TWO clear sections:
+   [ENGLISH]
+   (detailed English explanation in paragraphs)
+
+   [हिन्दी]
+   (same explanation translated to Hindi in paragraphs)
+
+2) DO NOT:
+   - use bullet points
+   - use numbered lists
+   - use asterisks (*), underscores (_), or markdown headings
+   - repeat English sentences inside the Hindi section
+
+3) CONTENT:
+   In both languages, cover:
+   - Basic personality and nature based on zodiac and numerology
+   - Emotional pattern and thinking style
+   - Education and career possibilities
+   - Money and stability pattern
+   - Relationships and family life (general tone)
+   - Health tendencies (very general, NO medical advice, just lifestyle guidance)
+   - 1–2 gentle suggestions or remedies (like mindset, habits, gratitude, helping others)
+
+4) TONE:
+   - Be kind and practical
+   - Do not scare the user
+   - No absolute predictions like “this will surely happen”
+   - Use words like “tendencies”, “possibilities”, “can improve by”, etc.
+
+Now generate the answer in the format:
 
 [ENGLISH]
-1. Overview of personality (based on sign and general astrological style)
-2. Strengths & talents
-3. Challenges or patterns to watch
-4. Career/Studies indication (general – no fake guarantees)
-5. Relationships & emotional pattern
-6. Practical guidance & remedies (very simple, like routine, mindset, etc.)
+...your English paragraphs...
 
 [हिन्दी]
-1. व्यक्तित्व की झलक
-2. आपकी खास ताकतें
-3. चुनौतियाँ / पैटर्न
-4. करियर / पढ़ाई के संकेत (सामान्य रूप से)
-5. रिश्ते और भावनाएँ
-6. सरल प्रैक्टिकल सुझाव और सावधानियाँ
-
-Avoid very specific dated predictions (like “on 12 March 2030…”).
-Keep it supportive, realistic and 100% non-fearful.
+...your Hindi paragraphs...
 `;
 }
 
-// Vercel API Route – default export
+// Helper: safely get JSON body on Vercel/Next/Node
+async function getBody(req) {
+  if (req.body) {
+    // Next.js API routes usually parse JSON already
+    return typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  }
+  // Fallback: raw stream (for plain Vercel functions)
+  const chunks = [];
+  for await (const chunk of req) chunks.push(chunk);
+  const raw = Buffer.concat(chunks).toString("utf8") || "{}";
+  return JSON.parse(raw);
+}
+
+// MAIN HANDLER
 export default async function handler(req, res) {
+  // Basic CORS support for local testing
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
+
+  if (req.method !== "POST") {
+    res.status(405).json({ error: "Method not allowed" });
+    return;
+  }
+
+  if (!apiKey) {
+    res.status(500).json({ error: "GEMINI_API_KEY missing on server" });
+    return;
+  }
+
   try {
-    if (req.method !== "POST") {
-      res.setHeader("Allow", ["POST"]);
-      return res.status(405).json({ error: "Method not allowed" });
-    }
-
-    if (!GEMINI_API_KEY) {
-      return res.status(500).json({ error: "GEMINI_API_KEY not set on server" });
-    }
-
-    const body = req.body || {};
-
-    if (!body.name || !body.dob || !body.tob || !body.city) {
-      return res.status(400).json({ error: "Missing required fields" });
-    }
-
-    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
+    const body = await getBody(req);
     const prompt = buildPrompt(body);
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    const text = response.text();
+    let text = response.text() || "";
 
-    return res.status(200).json({ description: text });
+    // Clean a bit, just in case
+    text = text.replace(/\*/g, "").replace(/_/g, "").trim();
+
+    res.status(200).json({ description: text });
   } catch (err) {
     console.error("astro API error:", err);
-    return res.status(500).json({
-      error: "Failed to generate description. Please try again later."
+
+    res.status(500).json({
+      error: "Failed to generate description",
+      details: err.message || String(err),
     });
   }
 }

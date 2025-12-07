@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>AstroEra – AI Powered Vedic Astrology | by Vedang Soni</title>
+<title>AstroEra – AI Powered Vedic Astrology </title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="google-site-verification" content="vMQeKXKG1Tik-KT3r47NCOf6LVaDQ8K9FpktamJr3T0" />
 <!-- Google tag (gtag.js) --><!--Analytics-->
@@ -291,7 +291,7 @@ footer {
   border-top:1px solid var(--border);
 }
 
-/* PRINT (kept for future, jsPDF now used) */
+/* PRINT (kept for fallback) */
 @media print {
   body {background:white !important; color:black !important; padding:0;}
   .floating-bar, header, footer, #intro-screen {display:none !important;}
@@ -426,11 +426,11 @@ footer {
   <div class="action-btn" id="downloadPDF"><span>📥</span>PDF</div>
 </div>
 
-<!-- Hidden print container (not used now but kept) -->
+<!-- Hidden print container (for fallback) -->
 <div id="print-container" style="display:none;"></div>
 
-<!-- jsPDF CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/3pIWfQxQ7JxSUSSYIYwPxwlUPXmWgO0H1YtGCFfKijPltP7GXBpFQ8ef9OHn2xl6F+xyPVq0jzQp0hVFU7CwA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- jsPDF CDN (no integrity for reliability) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
 /* ====== GLOBAL VOICE STATE ====== */
@@ -576,7 +576,8 @@ function getLifePath(date){
 }
 
 function splitDescription(text){
-  const enTag="[ENGLISH]", hiTag="[हिन्दी]";
+  const enTag="[ENGLISH]";
+  const hiTag="[हिन्दी]";
   const enIndex=text.indexOf(enTag);
   const hiIndex=text.indexOf(hiTag);
   if(enIndex===-1 && hiIndex===-1) return{en:text.trim(),hi:""};
@@ -646,7 +647,7 @@ document.getElementById("report-lang").onchange=()=>{
   else resultCard.textContent=descriptionHI||descriptionFull;
 };
 
-/* ===== FIXED VOICE READER (MOBILE FRIENDLY) ===== */
+/* ===== FIXED VOICE READER (MOBILE-FRIENDLY) ===== */
 function getVoiceFor(lang) {
   if (!synth) return null;
   const voices = synth.getVoices();
@@ -735,15 +736,30 @@ document.getElementById("shareReport").onclick=()=>{
   }
 };
 
-/* REAL PDF (jsPDF) */
+/* REAL PDF (jsPDF) WITH SAFE FALLBACK */
 document.getElementById("downloadPDF").onclick=()=>{
   const lang=document.getElementById("report-lang").value;
   const text=(lang==="en"?descriptionEN:descriptionHI)||"";
   if(!text){alert("Generate report first.");return;}
-  if(!window.jspdf){alert("PDF library load error.");return;}
 
-  const { jsPDF }=window.jspdf;
-  const doc=new jsPDF({unit:"pt",format:"a4"});
+  // Try to get jsPDF from different globals
+  let jsPDFConstructor = null;
+  if (window.jspdf && window.jspdf.jsPDF) {
+    jsPDFConstructor = window.jspdf.jsPDF;
+  } else if (window.jsPDF) {
+    jsPDFConstructor = window.jsPDF;
+  }
+
+  if (!jsPDFConstructor) {
+    // Fallback: simple print window
+    const w = window.open("", "_blank");
+    w.document.write("<pre>" + text.replace(/</g,"&lt;") + "</pre>");
+    w.document.close();
+    w.print();
+    return;
+  }
+
+  const doc=new jsPDFConstructor({unit:"pt",format:"a4"});
   const pageWidth=doc.internal.pageSize.getWidth();
   const pageHeight=doc.internal.pageSize.getHeight();
   const marginX=40;
