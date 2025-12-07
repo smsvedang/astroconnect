@@ -409,7 +409,6 @@ let voicesLoaded = false;
 
 let descriptionFull = "";
 let descriptionEN = "";
-let descriptionHI = "";
 let descriptionHing = "";
 
 const resultCard = document.getElementById("result-card");
@@ -465,6 +464,7 @@ function applyTheme(){
     themeToggle.textContent = "🌙";
   }
 }
+
 themeToggle.onclick = () => {
   theme = theme === "dark" ? "light" : "dark";
   localStorage.setItem("theme", theme);
@@ -527,6 +527,7 @@ cityInput.addEventListener("input", () => {
   });
   citySug.style.display="block";
 });
+
 document.addEventListener("mousedown",e=>{
   if(!citySug.contains(e.target) && e.target!==cityInput){
     citySug.style.display="none";
@@ -560,14 +561,14 @@ function getLifePath(date){
 
 function splitDescription(text){
   const enTag="[ENGLISH]";
-  const hiTag="[हिन्दी]";
+  const hingTag="[HINGLISH]";
   const enIndex=text.indexOf(enTag);
-  const hiIndex=text.indexOf(hiTag);
-  if(enIndex===-1 && hiIndex===-1) return{en:text.trim(),hi:""};
-  if(hiIndex===-1) return{en:text.replace(enTag,"").trim(),hi:""};
+  const hingIndex=text.indexOf(hingTag);
+  if(enIndex===-1 && hingIndex===-1) return{en:text.trim(),hing:""};
+  if(hingIndex===-1) return{en:text.replace(enTag,"").trim(),hing:""};
   return{
-    en:text.slice(enIndex+enTag.length,hiIndex).trim(),
-    hi:text.slice(hiIndex+hiTag.length).trim()
+    en:text.slice(enIndex+enTag.length,hingIndex).trim(),
+    hing:text.slice(hingIndex+hingTag.length).trim()
   };
 }
 
@@ -576,42 +577,6 @@ function cleanText(txt){
     .replace(/\*/g,"")
     .replace(/_/g,"")
     .replace(/\s{2,}/g," ");
-}
-
-/* H3 STYLE HINGLISH (ULTRA CLEAN) */
-function hindiToHinglish(str) {
-  if (!str) return "";
-
-  const map = {
-    "अ": "a", "आ": "a", "इ": "i", "ई": "i",
-    "उ": "u", "ऊ": "u", "ए": "e", "ऐ": "e",
-    "ओ": "o", "औ": "o",
-    "क": "k", "ख": "kh", "ग": "g", "घ": "gh",
-    "च": "ch", "छ": "chh", "ज": "j", "झ": "jh",
-    "ट": "t", "ठ": "th", "ड": "d", "ढ": "dh",
-    "त": "t", "थ": "th", "द": "d", "ध": "dh",
-    "न": "n", "प": "p", "फ": "ph", "ब": "b", "भ": "bh",
-    "म": "m", "य": "y", "र": "r", "ल": "l",
-    "व": "v", "श": "sh", "ष": "sh", "स": "s", "ह": "h",
-    "ृ": "ri", "ं": "n", "ः": "h", "ँ": "n"
-  };
-
-  let raw = "";
-  for (let ch of str) {
-    raw += map[ch] || ch;
-  }
-
-  let out = raw;
-
-  // Light smoothing for very common Hindi words (R3 style)
-  out = out.replace(/\binsaan\b/gi, "insan");
-  out = out.replace(/\bparinaam\b/gi, "parinam");
-  out = out.replace(/\bjeevan\b/gi, "jeevan");
-  out = out.replace(/\bsoch\b/gi, "soch");
-  out = out.replace(/\bvyakti\b/gi, "vyakti");
-
-  out = out.replace(/\s{2,}/g," ").trim();
-  return out;
 }
 
 /* ===== FORM SUBMIT ===== */
@@ -647,8 +612,7 @@ document.getElementById("astro-form").onsubmit = async (e) => {
 
   const parts = splitDescription(text);
   descriptionEN = cleanText(parts.en);
-  descriptionHI = cleanText(parts.hi);
-  descriptionHing = hindiToHinglish(descriptionHI || descriptionFull);
+  descriptionHing = cleanText(parts.hing);
 
   document.getElementById("report-lang").value = "en";
   resultCard.textContent = descriptionEN || descriptionFull;
@@ -659,17 +623,17 @@ document.getElementById("astro-form").onsubmit = async (e) => {
     );
 };
 
-/* ===== LANGUAGE SWITCH (ENGLISH / HINGLISH) ===== */
+/* ===== LANGUAGE SWITCH (English / Hinglish) ===== */
 document.getElementById("report-lang").onchange = () => {
   const lang = document.getElementById("report-lang").value;
   if(lang === "en"){
     resultCard.textContent = descriptionEN || descriptionFull;
   } else {
-    resultCard.textContent = descriptionHing || hindiToHinglish(descriptionFull);
+    resultCard.textContent = descriptionHing || descriptionFull;
   }
 };
 
-/* ===== TTS (ENGLISH + HINGLISH) ===== */
+/* ===== TTS (English + Hinglish) ===== */
 function speakNow() {
   if (!synth) {
     alert("Voice not supported.");
@@ -683,7 +647,7 @@ function speakNow() {
   if (lang === "en") {
     text = descriptionEN || descriptionFull;
   } else {
-    text = descriptionHing || hindiToHinglish(descriptionFull);
+    text = descriptionHing || descriptionFull;
   }
 
   if (!text || !text.trim()) {
@@ -740,14 +704,14 @@ document.getElementById("shareReport").onclick = () => {
   }
 };
 
-/* ===== PDF (jsPDF) WITH FALLBACK ===== */
+/* ===== PDF (jsPDF) ===== */
 document.getElementById("downloadPDF").onclick = () => {
   const lang=document.getElementById("report-lang").value;
   let text="";
   if(lang==="en"){
     text = descriptionEN || descriptionFull;
   } else {
-    text = descriptionHing || hindiToHinglish(descriptionFull);
+    text = descriptionHing || descriptionFull;
   }
 
   if(!text){alert("Generate report first.");return;}
@@ -804,5 +768,6 @@ document.getElementById("downloadPDF").onclick = () => {
   doc.save(`astroera_report_${lang}.pdf`);
 };
 </script>
+
 </body>
 </html>

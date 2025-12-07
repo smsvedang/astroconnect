@@ -1,5 +1,5 @@
 // api/astro.js
-// Vercel / Next.js style serverless function (ESM)
+// Vercel / Next.js style serverless (ESM)
 // Uses @google/generative-ai
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -11,8 +11,7 @@ if (!apiKey) {
 
 const genAI = new GoogleGenerativeAI(apiKey);
 
-// Recommended fast + good model
-// If 2.5 not available on your key, swap to "gemini-2.0-flash".
+// Use latest fast model; if this fails on your key, change to "gemini-2.0-flash"
 const model = genAI.getGenerativeModel({
   model: "gemini-2.5-flash",
 });
@@ -44,63 +43,59 @@ User birth details:
 - Life Path Number (Numerology): ${lifePath || "Unknown"}
 - Main concern / question: ${notes || "Not specified"}
 
-IMPORTANT INSTRUCTIONS (MUST FOLLOW):
+VERY IMPORTANT: OUTPUT FORMAT (MUST FOLLOW EXACTLY)
 
-1) Structure your answer in exactly TWO clear sections:
-   [ENGLISH]
-   (detailed English explanation in paragraphs)
+1) Your answer MUST have exactly two sections in this order:
 
-   [हिन्दी]
-   (same explanation translated to Hindi in paragraphs)
+[ENGLISH]
+(detailed explanation in English, using English alphabet)
 
-2) DO NOT:
-   - use bullet points
-   - use numbered lists
-   - use asterisks (*), underscores (_), or markdown headings
-   - repeat English sentences inside the Hindi section
+[HINGLISH]
+(same explanation in Hindi meaning, BUT written only in English alphabet / Roman Hindi.
+Do NOT use any Hindi/Devanagari characters like क, म, ि, ा, etc. 
+Example style: "Aapka swabhav shant hai, aur aap mehnati insan ho.")
 
-3) CONTENT:
-   In both languages, cover:
-   - Basic personality and nature based on zodiac and numerology
-   - Emotional pattern and thinking style
-   - Education and career possibilities
-   - Money and stability pattern
-   - Relationships and family life (general tone)
-   - Health tendencies (very general, NO medical advice, just lifestyle guidance)
-   - 1–2 gentle suggestions or remedies (like mindset, habits, gratitude, helping others)
+2) In BOTH sections (English and Hinglish), cover:
+- Personality and nature
+- Emotional pattern and thinking
+- Education and career possibilities
+- Money and stability tendencies
+- Relationships and family tone
+- General health tendencies (no medical advice, just lifestyle)
+- 1–2 gentle suggestions / mindset / gratitude / habits
+
+3) DO NOT:
+- use bullet points or numbered lists
+- use asterisks (*), underscores (_) or markdown headings
+- mix English and Hinglish in the same section
+- put Hindi/Devanagari letters in the [HINGLISH] section (it MUST be pure Roman Hindi)
 
 4) TONE:
-   - Be kind and practical
-   - Do not scare the user
-   - No absolute predictions like “this will surely happen”
-   - Use words like “tendencies”, “possibilities”, “can improve by”, etc.
+- kind, practical, non-scary
+- talk in possibilities and tendencies, not fixed destiny
 
 Now generate the answer in the format:
 
 [ENGLISH]
 ...your English paragraphs...
 
-[हिन्दी]
-...your Hindi paragraphs...
+[HINGLISH]
+...your Hinglish paragraphs, Hindi meaning written in English letters only...
 `;
 }
 
-// Helper: safely get JSON body on Vercel/Next/Node
+// Helper: read JSON body safely
 async function getBody(req) {
   if (req.body) {
-    // Next.js API routes usually parse JSON already
     return typeof req.body === "string" ? JSON.parse(req.body) : req.body;
   }
-  // Fallback: raw stream (for plain Vercel functions)
   const chunks = [];
   for await (const chunk of req) chunks.push(chunk);
   const raw = Buffer.concat(chunks).toString("utf8") || "{}";
   return JSON.parse(raw);
 }
 
-// MAIN HANDLER
 export default async function handler(req, res) {
-  // Basic CORS support for local testing
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -128,13 +123,11 @@ export default async function handler(req, res) {
     const response = await result.response;
     let text = response.text() || "";
 
-    // Clean a bit, just in case
     text = text.replace(/\*/g, "").replace(/_/g, "").trim();
 
     res.status(200).json({ description: text });
   } catch (err) {
     console.error("astro API error:", err);
-
     res.status(500).json({
       error: "Failed to generate description",
       details: err.message || String(err),
