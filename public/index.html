@@ -486,8 +486,8 @@ document.getElementById("report-lang").onchange=()=>{
   const lang=document.getElementById("report-lang").value;
 
   if(lang==="both") resultCard.textContent=descriptionFull;
-  if(lang==="en") resultCard.textContent=descriptionEN || "No English section.";
-  if(lang==="hi") resultCard.textContent=descriptionHI || "हिंदी उपलब्ध नहीं।";
+  if(lang==="en") resultCard.textContent=descriptionEN || "Please fill details to generate report and tap Generate Report.";
+  if(lang==="hi") resultCard.textContent=descriptionHI || "रिपोर्ट बनाने के लिए कृपया डिटेल्स भरें और 'Generate Report' पर टैप करें।";
 };
 
 /* ================================
