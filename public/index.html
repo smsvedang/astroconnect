@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>AstroEra – AI Powered Vedic Astrology | by Vedang Soni</title>
+<title>AstroEra – AI Powered Vedic Astrology</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <meta name="google-site-verification" content="vMQeKXKG1Tik-KT3r47NCOf6LVaDQ8K9FpktamJr3T0" />
 <!-- Google tag (gtag.js) --><!--Analytics-->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EYKZW2JHVR"></script>
@@ -19,7 +20,7 @@
 <meta name="description" content="AstroEra – AI-powered Vedic Astrology insights. Generate your Kundli-based personality report instantly.">
 <meta name="keywords" content="AstroEra, kundli, astrology, vedic, horoscope, AI kundli, birth chart, astro report">
 <meta property="og:title" content="AstroEra – AI Powered Vedic Astrology" />
-<meta property="og:description" content="Generate AI-powered English & Hindi Kundli reports instantly." />
+<meta property="og:description" content="Generate AI-powered English & Hinglish Kundli reports instantly." />
 <meta property="og:type" content="website" />
 <meta name="theme-color" content="#4f46e5" />
 
@@ -395,7 +396,7 @@ footer {
     <div style="margin:10px 0;">
       <select id="report-lang">
         <option value="en">English</option>
-        <option value="hi">Hindi</option>
+        <option value="hing">Hinglish</option>
       </select>
     </div>
 
@@ -630,6 +631,7 @@ document.getElementById("astro-form").onsubmit=async(e)=>{
   descriptionEN=cleanText(parts.en);
   descriptionHI=cleanText(parts.hi);
 
+  // default English
   document.getElementById("report-lang").value="en";
   resultCard.textContent=descriptionEN||descriptionFull;
 
@@ -637,30 +639,7 @@ document.getElementById("astro-form").onsubmit=async(e)=>{
     "https://wa.me/917974517991?text="+encodeURIComponent(text);
 };
 
-/* LANGUAGE SWITCH */
-document.getElementById("report-lang").onchange=()=>{
-  const lang=document.getElementById("report-lang").value;
-  if(lang==="en") resultCard.textContent=descriptionEN||descriptionFull;
-  else resultCard.textContent=descriptionHI||descriptionFull;
-};
-
-/* ===== NATURAL HINGLISH TTS ENGINE ===== */
-
-/* Get a good English voice */
-function getEnglishVoice() {
-  if (!synth) return null;
-  const voices = synth.getVoices();
-  if (!voices || !voices.length) return null;
-
-  return (
-    voices.find(v => v.lang.toLowerCase().includes("en-in")) ||
-    voices.find(v => v.lang.toLowerCase().includes("en-us")) ||
-    voices.find(v => v.lang.toLowerCase().includes("en-gb")) ||
-    voices[0]
-  );
-}
-
-/* Basic Hindi (Devanagari) → Hinglish transliteration + common word tuning */
+/* HINGLISH CONVERSION */
 function hindiToHinglish(str) {
   if (!str) return "";
 
@@ -684,47 +663,58 @@ function hindiToHinglish(str) {
 
   let raw = "";
   for (let ch of str) {
-    raw += map[ch] || ch; // non-Hindi remain same (numbers, punctuation, English words)
+    raw += map[ch] || ch;
   }
 
-  // Common word-level polishing
   let out = raw;
-
-  // Some very common patterns
-  out = out.replace(/ aap /gi, " aap ");
-  out = out.replace(/ hai\./gi, " hai.");
-  out = out.replace(/ hain\./gi, " hain.");
-  out = out.replace(/ rah sakta hai/gi, " reh sakta hai");
-  out = out.replace(/ rah sakti hai/gi, " reh sakti hai");
-  out = out.replace(/ ke liye/gi, " ke liye");
-  out = out.replace(/ aapko /gi, " aapko ");
-  out = out.replace(/ aapki /gi, " aapki ");
-
-  // Cleanup extra spaces
   out = out.replace(/\s{2,}/g, " ").trim();
   return out;
 }
 
-/* Speak Function (English + Hinglish) */
+/* LANGUAGE SWITCH (English / Hinglish) */
+document.getElementById("report-lang").onchange=()=>{
+  const lang=document.getElementById("report-lang").value;
+  if(lang==="en"){
+    resultCard.textContent=descriptionEN||descriptionFull;
+  } else {
+    // Hinglish display from Hindi part
+    const base = descriptionHI || descriptionFull;
+    resultCard.textContent = hindiToHinglish(base);
+  }
+};
+
+/* ===== NATURAL HINGLISH / ENGLISH TTS ===== */
+function getEnglishVoice() {
+  if (!synth) return null;
+  const voices = synth.getVoices();
+  if (!voices || !voices.length) return null;
+
+  return (
+    voices.find(v => v.lang.toLowerCase().includes("en-in")) ||
+    voices.find(v => v.lang.toLowerCase().includes("en-us")) ||
+    voices.find(v => v.lang.toLowerCase().includes("en-gb")) ||
+    voices[0]
+  );
+}
+
 function speakNow() {
   if (!synth) {
     alert("Voice not supported.");
     return;
   }
-
   if (!voicesLoaded) loadVoicesOnce();
 
-  const lang = document.getElementById("report-lang").value;
+  const lang=document.getElementById("report-lang").value;
 
-  let text = "";
-  if (lang === "en") {
+  let text="";
+  if(lang==="en"){
     text = descriptionEN || descriptionFull;
   } else {
-    // Hindi display but Hinglish voice
-    text = hindiToHinglish(descriptionHI || descriptionFull);
+    const base = descriptionHI || descriptionFull;
+    text = hindiToHinglish(base);
   }
 
-  if (!text || !text.trim()) {
+  if(!text || !text.trim()){
     alert("Generate report first.");
     return;
   }
@@ -735,15 +725,15 @@ function speakNow() {
     return;
   }
 
-  if (currentUtter) synth.cancel();
+  if(currentUtter) synth.cancel();
 
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.voice = englishVoice;
-  utter.lang = "en-IN";
-  utter.rate = 1.0;
-  utter.pitch = 1.0;
+  const utter=new SpeechSynthesisUtterance(text);
+  utter.voice=englishVoice;
+  utter.lang="en-IN";
+  utter.rate=1.0;
+  utter.pitch=1.0;
 
-  currentUtter = utter;
+  currentUtter=utter;
   synth.speak(utter);
 }
 
@@ -784,10 +774,16 @@ document.getElementById("shareReport").onclick=()=>{
 /* REAL PDF (jsPDF) WITH SAFE FALLBACK */
 document.getElementById("downloadPDF").onclick=()=>{
   const lang=document.getElementById("report-lang").value;
-  const text=(lang==="en"?descriptionEN:descriptionHI)||"";
+  let text="";
+  if(lang==="en"){
+    text = descriptionEN || descriptionFull;
+  } else {
+    const base = descriptionHI || descriptionFull;
+    text = hindiToHinglish(base);
+  }
+
   if(!text){alert("Generate report first.");return;}
 
-  // Try to get jsPDF from different globals
   let jsPDFConstructor = null;
   if (window.jspdf && window.jspdf.jsPDF) {
     jsPDFConstructor = window.jspdf.jsPDF;
@@ -796,7 +792,6 @@ document.getElementById("downloadPDF").onclick=()=>{
   }
 
   if (!jsPDFConstructor) {
-    // Fallback: simple print window
     const w = window.open("", "_blank");
     w.document.write("<pre>" + text.replace(/</g,"&lt;") + "</pre>");
     w.document.close();
@@ -810,7 +805,6 @@ document.getElementById("downloadPDF").onclick=()=>{
   const marginX=40;
   let y=60;
 
-  // Header
   doc.setFont("Helvetica","bold");
   doc.setFontSize(22);
   doc.text("ASTROERA REPORT", marginX, y);
@@ -824,7 +818,6 @@ document.getElementById("downloadPDF").onclick=()=>{
   doc.line(marginX, y, pageWidth-marginX, y);
   y+=24;
 
-  // Body text with wrapping and page break
   doc.setFontSize(12);
   const maxWidth=pageWidth-marginX*2;
   const lines=doc.splitTextToSize(text, maxWidth);
@@ -839,7 +832,6 @@ document.getElementById("downloadPDF").onclick=()=>{
     y+=lineHeight;
   });
 
-  // Footer last page
   const footerY=pageHeight-40;
   doc.setFontSize(9);
   doc.text("© 2025 AstroEra by Vedang Soni — All Rights Reserved.", marginX, footerY);
