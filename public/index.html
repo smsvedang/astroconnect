@@ -71,6 +71,17 @@ body.light {
   font-family: "Inter", sans-serif;
 }
 
+#footer-copy {
+  animation: footerGlow 4s ease-in-out infinite;
+}
+
+@keyframes footerGlow {
+  0% { opacity:0.45; }
+  50% { opacity:0.8; }
+  100% { opacity:0.45; }
+}
+
+
 body {
   background: var(--bg);
   color: var(--fg);
@@ -757,6 +768,18 @@ document.getElementById("downloadPDF").onclick = () => {
 };
 
 </script>
+<!-- COPYRIGHT FOOTER -->
+<div id="footer-copy"
+     style="
+        text-align:center;
+        font-size:12px;
+        opacity:0.55;
+        margin-top:40px;
+        padding:30px 0 90px;
+        color:var(--fg);
+     ">
+  © 2025 <strong>AstroEra</strong> by <strong>Vedang Soni</strong>. All Rights Reserved.
+</div>
 
 </body>
 </html>
