@@ -21,7 +21,7 @@
   --grad1: #4f46e5;
   --grad2: #ec4899;
   --radius: 16px;
-  --blur: 20px;
+  --blur: 18px;
 }
 
 body.light {
@@ -33,10 +33,10 @@ body.light {
 }
 
 /* ===========================================================
-   BASE STYLES
+   BASE + GLASS LAYOUT
    =========================================================== */
 
-* {margin:0; padding:0; box-sizing:border-box; font-family: "Inter", sans-serif;}
+* { margin:0; padding:0; box-sizing:border-box; font-family: "Inter", sans-serif; }
 
 body {
   background: var(--bg);
@@ -48,25 +48,21 @@ body {
   transition: background .3s, color .3s;
 }
 
-/* ===========================================================
-   GLASS APP CONTAINER
-   =========================================================== */
-
 .app {
   width:100%;
   max-width:1200px;
   background: var(--glass);
-  border:1px solid var(--border);
   border-radius: var(--radius);
+  border:1px solid var(--border);
   backdrop-filter: blur(var(--blur));
   overflow:hidden;
-  box-shadow: 0 20px 45px rgba(0,0,0,0.4);
-  animation: fadeIn .5s ease-out;
+  box-shadow:0 20px 45px rgba(0,0,0,0.45);
+  animation: fadeIn .6s ease-out;
 }
 
 @keyframes fadeIn {
-  from {opacity:0; transform: translateY(20px);}
-  to {opacity:1; transform: translateY(0);}
+  from {opacity:0; transform:translateY(20px);}
+  to {opacity:1; transform:translateY(0);}
 }
 
 /* ===========================================================
@@ -75,30 +71,27 @@ body {
 
 header {
   background: linear-gradient(to right, var(--grad1), var(--grad2));
-  padding: 18px 24px;
+  padding:18px 24px;
+  color:white;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  color:#fff;
 }
 
-.brand {
-  display:flex; gap:12px; align-items:center;
-}
+.brand { display:flex; gap:12px; align-items:center; }
 .brand-icon {
   width:42px; height:42px;
   border-radius:50%;
   background:#fbbf24;
+  color:#000;
   display:flex; align-items:center; justify-content:center;
-  font-weight:900; font-size:20px; color:#000;
+  font-weight:900; font-size:20px;
 }
 
-.theme-toggle {
-  font-size:26px; cursor:pointer;
-}
+.theme-toggle { font-size:26px; cursor:pointer; }
 
 /* ===========================================================
-   PANELS
+   LAYOUT PANELS
    =========================================================== */
 
 main { display:flex; flex-wrap:wrap; }
@@ -111,7 +104,7 @@ main { display:flex; flex-wrap:wrap; }
 }
 
 /* ===========================================================
-   FORM INPUTS STYLE
+   FORM UI
    =========================================================== */
 
 form { display:flex; flex-direction:column; gap:16px; }
@@ -123,88 +116,134 @@ input, textarea, select {
   border:1px solid var(--border);
   background: rgba(255,255,255,0.12);
   color: var(--fg);
-  font-size:14px;
   outline:none;
-  backdrop-filter: blur(10px);
-  transition: .2s;
+  transition:.25s;
 }
 
 input:focus, textarea:focus, select:focus {
   border-color: var(--primary);
-  transform: scale(1.02);
-  background: rgba(255,255,255,0.22);
+  transform:scale(1.02);
+  background:rgba(255,255,255,0.22);
 }
 
-/* FIXED SELECT DROPDOWN ISSUE */
-select {
-  background-color: rgba(0,0,0,0.35);
-}
-
-body.light select {
-  background-color: rgba(230,230,230,0.8);
-  color:#111;
-}
-
-select option {
-  background-color: #0f172a;
-  color: #fff;
-}
-
-body.light select option {
-  background-color: #ffffff;
-  color: #111;
-}
-
-/* ===========================================================
-   BUTTON
-   =========================================================== */
+/* FIX SELECT DROPDOWN */
+select { background-color:rgba(0,0,0,0.35); }
+body.light select { background-color:rgba(230,230,230,0.8); color:#111; }
+select option { background:#0f172a; color:white; }
+body.light select option { background:white; color:#111; }
 
 .btn-primary {
   padding:14px;
-  background: linear-gradient(to right, var(--grad1), var(--grad2));
-  border:none;
-  border-radius:999px;
-  color:#fff;
-  cursor:pointer;
-  font-weight:600;
+  background:linear-gradient(to right, var(--grad1), var(--grad2));
+  border:none; border-radius:999px; color:white;
+  font-weight:600; cursor:pointer;
   transition:.25s;
 }
-.btn-primary:hover {transform:scale(1.03);}
+.btn-primary:hover { transform:scale(1.03); }
 
 /* ===========================================================
-   RESULT BOX
+   RESULT CARD
    =========================================================== */
 
 .result-card {
   min-height:260px;
-  background: var(--card);
+  background:var(--card);
   border:1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius:var(--radius);
   padding:16px;
   white-space:pre-wrap;
 }
 
 /* ===========================================================
-   FLOATING MOBILE BAR
+   PLANET ORBIT LOADER
+   =========================================================== */
+
+.loader {
+  width:90px; height:90px;
+  margin:20px auto;
+  position:relative;
+  animation: loaderPulse 2s infinite ease-in-out;
+}
+
+@keyframes loaderPulse {
+  0% { transform:scale(0.95); }
+  50% { transform:scale(1.05); }
+  100% { transform:scale(0.95); }
+}
+
+/* Sun */
+.loader .sun {
+  width:26px; height:26px;
+  background: radial-gradient(circle, #ffd86b, #fbbf24);
+  border-radius:50%;
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 20px #fbbf24aa;
+}
+
+/* Orbits */
+.orbit {
+  position:absolute;
+  border:2px solid rgba(255,255,255,0.18);
+  border-radius:50%;
+  animation: spin 4s linear infinite;
+}
+.orbit1 { width:55px; height:55px; top:50%; left:50%; transform:translate(-50%,-50%); }
+.orbit2 { width:75px; height:75px; top:50%; left:50%; transform:translate(-50%,-50%); animation-duration:6s; }
+.orbit3 { width:95px; height:95px; top:-3px; left:-3px; animation-duration:8s; }
+
+/* Planets */
+.planet {
+  width:10px; height:10px;
+  border-radius:50%;
+  background:var(--grad1);
+  position:absolute; top:50%; left:-5px;
+}
+
+.orbit2 .planet { background:var(--grad2); width:12px; height:12px; }
+.orbit3 .planet { background:#38bdf8; width:8px; height:8px; }
+
+/* Spin Animation */
+@keyframes spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+
+/* ===========================================================
+   CITY DROPDOWN
+   =========================================================== */
+
+#city-suggestions {
+  position:absolute; top:100%; left:0; right:0;
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  max-height:240px; overflow-y:auto;
+  display:none;
+  backdrop-filter:blur(10px);
+}
+
+.city-suggestion-item {
+  padding:10px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+}
+.city-suggestion-item:hover { background:rgba(255,255,255,0.1); }
+
+/* ===========================================================
+   FLOATING ACTION BAR
    =========================================================== */
 
 .floating-bar {
   position:fixed;
   bottom:0; left:0; right:0;
-  background: var(--glass);
+  background:var(--glass);
   border-top:1px solid var(--border);
   backdrop-filter: blur(10px);
+  padding:10px;
   display:flex;
   justify-content:space-around;
-  padding:10px;
-  z-index:100;
+  z-index:200;
 }
 
-.action-btn {
-  text-align:center;
-  color:var(--fg);
-  cursor:pointer;
-}
+.action-btn { text-align:center; color:var(--fg); cursor:pointer; }
 .action-btn span { font-size:22px; display:block; }
 
 </style>
@@ -226,6 +265,7 @@ body.light select option {
 
 <!-- LEFT SIDE -->
 <section class="left">
+
   <h2>Enter Birth Details</h2>
 
   <form id="astro-form">
@@ -255,7 +295,7 @@ body.light select option {
       <input type="time" id="tob" required>
     </div>
 
-    <div>
+    <div style="position:relative;">
       <label>City</label>
       <input id="city" autocomplete="off" required>
       <div id="city-suggestions"></div>
@@ -272,7 +312,7 @@ body.light select option {
     </div>
 
     <div>
-      <label>Specific Concern (optional)</label>
+      <label>Specific Concern</label>
       <textarea id="notes"></textarea>
     </div>
 
@@ -292,10 +332,10 @@ body.light select option {
   </select>
 
   <div id="result-card" class="result-card">
-    Fill your details to generate report…
+    Report will appear here…
   </div>
 
-  <a id="whatsapp-button" class="btn-primary" style="display:inline-block;margin-top:10px;" target="_blank">
+  <a id="whatsapp-button" class="btn-primary" target="_blank" style="margin-top:10px;display:inline-block;">
     💬 Talk to Astrologer
   </a>
 </section>
@@ -303,7 +343,7 @@ body.light select option {
 </main>
 </div>
 
-<!-- FLOATING BAR -->
+<!-- BOTTOM BAR -->
 <div class="floating-bar">
   <a class="action-btn" id="copyReport"><span>📄</span>Copy</a>
   <a class="action-btn" id="shareReport"><span>📤</span>Share</a>
@@ -312,25 +352,23 @@ body.light select option {
 
 <script>
 
-/* ================================
-   THEME SWITCH
-================================ */
+/* ------------------ THEME SWITCH ------------------ */
 const themeToggle=document.getElementById("themeToggle");
 let theme=localStorage.getItem("theme") || "dark";
 applyTheme();
+
 function applyTheme(){
   if(theme==="light"){document.body.classList.add("light"); themeToggle.textContent="☀️";}
   else{document.body.classList.remove("light"); themeToggle.textContent="🌙";}
 }
+
 themeToggle.onclick=()=>{
   theme = theme==="dark" ? "light" : "dark";
-  localStorage.setItem("theme",theme);
+  localStorage.setItem("theme", theme);
   applyTheme();
 };
 
-/* ================================
-   CITY SEARCH (same as before — works)
-================================ */
+/* ------------------ LOAD CITIES ------------------ */
 let citiesFlat=[];
 (async ()=>{
   const res=await fetch("/cities.json");
@@ -344,22 +382,23 @@ let citiesFlat=[];
   }
 })();
 
+/* ------------------ FUZZY MATCH ------------------ */
 function fuzzyMatch(q,t){
-  q=q.toLowerCase();
-  t=t.toLowerCase();
+  q=q.toLowerCase(); t=t.toLowerCase();
   if(t.startsWith(q)) return 3;
   if(t.includes(q)) return 2;
-  if(q.split("").every(c=>t.includes(c))) return 1;
+  if(q.split("").every(ch=>t.includes(ch))) return 1;
   return 0;
 }
 
+/* ------------------ CITY DROPDOWN ------------------ */
 const cityInput=document.getElementById("city");
 const stateInput=document.getElementById("state");
-const suggestions=document.getElementById("city-suggestions");
+const sug=document.getElementById("city-suggestions");
 
-cityInput.addEventListener("input",()=>{
+cityInput.addEventListener("input", ()=>{
   const q=cityInput.value.trim();
-  if(q.length<2){suggestions.style.display="none"; return;}
+  if(q.length<2){sug.style.display="none"; return;}
 
   const matches=citiesFlat
     .map(c=>({...c,score:fuzzyMatch(q,c.city)}))
@@ -367,33 +406,31 @@ cityInput.addEventListener("input",()=>{
     .sort((a,b)=>b.score-a.score)
     .slice(0,20);
 
-  suggestions.innerHTML="";
-  if(!matches.length){suggestions.style.display="none"; return;}
+  sug.innerHTML="";
+  if(!matches.length){sug.style.display="none"; return;}
 
   matches.forEach(c=>{
     const div=document.createElement("div");
-    div.textContent=`${c.city}, ${c.state}`;
     div.className="city-suggestion-item";
+    div.textContent=`${c.city}, ${c.state}`;
     div.onclick=()=>{
       cityInput.value=c.city;
       stateInput.value=c.state;
-      suggestions.style.display="none";
+      sug.style.display="none";
     };
-    suggestions.appendChild(div);
+    sug.appendChild(div);
   });
 
-  suggestions.style.display="block";
+  sug.style.display="block";
 });
 
-document.addEventListener("click",e=>{
-  if(!suggestions.contains(e.target) && e.target !== cityInput){
-    suggestions.style.display="none";
+document.addEventListener("mousedown", e=>{
+  if(!sug.contains(e.target) && e.target!==cityInput){
+    sug.style.display="none";
   }
 });
 
-/* ================================
-   ZODIAC + LIFE PATH
-================================ */
+/* ------------------ ZODIAC ------------------ */
 function getZodiac(m,d){
   if((m===2&&d>=21)||(m===3&&d<=19))return"Aries";
   if((m===3&&d>=20)||(m===4&&d<=20))return"Taurus";
@@ -409,16 +446,14 @@ function getZodiac(m,d){
   return"Pisces";
 }
 
-function lifePath(d){
-  let s=[...(d.getFullYear()+""+(d.getMonth()+1)+d.getDate())]
-    .reduce((a,b)=>a+ +b,0);
-  while(s>9) s=[...(""+s)].reduce((a,b)=>a+ +b,0);
+/* ------------------ Life Path ------------------ */
+function getLifePath(d){
+  let s=[...(d.getFullYear()+""+(d.getMonth()+1)+d.getDate())].reduce((a,b)=>a+ +b,0);
+  while(s>9) s=[...(""+s)].reduce((x,y)=>x+ +y,0);
   return s;
 }
 
-/* ================================
-   SPLIT DESCRIPTION
-================================ */
+/* ------------------ EN/HINDI SPLIT ------------------ */
 function splitDescription(text){
   const enTag="[ENGLISH]";
   const hiTag="[हिन्दी]";
@@ -428,7 +463,7 @@ function splitDescription(text){
 
   if(enIndex===-1 && hiIndex===-1) return {en:text, hi:""};
 
-  if(hiIndex===-1) return {en:text.replace(enTag,""), hi:""};
+  if(hiIndex===-1) return {en:text.replace(enTag,"").trim(), hi:""};
 
   return {
     en:text.slice(enIndex+enTag.length, hiIndex).trim(),
@@ -436,16 +471,21 @@ function splitDescription(text){
   };
 }
 
-/* ================================
-   REPORT GENERATION
-================================ */
+/* ------------------ GENERATE REPORT ------------------ */
 let descriptionFull="", descriptionEN="", descriptionHI="";
-const resultCard=document.getElementById("result-card");
+const result=document.getElementById("result-card");
 
 document.getElementById("astro-form").onsubmit=async(e)=>{
   e.preventDefault();
 
-  resultCard.innerHTML='<div class="loader"></div>';
+  result.innerHTML=`
+    <div class="loader">
+      <div class="sun"></div>
+      <div class="orbit orbit1"><div class="planet"></div></div>
+      <div class="orbit orbit2"><div class="planet"></div></div>
+      <div class="orbit orbit3"><div class="planet"></div></div>
+    </div>
+  `;
 
   const name=document.getElementById("name").value;
   const gender=document.getElementById("gender").value;
@@ -458,9 +498,9 @@ document.getElementById("astro-form").onsubmit=async(e)=>{
 
   const d=new Date(dob);
   const zodiac=getZodiac(d.getMonth(),d.getDate());
-  const lp=lifePath(d);
+  const lifePath=getLifePath(d);
 
-  const payload={name,gender,dob,tob,city,state,country,notes,zodiac,lifePath:lp};
+  const payload={name,gender,dob,tob,city,state,country,notes,zodiac,lifePath};
 
   const res=await fetch("/api/astro",{
     method:"POST",
@@ -476,30 +516,23 @@ document.getElementById("astro-form").onsubmit=async(e)=>{
   descriptionEN=parts.en;
   descriptionHI=parts.hi;
 
-  resultCard.textContent=descriptionFull;
+  result.textContent=text;
 };
 
-/* ================================
-   LANGUAGE SWITCH
-================================ */
+/* ------------------ LANGUAGE SWITCH ------------------ */
 document.getElementById("report-lang").onchange=()=>{
   const lang=document.getElementById("report-lang").value;
-
-  if(lang==="both") resultCard.textContent=descriptionFull;
-  if(lang==="en") resultCard.textContent=descriptionEN || "Please fill details to generate report and tap Generate Report.";
-  if(lang==="hi") resultCard.textContent=descriptionHI || "रिपोर्ट बनाने के लिए कृपया डिटेल्स भरें और 'Generate Report' पर टैप करें।";
+  if(lang==="both") result.textContent=descriptionFull;
+  if(lang==="en") result.textContent=descriptionEN;
+  if(lang==="hi") result.textContent=descriptionHI;
 };
 
-/* ================================
-   WHATSAPP
-================================ */
+/* ------------------ WHATSAPP ------------------ */
 document.getElementById("whatsapp-button").onclick=()=>{
   window.open("https://wa.me/917974517991?text="+encodeURIComponent(descriptionFull));
 };
 
-/* ================================
-   COPY / SHARE / PDF
-================================ */
+/* ------------------ COPY/SHARE/PDF ------------------ */
 document.getElementById("copyReport").onclick=()=>{
   navigator.clipboard.writeText(descriptionFull);
   alert("Copied!");
@@ -521,6 +554,5 @@ document.getElementById("downloadPDF").onclick=()=>{
 };
 
 </script>
-
 </body>
 </html>
