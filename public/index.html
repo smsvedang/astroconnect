@@ -476,7 +476,6 @@ body.light select option {
   <h2>Your Astro Report</h2>
 
   <select id="report-lang">
-    <option value="both">English + Hindi</option>
     <option value="en">English Only</option>
     <option value="hi">Hindi Only</option>
   </select>
@@ -740,7 +739,10 @@ document.getElementById("astro-form").addEventListener("submit", async (e) => {
   descriptionEN = parts.en;
   descriptionHI = parts.hi;
 
-  resultCard.textContent = text;
+  // Default = English
+resultCard.textContent = descriptionEN;
+document.getElementById("report-lang").value = "en";
+
 
   document.getElementById("whatsapp-button").href =
     "https://wa.me/917974517991?text=" + encodeURIComponent(text);
@@ -753,13 +755,12 @@ document.getElementById("astro-form").addEventListener("submit", async (e) => {
 document.getElementById("report-lang").addEventListener("change", () => {
   const lang = document.getElementById("report-lang").value;
 
-  if (lang === "both") {
-    resultCard.textContent = descriptionFull || "Please fill details to generate report and tap Generate Report. + रिपोर्ट बनाने के लिए कृपया डिटेल्स भरें और 'Generate Report' पर टैप करें।";
-  } else if (lang === "en") {
+if (lang === "en") {
     resultCard.textContent = descriptionEN || "Please fill details to generate report and tap Generate Report.";
-  } else if (lang === "hi") {
+} else if (lang === "hi") {
     resultCard.textContent = descriptionHI || "रिपोर्ट बनाने के लिए कृपया डिटेल्स भरें और 'Generate Report' पर टैप करें।";
-  }
+}
+
 });
 
 /* ===========================================================
