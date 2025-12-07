@@ -2,618 +2,490 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AstroConnect – Astro Description</title>
+  <title>AstroConnect – Astro Description Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: system-ui, sans-serif;
+    }
+
     body {
-      min-height: 100vh;
       background: radial-gradient(circle at top, #1f2937, #020617);
-      color: #f9fafb;
+      min-height: 100vh;
+      color: #fff;
+      padding: 22px;
       display: flex;
       justify-content: center;
-      padding: 24px;
     }
-    .app {
-      max-width: 1100px;
-      width: 100%;
-      background: rgba(15, 23, 42, 0.9);
-      border-radius: 24px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-      overflow: hidden;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-    }
-    header {
-      padding: 16px 24px;
-      border-bottom: 1px solid rgba(148, 163, 184, 0.3);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: linear-gradient(to right, rgba(30, 64, 175, 0.5), rgba(147, 51, 234, 0.5));
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-icon {
-      width: 36px; height: 36px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, #fbbf24, #f97316);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 18px; color: #111827;
-      box-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
-    }
-    .brand-text h1 { font-size: 20px; font-weight: 700; }
-    .brand-text p { font-size: 12px; opacity: 0.9; }
-    .small-note { font-size: 11px; max-width: 220px; text-align: right; opacity: 0.9; }
-    .dot { width: 6px; height: 6px; border-radius: 999px; background: #22c55e; box-shadow: 0 0 10px #22c55e; display: inline-block; margin-right: 4px; }
-    main { display: flex; flex-wrap: wrap; }
-    .left, .right { padding: 24px; width: 100%; }
-    @media (min-width: 900px) {
-      .left, .right { width: 50%; }
-      .left { border-right: 1px solid rgba(148, 163, 184, 0.2); }
-    }
-    .section-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-    .section-subtitle { font-size: 13px; color: #9ca3af; margin-bottom: 20px; }
-    form { display: flex; flex-direction: column; gap: 14px; }
-    label { font-size: 13px; font-weight: 500; margin-bottom: 4px; display: inline-block; }
-    .field { display: flex; flex-direction: column; gap: 4px; }
-    input, select, textarea {
-      padding: 9px 11px; border-radius: 10px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.9); color: #f9fafb;
-      font-size: 13px; outline: none;
-      transition: border 0.15s, box-shadow 0.15s, background 0.15s;
-    }
-    input::placeholder, textarea::placeholder { color: #6b7280; font-size: 12px; }
-    input:focus, select:focus, textarea:focus {
-      border-color: #6366f1;
-      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.6);
-      background: rgba(15, 23, 42, 1);
-    }
-    .inline-fields { display: flex; gap: 12px; flex-wrap: wrap; }
-    .inline-fields .field { flex: 1 1 120px; }
-    .btn-primary {
-      margin-top: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: none;
-      font-size: 14px; font-weight: 600;
-      cursor: pointer;
-      background: linear-gradient(to right, #4f46e5, #ec4899);
-      color: #f9fafb;
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      box-shadow: 0 15px 25px rgba(79, 70, 229, 0.4);
-      transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
-    }
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-      box-shadow: 0 20px 35px rgba(79, 70, 229, 0.6);
-    }
-    .btn-primary:active { transform: translateY(0); box-shadow: 0 10px 18px rgba(79, 70, 229, 0.5); }
-    .btn-secondary {
-      margin-top: 12px; padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      font-size: 13px; font-weight: 500;
-      cursor: pointer;
-      background: rgba(15, 23, 42, 0.9); color: #e5e7eb;
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      transition: background 0.15s, border 0.15s, transform 0.15s;
-      text-decoration: none;
-    }
-    .btn-secondary:hover {
-      background: rgba(31, 41, 55, 1);
-      border-color: rgba(209, 213, 219, 0.8);
-      transform: translateY(-1px);
-    }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px dashed rgba(148, 163, 184, 0.6);
-      color: #e5e7eb;
-      margin-bottom: 8px;
-    }
-    .pill span { font-size: 9px; opacity: 0.8; }
-    .result-card {
-      background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.25), rgba(15, 23, 42, 1));
-      border-radius: 18px;
-      padding: 16px 16px 18px;
-      border: 1px solid rgba(75, 85, 99, 0.8);
-      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.7);
-      min-height: 220px;
-      position: relative;
-      overflow: hidden;
-      font-size: 13px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-    }
-    .watermark {
-      position: absolute;
-      bottom: -20px;
-      right: -10px;
-      font-size: 42px;
-      font-weight: 800;
-      color: rgba(55, 65, 81, 0.4);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      pointer-events: none;
-    }
-    .placeholder { font-size: 12px; color: #9ca3af; display: flex; flex-direction: column; gap: 6px; }
-    .placeholder li { margin-left: 18px; }
-    footer {
-      border-top: 1px solid rgba(148, 163, 184, 0.25);
-      padding: 12px 20px 14px;
-      font-size: 11px;
-      color: #9ca3af;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 6px;
-      background: rgba(15, 23, 42, 0.95);
-    }
-    .error { font-size: 11px; color: #f97373; margin-top: 4px; }
-    .status { font-size: 12px; color: #e5e7eb; margin-top: 6px; }
 
-    .report-lang-toggle {
+    .app {
+      width: 100%;
+      max-width: 1200px;
+      background: rgba(15, 23, 42, 0.92);
+      border-radius: 20px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      overflow: hidden;
+      box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+    }
+
+    /* HEADER ----------- */
+    header {
+      padding: 15px 22px;
+      background: linear-gradient(to right, #334155cc, #6366f1cc);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      color: #fff;
+    }
+
+    .brand {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      margin-bottom: 8px;
-      color: #e5e7eb;
+      gap: 12px;
     }
-    .report-lang-toggle select {
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      background: rgba(15, 23, 42, 0.9);
-      color: #f9fafb;
-      font-size: 11px;
+
+    .brand-icon {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fbbf24, #f97316);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 900;
+      font-size: 22px;
+      box-shadow: 0 0 18px #fbbf24aa;
+      color: #000;
+    }
+
+    main {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .left, .right {
+      width: 100%;
+      padding: 25px;
+    }
+
+    @media (min-width: 850px) {
+      .left, .right { width: 50%; }
+      .left { border-right: 1px solid rgba(148,163,184,0.25); }
+    }
+
+    /* FORM -------- */
+    form { display: flex; flex-direction: column; gap: 16px; }
+
+    input, textarea, select {
+      padding: 10px 12px;
+      font-size: 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: rgba(15,23,42,0.96);
+      color: #fff;
       outline: none;
     }
 
-    /* City suggestions dropdown (custom, below input) */
-    .city-field {
+    input:focus, textarea:focus, select:focus {
+      border-color: #818cf8;
+      box-shadow: 0 0 0 1px #6366f1;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #4f46e5, #ec4899);
+      border: none;
+      padding: 12px 18px;
+      border-radius: 999px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 15px;
+      margin-top: 8px;
+      box-shadow: 0 12px 25px rgba(79,70,229,0.4);
+      transition: 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      padding: 10px 14px;
+      font-size: 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      color: #eee;
+      text-decoration: none;
+      margin-top: 14px;
+    }
+
+    /* RESULT BOX -------- */
+    .result-card {
+      min-height: 260px;
+      border-radius: 14px;
+      padding: 18px;
+      background: rgba(30,41,59,0.6);
+      border: 1px solid rgba(100,100,130,0.5);
+      white-space: pre-wrap;
+      line-height: 1.55;
+      font-size: 14px;
       position: relative;
     }
+
+    /* LOADING ANIMATION -------- */
+    .loader {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #ffffff33;
+      border-top-color: #60a5fa;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* CITY DROPDOWN -------- */
+    .city-field { position: relative; }
+
     #city-suggestions {
       position: absolute;
       top: 100%;
       left: 0;
       right: 0;
-      margin-top: 4px;
-      background: rgba(15, 23, 42, 0.98);
-      border-radius: 10px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      max-height: 230px;
+      background: rgba(15,23,42,0.98);
+      border: 1px solid rgba(75,85,99,0.8);
+      max-height: 240px;
       overflow-y: auto;
       z-index: 50;
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6);
+      border-radius: 12px;
       display: none;
     }
-    #city-suggestions.visible {
-      display: block;
-    }
+
+    #city-suggestions.visible { display: block; }
+
     .city-suggestion-item {
-      padding: 8px 10px;
-      font-size: 13px;
+      padding: 10px;
       cursor: pointer;
-      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
-    }
-    .city-suggestion-item:last-child {
-      border-bottom: none;
+      border-bottom: 1px solid rgba(45,55,72,0.8);
     }
     .city-suggestion-item:hover {
-      background: rgba(30, 64, 175, 0.45);
+      background: rgba(99,102,241,0.3);
     }
-    .city-suggestion-item strong {
-      display: block;
+
+    .lang-switch {
+      margin-bottom: 10px;
+      font-size: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
-    .city-suggestion-item small {
-      display: block;
-      font-size: 11px;
-      color: #9ca3af;
-    }
+
   </style>
 </head>
+
 <body>
-  <div class="app">
-    <header>
-      <div class="brand">
-        <div class="brand-icon">ॐ</div>
-        <div class="brand-text">
-          <h1>AstroConnect</h1>
-          <p>Astrological guidance based on your birth details</p>
-        </div>
-      </div>
-      <div class="small-note">
-        <span class="dot"></span>Online · WhatsApp Consult Available<br />
-        <strong>+91 7974517991</strong>
-      </div>
-    </header>
+<div class="app">
+<header>
+  <div class="brand">
+    <div class="brand-icon">ॐ</div>
+    <div>
+      <h2>AstroConnect</h2>
+      <small>Personalized birth-based astro insights</small>
+    </div>
+  </div>
+</header>
 
-    <main>
-      <!-- LEFT: FORM -->
-      <section class="left">
-        <div class="pill">
-          ✨ <span>Step 1 · Fill your birth details</span>
-        </div>
-        <h2 class="section-title">Generate Your Astro Description</h2>
-        <p class="section-subtitle">
-          Enter your birth details. You’ll get a detailed description in English and Hindi based on your inputs.
-        </p>
+<main>
 
-        <form id="astro-form">
-          <div class="field">
-            <label for="name">Full Name</label>
-            <input id="name" name="name" type="text" placeholder="e.g. Vedang Soni" required />
-          </div>
+<!-- LEFT PANEL ---------------------------- -->
+<section class="left">
 
-          <div class="inline-fields">
-            <div class="field">
-              <label for="gender">Gender</label>
-              <select id="gender" name="gender" required>
-                <option value="">Select</option>
-                <option value="Male">Male / पुरुष</option>
-                <option value="Female">Female / महिला</option>
-                <option value="Other">Other / अन्य</option>
-                <option value="Prefer not to say">Prefer not to say</option>
-              </select>
-            </div>
+  <h2>Enter Your Birth Details</h2>
+  <p style="opacity: .8; margin-bottom: 14px;">You will receive English + Hindi astro reading.</p>
 
-            <div class="field">
-              <label for="dob">Date of Birth</label>
-              <input id="dob" name="dob" type="date" required />
-            </div>
+  <form id="astro-form">
 
-            <div class="field">
-              <label for="tob">Time of Birth</label>
-              <input id="tob" name="tob" type="time" required />
-            </div>
-          </div>
+    <div>
+      <label>Full Name</label>
+      <input id="name" required placeholder="e.g. Vedang Soni">
+    </div>
 
-            <div class="field city-field">
-              <label for="city">City (auto or manual)</label>
-              <input
-                id="city"
-                name="city"
-                type="text"
-                placeholder="Start typing city name..."
-                autocomplete="off"
-                required
-              />
-              <div id="city-suggestions"></div>
-            </div>
-          </div>
+    <div>
+      <label>Gender</label>
+      <select id="gender" required>
+        <option value="">Select</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+    </div>
 
-          <div class="field">
-            <label for="state">State</label>
-            <input
-              id="state"
-              name="state"
-              type="text"
-              placeholder="Auto-filled from PIN / city"
-              required
-            />
-          </div>
+    <div>
+      <label>Date of Birth</label>
+      <input type="date" id="dob" required>
+    </div>
 
-          <div class="field">
-            <label for="country">Country</label>
-            <input id="country" name="country" type="text" value="India" required />
-          </div>
+    <div>
+      <label>Time of Birth</label>
+      <input type="time" id="tob" required>
+    </div>
 
-          <div class="field">
-            <label for="notes">Any specific concern? (Optional)</label>
-            <textarea id="notes" name="notes" rows="2" placeholder="e.g. Career, marriage, studies, mental stress"></textarea>
-          </div>
+    <div class="city-field">
+      <label>City</label>
+      <input id="city" autocomplete="off" required placeholder="Start typing...">
+      <div id="city-suggestions"></div>
+    </div>
 
-          <div id="error-message" class="error" style="display:none;"></div>
-          <div id="status" class="status"></div>
+    <div>
+      <label>State</label>
+      <input id="state" required placeholder="Auto-filled">
+    </div>
 
-          <button type="submit" class="btn-primary" id="btn-generate">
-            🔮 Get Your Description
-          </button>
-        </form>
-      </section>
+    <div>
+      <label>Country</label>
+      <input id="country" value="India" required>
+    </div>
 
-      <!-- RIGHT: RESULT -->
-      <section class="right">
-        <div class="pill">
-          📜 <span>Step 2 · Read your description</span>
-        </div>
-        <h2 class="section-title">Your Astro Personality Report</h2>
-        <p class="section-subtitle">
-          Read your personality, strengths, challenges and guidance based on the birth details you have shared.
-        </p>
+    <div>
+      <label>Specific Concern (Optional)</label>
+      <textarea id="notes" rows="2" placeholder="Career, relationship, studies…"></textarea>
+    </div>
 
-        <!-- language switch for report -->
-        <div class="report-lang-toggle">
-          <span>Report language / रिपोर्ट भाषा:</span>
-          <select id="report-lang">
-            <option value="both">English + Hindi</option>
-            <option value="en">English only</option>
-            <option value="hi">हिन्दी only</option>
-          </select>
-        </div>
+    <small id="status"></small>
+    <small id="error-message" style="color:#f87171; display:none;"></small>
 
-        <div id="result-card" class="result-card">
-          <div id="result-content" class="placeholder">
-            <p><strong>Waiting for your details…</strong></p>
-            <ul>
-              <li>Fill the form on the left</li>
-              <li>Click on <b>“Get Your Description”</b></li>
-            </ul>
-          </div>
-          <div class="watermark">ASTRO</div>
-        </div>
+    <button class="btn-primary">🔮 Generate Description</button>
+  </form>
+</section>
 
-        <a id="whatsapp-button" class="btn-secondary" target="_blank">
-          💬 Talk to Astrologer on WhatsApp
-        </a>
-      </section>
-    </main>
+<!-- RIGHT PANEL ---------------------------- -->
+<section class="right">
 
-    <footer>
-      <div>
-        © <span id="year"></span> AstroConnect. For guidance only, not a substitute for professional advice.
-      </div>
-      <div>
-        If you feel mentally disturbed or anxious, please also reach out to a trusted person or professional counsellor.
-      </div>
-    </footer>
+  <h2>Your Astro Report</h2>
+
+  <div class="lang-switch">
+    <span>Language:</span>
+    <select id="report-lang">
+      <option value="both">English + Hindi</option>
+      <option value="en">English</option>
+      <option value="hi">Hindi</option>
+    </select>
   </div>
 
-  <script>
-// ---------------------- ZODIAC + LIFE PATH ------------------------
+  <div id="result-card" class="result-card">
+    <p style="opacity:.6;">Fill your details to generate report…</p>
+  </div>
+
+  <a id="whatsapp-button" class="btn-secondary" target="_blank">
+    💬 Talk to Astrologer
+  </a>
+</section>
+
+</main>
+</div>
+
+
+<!-- FULL SCRIPT BELOW ---------------------- -->
+<script>
+/* ---------- HELPER FUNCTIONS ------------ */
 function getZodiacSign(month, day) {
-  if ((month === 2 && day >= 21) || (month === 3 && day <= 19)) return "Aries";
-  if ((month === 3 && day >= 20) || (month === 4 && day <= 20)) return "Taurus";
-  if ((month === 4 && day >= 21) || (month === 5 && day <= 20)) return "Gemini";
-  if ((month === 5 && day >= 21) || (month === 6 && day <= 22)) return "Cancer";
-  if ((month === 6 && day >= 23) || (month === 7 && day <= 22)) return "Leo";
-  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "Virgo";
-  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "Libra";
-  if ((month === 9 && day >= 23) || (month === 10 && day <= 21)) return "Scorpio";
-  if ((month === 10 && day >= 22) || (month === 11 && day <= 21)) return "Sagittarius";
-  if ((month === 11 && day >= 22) || (month === 0 && day <= 19)) return "Capricorn";
-  if ((month === 0 && day >= 20) || (month === 1 && day <= 18)) return "Aquarius";
+  if ((month===2 && day>=21)||(month===3 && day<=19)) return "Aries";
+  if ((month===3 && day>=20)||(month===4 && day<=20)) return "Taurus";
+  if ((month===4 && day>=21)||(month===5 && day<=20)) return "Gemini";
+  if ((month===5 && day>=21)||(month===6 && day<=22)) return "Cancer";
+  if ((month===6 && day>=23)||(month===7 && day<=22)) return "Leo";
+  if ((month===7 && day>=23)||(month===8 && day<=22)) return "Virgo";
+  if ((month===8 && day>=23)||(month===9 && day<=22)) return "Libra";
+  if ((month===9 && day>=23)||(month===10 && day<=21)) return "Scorpio";
+  if ((month===10 && day>=22)||(month===11 && day<=21)) return "Sagittarius";
+  if ((month===11 && day>=22)||(month===0 && day<=19)) return "Capricorn";
+  if ((month===0 && day>=20)||(month===1 && day<=18)) return "Aquarius";
   return "Pisces";
 }
 
 function getLifePathNumber(date) {
-  const digits = date.getFullYear().toString() + (date.getMonth() + 1) + date.getDate();
-  let sum = 0;
-  for (let ch of digits) sum += parseInt(ch, 10);
-  while (sum > 9) {
-    let t = 0;
-    for (let c of sum.toString()) t += parseInt(c, 10);
-    sum = t;
-  }
+  let sum = [...(date.getFullYear()+""+(date.getMonth()+1)+date.getDate())]
+    .reduce((a,b)=>a+ +b,0);
+  while(sum>9) sum = [...("" + sum)].reduce((x,y)=>x+ +y,0);
   return sum;
 }
 
-// ---------------------- DOM ELEMENTS ------------------------
-const form = document.getElementById("astro-form");
-const resultContent = document.getElementById("result-content");
+
+/* --------- DOM ELEMENTS ---------------- */
+const resultCard = document.getElementById("result-card");
 const errorMessage = document.getElementById("error-message");
-const status = document.getElementById("status");
+const statusEl = document.getElementById("status");
 const whatsappButton = document.getElementById("whatsapp-button");
 
 const cityInput = document.getElementById("city");
-const citySuggestionsEl = document.getElementById("city-suggestions");
 const stateInput = document.getElementById("state");
 const countryInput = document.getElementById("country");
+const citySuggestionsEl = document.getElementById("city-suggestions");
 
 const reportLangSelect = document.getElementById("report-lang");
-const yearSpan = document.getElementById("year");
-yearSpan.textContent = new Date().getFullYear();
 
-const whatsappBase = "https://wa.me/917974517991";
-
-// ---------------------- DEFAULT WHATSAPP ----------------------
-function setDefaultWhatsAppLink() {
-  const text = "Namaste, I want a detailed astrological consultation.";
-  whatsappButton.href = whatsappBase + "?text=" + encodeURIComponent(text);
-}
-setDefaultWhatsAppLink();
-
-// ---------------------- CITY JSON LOADING ------------------------
-let citiesData = [];
 let citiesFlat = [];
+let descriptionFull = "", descriptionEN = "", descriptionHI = "";
 
-function flattenCities(raw) {
-  const arr = [];
-  for (const [state, districts] of Object.entries(raw)) {
+
+/* --------- LOAD CITIES ---------------- */
+async function loadCities() {
+  const res = await fetch("/cities.json");
+  const json = await res.json();
+
+  for (const [state, districts] of Object.entries(json)) {
     for (const [district, places] of Object.entries(districts)) {
-      for (const [city, _pin] of Object.entries(places)) {
-        arr.push({ city, state, district, country: "India" });
+      for (const city of Object.keys(places)) {
+        citiesFlat.push({city, state, district, country:"India"});
       }
     }
-  }
-  return arr;
-}
-
-async function loadCities() {
-  try {
-    const res = await fetch("/cities.json");
-    const json = await res.json();
-    citiesData = json;
-    citiesFlat = flattenCities(json);
-  } catch (err) {
-    console.error("City load failed:", err);
-    status.textContent = "Unable to load city list. Type manually.";
   }
 }
 loadCities();
 
-// ---------------------- CITY SUGGESTION CONTROLS ------------------------
-function hideCitySuggestions() {
-  citySuggestionsEl.classList.remove("visible");
-  citySuggestionsEl.innerHTML = "";
+
+/* --------- FUZZY MATCH ---------------- */
+function fuzzyMatch(q, text) {
+  q = q.toLowerCase();
+  text = text.toLowerCase();
+  if (text.startsWith(q)) return 3;
+  if (text.includes(q)) return 2;
+  if (q.split("").every(ch => text.includes(ch))) return 1;
+  return 0;
 }
 
-function showCitySuggestions(matches) {
-  citySuggestionsEl.innerHTML = "";
 
-  matches.forEach(c => {
-    const el = document.createElement("div");
-    el.className = "city-suggestion-item";
-    el.innerHTML = `
-      <strong>${c.city}</strong>
-      <small>${c.state}</small>
-    `;
-
-    // *** FIX: mousedown ensures selection before blur ***
-    el.addEventListener("mousedown", e => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      cityInput.value = c.city;
-      stateInput.value = c.state;
-      countryInput.value = c.country;
-
-      status.textContent = "City & state auto-filled.";
-      hideCitySuggestions();
-    });
-
-    citySuggestionsEl.appendChild(el);
-  });
-
-  citySuggestionsEl.classList.add("visible");
-}
-
+/* --------- CITY SUGGESTIONS ---------------- */
 cityInput.addEventListener("input", () => {
-  const q = cityInput.value.trim().toLowerCase();
-  if (q.length < 2) return hideCitySuggestions();
+  const q = cityInput.value.trim();
+  if (q.length < 2) return (citySuggestionsEl.style.display="none");
 
   const matches = citiesFlat
-    .filter(c => c.city.toLowerCase().startsWith(q))
+    .map(c => ({...c, score: fuzzyMatch(q, c.city)}))
+    .filter(c => c.score > 0)
+    .sort((a,b)=>b.score - a.score)
     .slice(0, 20);
 
-  if (matches.length) showCitySuggestions(matches);
-  else hideCitySuggestions();
+  citySuggestionsEl.innerHTML = "";
+  if (!matches.length) return citySuggestionsEl.style.display="none";
+
+  matches.forEach(c => {
+    const item = document.createElement("div");
+    item.className = "city-suggestion-item";
+    item.innerHTML = `<strong>${c.city}</strong><small>${c.state}</small>`;
+    item.addEventListener("mousedown", e => {
+      e.preventDefault();
+      cityInput.value = c.city;
+      stateInput.value = c.state;
+      countryInput.value = "India";
+      citySuggestionsEl.style.display="none";
+    });
+    citySuggestionsEl.appendChild(item);
+  });
+
+  citySuggestionsEl.style.display="block";
 });
 
-// Prevent closing before click
-cityInput.addEventListener("blur", () => {
-  setTimeout(() => {
-    if (!citySuggestionsEl.matches(":hover")) hideCitySuggestions();
-  }, 200);
-});
-
-// Click outside closes
 document.addEventListener("mousedown", e => {
   if (!citySuggestionsEl.contains(e.target) && e.target !== cityInput) {
-    hideCitySuggestions();
+    citySuggestionsEl.style.display="none";
   }
 });
 
-// ---------------------- REPORT LANGUAGE ------------------------
-let descriptionFull = "";
-let descriptionEN = "";
-let descriptionHI = "";
 
+/* --------- SPLIT AI DESCRIPTION ---------------- */
 function splitDescription(text) {
   const enIndex = text.indexOf("[ENGLISH]");
   const hiIndex = text.indexOf("[हिन्दी]");
-  let en = "", hi = "";
-
-  if (hiIndex !== -1) {
-    en = text.slice(enIndex + 9, hiIndex).trim();
-    hi = text.slice(hiIndex + 7).trim();
-  } else {
-    en = text.trim();
-  }
-  return { en, hi };
+  if (hiIndex === -1) return {en:text, hi:""};
+  return {
+    en: text.slice(enIndex+9, hiIndex).trim(),
+    hi: text.slice(hiIndex+7).trim()
+  };
 }
 
-reportLangSelect.addEventListener("change", () => {
-  const lang = reportLangSelect.value;
-  if (lang === "both") resultContent.textContent = descriptionFull;
-  else if (lang === "en") resultContent.textContent = descriptionEN || descriptionFull;
-  else if (lang === "hi") resultContent.textContent = descriptionHI || descriptionFull;
-});
 
-// ---------------------- SUBMIT HANDLER ------------------------
-form.addEventListener("submit", async function (e) {
+/* --------- FORM SUBMIT ---------------- */
+document.getElementById("astro-form").addEventListener("submit", async e => {
   e.preventDefault();
   errorMessage.style.display = "none";
-  status.textContent = "";
+  statusEl.textContent = "";
 
-  const name = document.getElementById("name").value.trim();
+  const name = document.getElementById("name").value;
   const gender = document.getElementById("gender").value;
-  const dobInput = document.getElementById("dob").value;
+  const dob = document.getElementById("dob").value;
   const tob = document.getElementById("tob").value;
-  const cityValue = cityInput.value.trim();
-  const stateValue = stateInput.value.trim();
-  const countryValue = countryInput.value.trim() || "India";
-  const notes = document.getElementById("notes").value.trim();
+  const notes = document.getElementById("notes").value;
+  const city = cityInput.value.trim();
+  const state = stateInput.value.trim();
+  const country = countryInput.value.trim();
 
-  if (!name || !gender || !dobInput || !tob || !cityValue || !stateValue) {
-    errorMessage.textContent = "Please fill all required fields.";
+  if (!name || !gender || !dob || !tob || !city || !state) {
     errorMessage.style.display = "block";
+    errorMessage.textContent = "Please fill all required fields.";
     return;
   }
 
-  const dob = new Date(dobInput);
-  const zodiac = getZodiacSign(dob.getMonth(), dob.getDate());
-  const lifePath = getLifePathNumber(dob);
+  const date = new Date(dob);
+  const zodiac = getZodiacSign(date.getMonth(), date.getDate());
+  const lifePath = getLifePathNumber(date);
 
-  const payload = {
-    name, gender,
-    dob: dobInput, tob,
-    city: cityValue, state: stateValue,
-    country: countryValue,
-    notes, zodiac, lifePath
-  };
+  const payload = {name,gender,dob,tob,city,state,country,notes,zodiac,lifePath};
+
+  /* SHOW LOADER */
+  resultCard.innerHTML = `<div class="loader"></div><p style="text-align:center;margin-top:10px;">Generating report...</p>`;
 
   try {
-    status.textContent = "Generating your description…";
-
-    const response = await fetch("/api/astro", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+    const res = await fetch("/api/astro", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
     });
 
-    const data = await response.json();
-    const text = data.description || "No description received.";
+    const data = await res.json();
+    const text = data.description;
 
     descriptionFull = text;
     const parts = splitDescription(text);
     descriptionEN = parts.en;
     descriptionHI = parts.hi;
 
-    resultContent.textContent = text;
+    resultCard.textContent = text;
 
+    /* WHATSAPP MESSAGE */
     const waMessage =
-`Namaste, I generated my astro description:
+`Namaste, please read my astro details:
 
 Name: ${name}
-DOB: ${dobInput}
+DOB: ${dob}
 TOB: ${tob}
-Place: ${cityValue}, ${stateValue}, ${countryValue}
-
-Concern: ${notes || "Not mentioned"}
+Place: ${city}, ${state}, ${country}
+Concern: ${notes || "Not specified"}
 
 Please guide me further.`;
 
-    whatsappButton.href = whatsappBase + "?text=" + encodeURIComponent(waMessage);
-    status.textContent = "Description generated.";
+    whatsappButton.href = "https://wa.me/917974517991?text=" + encodeURIComponent(waMessage);
 
   } catch (err) {
-    console.error(err);
-    errorMessage.textContent = "Could not generate description. Please try again.";
-    errorMessage.style.display = "block";
-    setDefaultWhatsAppLink();
+    resultCard.textContent = "Something went wrong. Please try again.";
   }
 });
+
+
+/* --------- LANGUAGE SWITCH ---------------- */
+reportLangSelect.addEventListener("change", () => {
+  const lang = reportLangSelect.value;
+  if (lang === "both") resultCard.textContent = descriptionFull;
+  if (lang === "en") resultCard.textContent = descriptionEN || descriptionFull;
+  if (lang ==="hi") resultCard.textContent = descriptionHI || descriptionFull;
+});
 </script>
+
 </body>
 </html>
