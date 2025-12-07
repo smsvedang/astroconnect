@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <title>AstroEra – AI Powered Vedic Astrology | by Vedang Soni</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <meta name="google-site-verification" content="vMQeKXKG1Tik-KT3r47NCOf6LVaDQ8K9FpktamJr3T0" />
 <!-- Google tag (gtag.js) --><!--Analytics-->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EYKZW2JHVR"></script>
@@ -14,8 +15,9 @@
 
   gtag('config', 'G-EYKZW2JHVR');
 </script>
+
 <!-- ===========================
-     SEO OPTIMIZATION
+     SEO
 =========================== -->
 <meta name="description" content="AstroEra – Get AI-powered Vedic Astrology insights. Generate your Kundli-based personality report in English or Hindi instantly. Talk to astrologers directly.">
 <meta name="keywords" content="AstroEra, kundli, astrology, vedic astrology, horoscope, rashifal, janam kundli, AI kundli, birth chart, astrology report, hindi astrology">
@@ -26,234 +28,333 @@
 <meta name="theme-color" content="#4f46e5" />
 
 <style>
-/* ===========================================================
-   ROOT VARIABLES
-=========================================================== */
+/* ================= ROOT ================= */
 :root {
   --bg: #020617;
-  --fg: #fff;
+  --fg: #ffffff;
   --glass: rgba(255,255,255,0.08);
   --card: rgba(255,255,255,0.12);
-  --border: rgba(255,255,255,0.15);
+  --border: rgba(255,255,255,0.16);
   --primary: #6366f1;
   --grad1: #4f46e5;
   --grad2: #ec4899;
-  --radius: 16px;
+  --radius: 18px;
   --blur: 18px;
 }
 
 body.light {
   --bg: #e2e8f0;
-  --fg: #111;
-  --glass: rgba(255,255,255,0.75);
-  --card: rgba(255,255,255,0.85);
+  --fg: #111827;
+  --glass: rgba(255,255,255,0.85);
+  --card: rgba(255,255,255,0.95);
   --border: rgba(0,0,0,0.18);
 }
 
-/* GLOBAL */
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Inter",sans-serif;}
-body{
-  background:var(--bg);color:var(--fg);
-  min-height:100vh;padding:20px;
-  display:flex;justify-content:center;
+/* ================= GLOBAL ================= */
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Inter",sans-serif;
+}
+
+body {
+  background:var(--bg);
+  color:var(--fg);
+  min-height:100vh;
+  padding:20px;
+  display:flex;
+  justify-content:center;
   transition:.3s;
   overflow-x:hidden;
 }
 
-/* ===========================================================
-   INTRO with TAP TO ENTER
-=========================================================== */
+/* ================= INTRO (Tap to Enter) ================= */
 #intro-screen{
-  position:fixed;inset:0;
+  position:fixed;
+  inset:0;
   background:radial-gradient(circle,#0a0f2a,#000);
-  display:flex;justify-content:center;align-items:center;
-  z-index:9999;overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  z-index:9999;
 }
 .intro-aura{
-  position:absolute;width:320px;height:320px;
-  background:radial-gradient(circle,rgba(120,120,255,.45),transparent 70%);
-  filter:blur(65px);animation:auraMv 9s infinite ease-in-out;
+  position:absolute;
+  width:320px;height:320px;
+  background:radial-gradient(circle,rgba(120,120,255,0.45),transparent 70%);
+  filter:blur(65px);
+  animation:auraMove 9s ease-in-out infinite;
 }
 .aura2{
   width:380px;height:380px;
-  background:radial-gradient(circle,rgba(255,80,180,.45),transparent 70%);
+  background:radial-gradient(circle,rgba(255,80,180,0.45),transparent 70%);
   animation-duration:12s;
 }
-@keyframes auraMv{
-  0%{transform:translate(-90,-90);}
-  50%{transform:translate(130,100);}
-  100%{transform:translate(-90,-90);}
+@keyframes auraMove{
+  0%{transform:translate(-90px,-90px);}
+  50%{transform:translate(130px,100px);}
+  100%{transform:translate(-90px,-90px);}
 }
 .intro-center{text-align:center;z-index:10;}
 .intro-om{
-  font-size:85px;font-weight:900;color:#fbbf24;
+  font-size:85px;
+  font-weight:900;
+  color:#fbbf24;
   text-shadow:0 0 30px #fbbf24cc;
-  animation:glow 2s infinite ease-in-out;
+  animation:omGlow 2s ease-in-out infinite;
   cursor:pointer;
 }
-@keyframes glow{
+@keyframes omGlow{
   0%{transform:scale(1);opacity:.85;}
   50%{transform:scale(1.15);opacity:1;}
   100%{transform:scale(1);opacity:.85;}
 }
 .tap-text{
-  margin-top:12px;font-size:18px;color:#fff9;
-  animation:pulse 2s infinite;
+  margin-top:12px;
+  font-size:18px;
+  color:#ffffffaa;
+  animation:tapPulse 2s infinite;
 }
-@keyframes pulse{
- 0%{opacity:.4;}50%{opacity:1;}100%{opacity:.4;}
+@keyframes tapPulse{
+  0%{opacity:.4;}50%{opacity:1;}100%{opacity:.4;}
 }
-.intro-exit{animation:introFade .7s forwards ease;}
-@keyframes introFade{to{opacity:0;visibility:hidden;}}
+.intro-exit{
+  animation:introFade .7s forwards ease-out;
+}
+@keyframes introFade{
+  to{opacity:0;visibility:hidden;}
+}
 
-/* ===========================================================
-   MAIN APP
-=========================================================== */
+/* ================= MAIN APP ================= */
 .app{
-  width:100%;max-width:1200px;
+  width:100%;
+  max-width:1200px;
   background:var(--glass);
   border-radius:var(--radius);
   border:1px solid var(--border);
   backdrop-filter:blur(var(--blur));
   overflow:hidden;
-  opacity:0;transform:translateY(40px);
-  transition:.5s ease;
+  box-shadow:0 20px 45px rgba(0,0,0,.45);
+  opacity:0;
+  transform:translateY(40px);
+  transition:.6s ease-out;
 }
-.app.visible{opacity:1;transform:translateY(0);}
+.app.visible{
+  opacity:1;
+  transform:translateY(0);
+}
 
-/* HEADER */
+/* ================= HEADER ================= */
 header{
   background:linear-gradient(to right,var(--grad1),var(--grad2));
-  padding:18px 24px;color:white;
-  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:#fff;
 }
-.brand{display:flex;align-items:center;gap:12px;}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
 .brand-icon{
-  width:42px;height:42px;
-  background:#fbbf24;color:#000;
-  border-radius:50%;font-weight:900;
-  display:flex;justify-content:center;align-items:center;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#fbbf24;
+  color:#000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:22px;
 }
-.theme-toggle{cursor:pointer;font-size:26px;}
+.theme-toggle{
+  font-size:26px;
+  cursor:pointer;
+}
 
-/* LAYOUT */
-main{display:flex;flex-wrap:wrap;}
-.left,.right{width:100%;padding:24px;}
+/* ================= LAYOUT ================= */
+main{
+  display:flex;
+  flex-wrap:wrap;
+}
+.left,.right{
+  width:100%;
+  padding:24px;
+}
 @media(min-width:850px){
   .left,.right{width:50%;}
   .left{border-right:1px solid var(--border);}
 }
 
-/* FORM */
-form{display:flex;flex-direction:column;gap:16px;}
+/* ================= FORM ================= */
+form{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
 input,textarea,select{
-  padding:12px;width:100%;
+  width:100%;
+  padding:12px;
   border-radius:var(--radius);
   border:1px solid var(--border);
-  background:rgba(255,255,255,.12);
-  color:var(--fg);transition:.25s;
+  background:rgba(255,255,255,0.12);
+  color:var(--fg);
+  transition:.25s;
 }
 input:focus,textarea:focus,select:focus{
-  border-color:var(--primary);transform:scale(1.02);
+  border-color:var(--primary);
+  transform:scale(1.02);
 }
-select option{background:#0f172a;color:#fff;}
-body.light select option{background:#fff;color:#111;}
-
+select{
+  background:rgba(0,0,0,0.35);
+}
+body.light select{
+  background:rgba(255,255,255,0.85);
+  color:#111;
+}
+select option{
+  background:#0f172a;
+  color:white;
+}
+body.light select option{
+  background:#fff;
+  color:#111;
+}
 .btn-primary{
-  padding:14px;background:linear-gradient(to right,var(--grad1),var(--grad2));
-  border:none;border-radius:999px;color:white;
-  font-weight:600;cursor:pointer;
+  padding:14px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(to right,var(--grad1),var(--grad2));
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
 }
 
-/* ===========================================================
-   CITY DROPDOWN SUGGESTIONS
-=========================================================== */
+/* ================= CITY SUGGESTIONS ================= */
 #city-suggestions{
-  position:absolute;top:100%;left:0;right:0;
-  max-height:250px;overflow-y:auto;
-  background:#1e293b;color:white;
+  position:absolute;
+  top:100%;
+  left:0;
+  right:0;
+  max-height:260px;
+  overflow-y:auto;
+  background:#111827;
+  color:white;
   border-radius:var(--radius);
   border:1px solid var(--border);
-  display:none;z-index:999;
+  box-shadow:0 8px 20px rgba(0,0,0,0.35);
+  display:none;
+  z-index:1000;
 }
-body.light #city-suggestions{background:white;color:#111;}
+body.light #city-suggestions{
+  background:#ffffff;
+  color:#111827;
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
 .city-suggestion-item{
-  padding:10px 14px;cursor:pointer;
-  border-bottom:1px solid rgba(255,255,255,0.1);
+  padding:10px 12px;
+  cursor:pointer;
+  font-size:14px;
+  border-bottom:1px solid rgba(255,255,255,0.12);
 }
-.city-suggestion-item:hover{background:rgba(255,255,255,.12);}
-body.light .city-suggestion-item:hover{background:rgba(0,0,0,.08);}
-
-/* ===========================================================
-   CHAKRA ANIMATION
-=========================================================== */
-.chakra{display:flex;flex-direction:column;gap:4px;}
-.chakra-dot{
-  width:10px;height:10px;border-radius:50%;
-  animation:chakraPulse 1.5s infinite ease-in-out;
+body.light .city-suggestion-item{
+  border-bottom:1px solid rgba(0,0,0,0.08);
 }
-.chakra-dot:nth-child(1){background:#ef4444;}
-.chakra-dot:nth-child(2){background:#f97316;}
-.chakra-dot:nth-child(3){background:#facc15;}
-.chakra-dot:nth-child(4){background:#22c55e;}
-.chakra-dot:nth-child(5){background:#0ea5e9;}
-.chakra-dot:nth-child(6){background:#6366f1;}
-.chakra-dot:nth-child(7){background:#a855f7;}
-@keyframes chakraPulse{
-  0%,100%{transform:scale(1);opacity:.7;}
-  50%{transform:scale(1.45);opacity:1;}
+.city-suggestion-item:hover{
+  background:rgba(255,255,255,0.12);
+}
+body.light .city-suggestion-item:hover{
+  background:rgba(0,0,0,0.06);
 }
 
-/* REPORT CARD */
+/* ================= RESULT + VOICE ================= */
 .result-card{
   background:var(--card);
-  border:1px solid var(--border);
   border-radius:var(--radius);
-  padding:16px;min-height:260px;
+  border:1px solid var(--border);
+  padding:16px;
+  min-height:260px;
   white-space:pre-wrap;
 }
 
-/* VOICE */
-.voice-controls{margin:10px 0;display:flex;gap:10px;}
+/* VOICE CONTROLS – better styling */
+.voice-controls{
+  margin:12px 0 14px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
 .voice-btn{
-  padding:6px 12px;border-radius:999px;
-  background:rgba(0,0,0,.25);border:1px solid var(--border);
-  cursor:pointer;font-size:14px;
+  padding:6px 14px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:linear-gradient(to right, var(--grad1), var(--grad2));
+  color:#fff;
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,0.25);
 }
-body.light .voice-btn{background:white;color:black;}
+.voice-btn span{
+  font-size:14px;
+}
+body.light .voice-btn{
+  color:#fff;
+}
 
-/* LOADER */
-.loader{width:90px;height:90px;margin:20px auto;position:relative;}
-.sun{
-  width:22px;height:22px;background:radial-gradient(circle,#ffd86b,#fbbf24);
-  border-radius:50%;position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);box-shadow:0 0 20px #fbbf24cc;
+/* ================= SIMPLE LOADER ================= */
+.loader{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:4px solid rgba(255,255,255,0.18);
+  border-top-color:var(--primary);
+  margin:24px auto;
+  animation:spin 0.7s linear infinite;
 }
-.orbit{border:2px solid rgba(255,255,255,0.25);border-radius:50%;position:absolute;
-  animation:spin 6s linear infinite;}
-.orbit1{width:55px;height:55px;top:18px;left:18px;}
-.orbit2{width:75px;height:75px;top:8px;left:8px;animation-duration:8s;}
-.orbit3{width:95px;height:95px;top:-2px;left:-2px;animation-duration:10s;}
-.planet{
-  width:10px;height:10px;border-radius:50%;background:var(--grad1);
-  position:absolute;top:50%;left:-4px;
+@keyframes spin{
+  to{transform:rotate(360deg);}
 }
-@keyframes spin{to{transform:rotate(360deg);}}
 
-/* FLOATING BAR */
+/* ================= FLOATING BAR ================= */
 .floating-bar{
-  position:fixed;bottom:0;left:0;right:0;
-  padding:10px;display:flex;justify-content:space-around;
-  background:var(--glass);border-top:1px solid var(--border);
-  backdrop-filter:blur(10px);z-index:500;
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  padding:10px;
+  display:flex;
+  justify-content:space-around;
+  background:var(--glass);
+  border-top:1px solid var(--border);
+  backdrop-filter:blur(10px);
+  z-index:500;
 }
-.action-btn{text-align:center;cursor:pointer;}
-.action-btn span{font-size:22px;display:block;}
+.action-btn{
+  text-align:center;
+  cursor:pointer;
+}
+.action-btn span{
+  font-size:22px;
+  display:block;
+}
 
-/* FOOTER */
+/* ================= FOOTER ================= */
 footer{
-  text-align:center;font-size:12px;opacity:.6;
-  padding:25px 0 90px;margin-top:40px;color:var(--fg);
+  width:100%;
+  text-align:center;
+  font-size:12px;
+  opacity:.6;
+  padding:20px 16px 90px;
+  border-top:1px solid var(--border);
+  color:var(--fg);
 }
 </style>
 </head>
@@ -270,8 +371,9 @@ footer{
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- APP -->
 <div class="app" id="mainApp">
+
 <header>
   <div class="brand">
     <div class="brand-icon">ॐ</div>
@@ -281,80 +383,107 @@ footer{
 </header>
 
 <main>
-<section class="left">
+  <!-- LEFT -->
+  <section class="left">
+    <h2>Enter Birth Details</h2>
+    <form id="astro-form">
 
-<h2>Enter Birth Details</h2>
+      <div>
+        <label>Name</label>
+        <input id="name" required>
+      </div>
 
-<form id="astro-form">
+      <div>
+        <label>Gender</label>
+        <select id="gender" required>
+          <option value="">Select</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+      </div>
 
-  <div><label>Name</label><input id="name" required></div>
+      <div>
+        <label>Date of Birth</label>
+        <input type="date" id="dob" required>
+      </div>
 
-  <div><label>Gender</label>
-    <select id="gender" required>
-      <option value="">Select</option><option>Male</option>
-      <option>Female</option><option>Other</option>
-    </select>
-  </div>
+      <div>
+        <label>Time of Birth</label>
+        <input type="time" id="tob" required>
+      </div>
 
-  <div><label>Date of Birth</label><input type="date" id="dob" required></div>
-  <div><label>Time of Birth</label><input type="time" id="tob" required></div>
+      <div style="position:relative;">
+        <label>City</label>
+        <input id="city" autocomplete="off" placeholder="Start typing city..." required>
+        <div id="city-suggestions"></div>
+      </div>
 
-  <div style="position:relative;">
-    <label>City</label>
-    <input autocomplete="off" id="city" placeholder="Type city..." />
-    <div id="city-suggestions"></div>
-  </div>
+      <div>
+        <label>State</label>
+        <input id="state" required>
+      </div>
 
-  <div><label>State</label><input id="state"></div>
-  <div><label>Country</label><input id="country" value="India"></div>
+      <div>
+        <label>Country</label>
+        <input id="country" value="India" required>
+      </div>
 
-  <div><label>Specific Concern</label><textarea id="notes"></textarea></div>
+      <div>
+        <label>Specific Concern</label>
+        <textarea id="notes"></textarea>
+      </div>
 
-  <button class="btn-primary">🔮 Generate Report</button>
+      <button class="btn-primary">🔮 Generate Report</button>
 
-</form>
+    </form>
+  </section>
 
-</section>
+  <!-- RIGHT -->
+  <section class="right">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h2>Your Astro Report</h2>
+    </div>
 
-<section class="right">
+    <div style="margin:10px 0;">
+      <select id="report-lang">
+        <option value="en">English</option>
+        <option value="hi">Hindi</option>
+      </select>
+    </div>
 
-<div style="display:flex;justify-content:space-between;align-items:center;">
-  <h2>Your Astro Report</h2>
-  <div class="chakra">
-    <div class="chakra-dot"></div>
-    <div class="chakra-dot"></div>
-    <div class="chakra-dot"></div>
-    <div class="chakra-dot"></div>
-    <div class="chakra-dot"></div>
-    <div class="chakra-dot"></div>
-    <div class="chakra-dot"></div>
-  </div>
-</div>
+    <!-- VOICE CONTROLS -->
+    <div class="voice-controls">
+      <button type="button" class="voice-btn" id="voicePlay">
+        <span>▶</span> Play
+      </button>
+      <button type="button" class="voice-btn" id="voicePause">
+        <span>⏸</span> Pause
+      </button>
+      <button type="button" class="voice-btn" id="voiceStop">
+        <span>⏹</span> Stop
+      </button>
+    </div>
 
-<div style="margin:10px 0;">
-  <select id="report-lang">
-    <option value="en">English</option>
-    <option value="hi">Hindi</option>
-  </select>
-</div>
+    <div id="result-card" class="result-card">
+      Your report will appear here…
+    </div>
 
-<!-- VOICE -->
-<div class="voice-controls">
-  <button class="voice-btn" id="voicePlay">🔊 Play</button>
-  <button class="voice-btn" id="voicePause">⏸ Pause</button>
-  <button class="voice-btn" id="voiceStop">⏹ Stop</button>
-</div>
-
-<div id="result-card" class="result-card">Your report will appear here…</div>
-
-<a id="whatsapp-button" class="btn-primary" target="_blank" style="margin-top:10px;display:inline-block;">
-  💬 Talk to Astrologer
-</a>
-
-</section>
+    <a id="whatsapp-button"
+       class="btn-primary"
+       target="_blank"
+       style="margin-top:10px;display:inline-block;">
+      💬 Talk to Astrologer
+    </a>
+  </section>
 </main>
 
-</div>
+<!-- FOOTER INSIDE APP -->
+<footer>
+  © 2025 <strong>AstroEra</strong> by <strong>Vedang Soni</strong>. All Rights Reserved.
+</footer>
+
+</div> <!-- end .app -->
 
 <!-- FLOATING BAR -->
 <div class="floating-bar">
@@ -363,132 +492,146 @@ footer{
   <div class="action-btn" id="downloadPDF"><span>📥</span>PDF</div>
 </div>
 
-<!-- COPYRIGHT -->
-<footer>
-  © 2025 <strong>AstroEra</strong> by <strong>Vedang Soni</strong>. All Rights Reserved.
-</footer>
-
 <script>
 /* INTRO TAP */
 document.getElementById("enterOm").onclick = () => {
-  const intro=document.getElementById("intro-screen");
+  const intro = document.getElementById("intro-screen");
   intro.classList.add("intro-exit");
-  setTimeout(()=>{
+  setTimeout(() => {
     intro.remove();
     document.getElementById("mainApp").classList.add("visible");
-  },700);
+  }, 700);
 };
 
 /* THEME */
-const themeToggle=document.getElementById("themeToggle");
-let theme=localStorage.getItem("theme")||"dark";
+const themeToggle = document.getElementById("themeToggle");
+let theme = localStorage.getItem("theme") || "dark";
 applyTheme();
 function applyTheme(){
-  if(theme==="light")document.body.classList.add("light"),themeToggle.textContent="☀️";
-  else document.body.classList.remove("light"),themeToggle.textContent="🌙";
+  if(theme === "light"){
+    document.body.classList.add("light");
+    themeToggle.textContent = "☀️";
+  } else {
+    document.body.classList.remove("light");
+    themeToggle.textContent = "🌙";
+  }
 }
-themeToggle.onclick=()=>{theme=theme==="dark"?"light":"dark";localStorage.setItem("theme",theme);applyTheme();};
+themeToggle.onclick = () => {
+  theme = theme === "dark" ? "light" : "dark";
+  localStorage.setItem("theme", theme);
+  applyTheme();
+};
 
-/* CITY SEARCH */
-let citiesFlat=[];
-(async()=>{
-  const res=await fetch("/cities.json");
-  const json=await res.json();
-  for(const [state,dists] of Object.entries(json)){
-    for(const [dist,places] of Object.entries(dists)){
-      for(const city of Object.keys(places)){
-        citiesFlat.push({city,state});
+/* CITY SEARCH (fast old system) */
+let citiesFlat = [];
+(async () => {
+  try{
+    const res = await fetch("/cities.json");
+    const json = await res.json();
+    for(const [state,dists] of Object.entries(json)){
+      for(const [dist,places] of Object.entries(dists)){
+        for(const city of Object.keys(places)){
+          citiesFlat.push({city,state});
+        }
       }
     }
-  }
+  }catch(e){console.error("City load error",e);}
 })();
 
-function fuzzy(q,t){
-  q=q.toLowerCase();t=t.toLowerCase();
-  if(t.startsWith(q))return 3;
-  if(t.includes(q))return 2;
-  if(q.split("").every(c=>t.includes(c)))return 1;
+function fuzzyMatch(q,t){
+  q=q.toLowerCase(); t=t.toLowerCase();
+  if(t.startsWith(q)) return 3;
+  if(t.includes(q)) return 2;
+  if(q.split("").every(c=>t.includes(c))) return 1;
   return 0;
 }
 
-const cityInput=document.getElementById("city");
-const stateInput=document.getElementById("state");
-const cityList=document.getElementById("city-suggestions");
+const cityInput = document.getElementById("city");
+const stateInput = document.getElementById("state");
+const citySug = document.getElementById("city-suggestions");
 
-cityInput.oninput=()=>{
-  const q=cityInput.value.trim();
-  if(q.length<2){cityList.style.display="none";return;}
-  const results=citiesFlat
-    .map(c=>({...c,score:fuzzy(q,c.city)}))
-    .filter(c=>c.score>0)
+cityInput.addEventListener("input", () => {
+  const q = cityInput.value.trim();
+  if(q.length < 2 || !citiesFlat.length){
+    citySug.style.display = "none";
+    return;
+  }
+
+  const results = citiesFlat
+    .map(c => ({...c,score:fuzzyMatch(q,c.city)}))
+    .filter(c => c.score > 0)
     .sort((a,b)=>b.score-a.score)
     .slice(0,25);
 
-  cityList.innerHTML="";
-  if(!results.length){cityList.style.display="none";return;}
+  citySug.innerHTML = "";
+  if(!results.length){
+    citySug.style.display="none";
+    return;
+  }
 
-  results.forEach(c=>{
-    const div=document.createElement("div");
-    div.className="city-suggestion-item";
-    div.textContent=`${c.city}, ${c.state}`;
-    div.onclick=()=>{
-      cityInput.value=c.city;
-      stateInput.value=c.state;
-      cityList.style.display="none";
+  results.forEach(c => {
+    const div = document.createElement("div");
+    div.className = "city-suggestion-item";
+    div.textContent = `${c.city}, ${c.state}`;
+    div.onclick = () => {
+      cityInput.value = c.city;
+      stateInput.value = c.state;
+      citySug.style.display="none";
     };
-    cityList.appendChild(div);
+    citySug.appendChild(div);
   });
-  cityList.style.display="block";
-};
-document.addEventListener("mousedown",e=>{
-  if(!cityList.contains(e.target)&&e.target!==cityInput) cityList.style.display="none";
+
+  citySug.style.display = "block";
 });
 
-/* ASTRO FUNCTIONS */
-function zodiac(m,d){
-  if((m==2&&d>=21)||(m==3&&d<=19))return"Aries";
-  if((m==3&&d>=20)||(m==4&&d<=20))return"Taurus";
-  if((m==4&&d>=21)||(m==5&&d<=20))return"Gemini";
-  if((m==5&&d>=21)||(m==6&&d<=22))return"Cancer";
-  if((m==6&&d>=23)||(m==7&&d<=22))return"Leo";
-  if((m==7&&d>=23)||(m==8&&d<=22))return"Virgo";
-  if((m==8&&d>=23)||(m==9&&d<=22))return"Libra";
-  if((m==9&&d>=23)||(m==10&&d<=21))return"Scorpio";
-  if((m==10&&d>=22)||(m==11&&d<=21))return"Sagittarius";
-  if((m==11&&d>=22)||(m==0&&d<=19))return"Capricorn";
-  if((m==0&&d>=20)||(m==1&&d<=18))return"Aquarius";
-  return"Pisces";
+document.addEventListener("mousedown", e => {
+  if(!citySug.contains(e.target) && e.target !== cityInput){
+    citySug.style.display="none";
+  }
+});
+
+/* ASTRO HELPERS */
+function getZodiac(m,d){
+  if((m===2&&d>=21)||(m===3&&d<=19))return"Aries";
+  if((m===3&&d>=20)||(m===4&&d<=20))return"Taurus";
+  if((m===4&&d>=21)||(m===5&&d<=20))return"Gemini";
+  if((m===5&&d>=21)||(m===6&&d<=22))return"Cancer";
+  if((m===6&&d>=23)||(m===7&&d<=22))return"Leo";
+  if((m===7&&d>=23)||(m===8&&d<=22))return"Virgo";
+  if((m===8&&d>=23)||(m===9&&d<=22))return"Libra";
+  if((m===9&&d>=23)||(m===10&&d<=21))return"Scorpio";
+  if((m===10&&d>=22)||(m===11&&d<=21))return"Sagittarius";
+  if((m===11&&d>=22)||(m===0&&d<=19))return"Capricorn";
+  if((m===0&&d>=20)||(m===1&&d<=18))return"Aquarius";
+  return "Pisces";
 }
-function lifePath(date){
-  let n=[...(date.getFullYear()+""+(date.getMonth()+1)+date.getDate())]
-      .reduce((a,b)=>a+ +b,0);
-  while(n>9)n=[...(""+n)].reduce((x,y)=>x+ +y,0);
-  return n;
+function getLifePath(date){
+  let s=[...(date.getFullYear()+""+(date.getMonth()+1)+date.getDate())]
+    .reduce((a,b)=>a+ +b,0);
+  while(s>9) s=[...(""+s)].reduce((x,y)=>x+ +y,0);
+  return s;
 }
-function splitText(t){
-  const e="[ENGLISH]", h="[हिन्दी]";
-  const ei=t.indexOf(e), hi=t.indexOf(h);
-  if(ei<0&&hi<0)return{en:t.trim(),hi:""};
-  if(hi<0)return{en:t.replace(e,"").trim(),hi:""};
-  return{
-    en:t.slice(ei+e.length,hi).trim(),
-    hi:t.slice(hi+h.length).trim()
+function splitDescription(text){
+  const enTag="[ENGLISH]", hiTag="[हिन्दी]";
+  const enIndex=text.indexOf(enTag);
+  const hiIndex=text.indexOf(hiTag);
+
+  if(enIndex===-1 && hiIndex===-1) return {en:text.trim(),hi:""};
+  if(hiIndex===-1) return {en:text.replace(enTag,"").trim(),hi:""};
+  return {
+    en:text.slice(enIndex+enTag.length,hiIndex).trim(),
+    hi:text.slice(hiIndex+hiTag.length).trim()
   };
 }
 
 /* FORM SUBMIT */
-let full="", EN="", HI="";
-const rc=document.getElementById("result-card");
+let descriptionFull="", descriptionEN="", descriptionHI="";
+const resultCard = document.getElementById("result-card");
 
-document.getElementById("astro-form").onsubmit=async e=>{
+document.getElementById("astro-form").onsubmit = async (e) => {
   e.preventDefault();
 
-  rc.innerHTML=`<div class="loader">
-      <div class="sun"></div>
-      <div class="orbit orbit1"><div class="planet"></div></div>
-      <div class="orbit orbit2"><div class="planet"></div></div>
-      <div class="orbit orbit3"><div class="planet"></div></div>
-    </div>`;
+  resultCard.innerHTML = `<div class="loader"></div>`;
 
   const name=document.getElementById("name").value;
   const gender=document.getElementById("gender").value;
@@ -500,72 +643,92 @@ document.getElementById("astro-form").onsubmit=async e=>{
   const notes=document.getElementById("notes").value;
 
   const d=new Date(dob);
-  const z=zodiac(d.getMonth(),d.getDate());
-  const lp=lifePath(d);
+  const zodiac=getZodiac(d.getMonth(),d.getDate());
+  const lifePath=getLifePath(d);
+
+  const payload={name,gender,dob,tob,city,state,country,notes,zodiac,lifePath};
 
   const res=await fetch("/api/astro",{
-    method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({name,gender,dob,tob,city,state,country,notes,zodiac:z,lifePath:lp})
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(payload)
   });
   const data=await res.json();
+  const text=data.description;
 
-  full=data.description;
-  const parts=splitText(full);
-  EN=parts.en; HI=parts.hi;
+  descriptionFull=text;
+  const parts=splitDescription(text);
+  descriptionEN=parts.en;
+  descriptionHI=parts.hi;
 
-  rc.textContent=EN;
   document.getElementById("report-lang").value="en";
+  resultCard.textContent=descriptionEN || descriptionFull;
 
   document.getElementById("whatsapp-button").href=
-    "https://wa.me/917974517991?text="+encodeURIComponent(full);
+    "https://wa.me/917974517991?text="+encodeURIComponent(text);
 };
 
-/* LANG SWITCH */
-document.getElementById("report-lang").onchange=()=>{
-  const l=document.getElementById("report-lang").value;
-  rc.textContent = l==="en" ? (EN||full) : (HI||full);
+/* LANGUAGE SWITCH */
+document.getElementById("report-lang").onchange = () => {
+  const lang=document.getElementById("report-lang").value;
+  if(lang==="en"){
+    resultCard.textContent=descriptionEN || descriptionFull;
+  } else {
+    resultCard.textContent=descriptionHI || descriptionFull;
+  }
 };
 
-/* VOICE */
+/* VOICE READER */
 let synth=window.speechSynthesis;
-let u=null;
+let currentUtter=null;
 
 function speak(){
-  if(!synth){alert("Not supported.");return;}
-
+  if(!synth){alert("Voice not supported");return;}
   const lang=document.getElementById("report-lang").value;
-  const text = lang==="en"?(EN||full):(HI||full);
+  const text=lang==="en"?(descriptionEN||descriptionFull):(descriptionHI||descriptionFull);
+  if(!text){alert("Generate report first.");return;}
 
-  if(u){synth.cancel();u=null;}
+  if(currentUtter){synth.cancel();currentUtter=null;}
 
-  u=new SpeechSynthesisUtterance(text);
-  u.lang = lang==="en"?"en-IN":"hi-IN";
-
+  const utter=new SpeechSynthesisUtterance(text);
+  utter.lang=lang==="en"?"en-IN":"hi-IN";
   const voices=synth.getVoices();
-  const v=voices.find(v=>v.lang===u.lang)||voices[0];
-  if(v)u.voice=v;
-
-  u.rate=0.95;u.pitch=1;
-  synth.speak(u);
+  const v=voices.find(v=>v.lang===utter.lang)||voices[0];
+  if(v) utter.voice=v;
+  utter.rate=0.95;
+  utter.pitch=1.0;
+  currentUtter=utter;
+  synth.speak(utter);
 }
 
 document.getElementById("voicePlay").onclick=()=>{
-  if(synth.paused)synth.resume(); else speak();
+  if(!synth){alert("Voice not supported");return;}
+  if(synth.paused && currentUtter) synth.resume(); else speak();
 };
-document.getElementById("voicePause").onclick=()=>{if(synth.speaking)synth.pause();}
-document.getElementById("voiceStop").onclick=()=>{synth.cancel();u=null;};
+document.getElementById("voicePause").onclick=()=>{
+  if(synth && synth.speaking) synth.pause();
+};
+document.getElementById("voiceStop").onclick=()=>{
+  if(synth){synth.cancel();currentUtter=null;}
+};
 
 /* COPY / SHARE / PDF */
 document.getElementById("copyReport").onclick=()=>{
-  navigator.clipboard.writeText(full||"");alert("Copied!");
+  navigator.clipboard.writeText(descriptionFull || "");
+  alert("Copied!");
 };
 document.getElementById("shareReport").onclick=()=>{
-  if(navigator.share)navigator.share({title:"AstroEra Report",text:full});
-  else navigator.clipboard.writeText(full);
+  if(navigator.share){
+    navigator.share({title:"AstroEra Report",text:descriptionFull||""});
+  }else{
+    navigator.clipboard.writeText(descriptionFull||"");
+    alert("Copied!");
+  }
 };
 document.getElementById("downloadPDF").onclick=()=>{
   const w=window.open("","_blank");
-  w.document.write(`<pre>${(full||"").replace(/</g,"&lt;")}</pre>`);w.print();
+  w.document.write(`<pre>${(descriptionFull||"").replace(/</g,"&lt;")}</pre>`);
+  w.print();
 };
 </script>
 
