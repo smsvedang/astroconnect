@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>AstroEra – AI Powered Vedic Astrology </title>
+<title>AstroEra – AI Powered Vedic Astrology | by Vedang Soni</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="google-site-verification" content="vMQeKXKG1Tik-KT3r47NCOf6LVaDQ8K9FpktamJr3T0" />
 <!-- Google tag (gtag.js) --><!--Analytics-->
@@ -441,14 +441,11 @@ let voicesLoaded = false;
 function loadVoicesOnce() {
   if (!synth) return;
   const voices = synth.getVoices();
-  if (voices && voices.length) {
-    voicesLoaded = true;
-  }
+  if (voices && voices.length) voicesLoaded = true;
+
   synth.onvoiceschanged = () => {
     const v = synth.getVoices();
-    if (v && v.length) {
-      voicesLoaded = true;
-    }
+    if (v && v.length) voicesLoaded = true;
   };
 }
 
@@ -647,75 +644,123 @@ document.getElementById("report-lang").onchange=()=>{
   else resultCard.textContent=descriptionHI||descriptionFull;
 };
 
-/* ===== FIXED VOICE READER (MOBILE-FRIENDLY) ===== */
-function getVoiceFor(lang) {
+/* ===== NATURAL HINGLISH TTS ENGINE ===== */
+
+/* Get a good English voice */
+function getEnglishVoice() {
   if (!synth) return null;
   const voices = synth.getVoices();
   if (!voices || !voices.length) return null;
 
-  let v = voices.find(v => v.lang.toLowerCase() === lang.toLowerCase());
-  if (v) return v;
-
-  if (lang.startsWith("hi")) {
-    v = voices.find(v => v.lang.toLowerCase().includes("hi"));
-    if (v) return v;
-  }
-  return voices[0] || null;
+  return (
+    voices.find(v => v.lang.toLowerCase().includes("en-in")) ||
+    voices.find(v => v.lang.toLowerCase().includes("en-us")) ||
+    voices.find(v => v.lang.toLowerCase().includes("en-gb")) ||
+    voices[0]
+  );
 }
 
+/* Basic Hindi (Devanagari) → Hinglish transliteration + common word tuning */
+function hindiToHinglish(str) {
+  if (!str) return "";
+
+  const map = {
+    "अ": "a", "आ": "aa", "इ": "i", "ई": "ee", "उ": "u", "ऊ": "oo",
+    "ए": "e", "ऐ": "ai", "ओ": "o", "औ": "au",
+
+    "क": "k", "ख": "kh", "ग": "g", "घ": "gh",
+    "च": "ch", "छ": "chh", "ज": "j", "झ": "jh",
+    "ट": "t", "ठ": "th", "ड": "d", "ढ": "dh",
+    "त": "t", "थ": "th", "द": "d", "ध": "dh",
+    "न": "n", "प": "p", "फ": "ph", "ब": "b", "भ": "bh",
+    "म": "m", "य": "y", "र": "r", "ल": "l",
+    "व": "v", "श": "sh", "ष": "sh", "स": "s", "ह": "h",
+
+    "ृ": "ri",
+    "ं": "n",
+    "ः": "h",
+    "ँ": "n"
+  };
+
+  let raw = "";
+  for (let ch of str) {
+    raw += map[ch] || ch; // non-Hindi remain same (numbers, punctuation, English words)
+  }
+
+  // Common word-level polishing
+  let out = raw;
+
+  // Some very common patterns
+  out = out.replace(/ aap /gi, " aap ");
+  out = out.replace(/ hai\./gi, " hai.");
+  out = out.replace(/ hain\./gi, " hain.");
+  out = out.replace(/ rah sakta hai/gi, " reh sakta hai");
+  out = out.replace(/ rah sakti hai/gi, " reh sakti hai");
+  out = out.replace(/ ke liye/gi, " ke liye");
+  out = out.replace(/ aapko /gi, " aapko ");
+  out = out.replace(/ aapki /gi, " aapki ");
+
+  // Cleanup extra spaces
+  out = out.replace(/\s{2,}/g, " ").trim();
+  return out;
+}
+
+/* Speak Function (English + Hinglish) */
 function speakNow() {
   if (!synth) {
-    alert("Your browser does not support voice.");
+    alert("Voice not supported.");
     return;
   }
 
-  if (!voicesLoaded) {
-    loadVoicesOnce();
-  }
+  if (!voicesLoaded) loadVoicesOnce();
 
   const lang = document.getElementById("report-lang").value;
-  let t = lang === "en"
-    ? (descriptionEN || descriptionFull)
-    : (descriptionHI || descriptionFull);
 
-  if (!t) {
+  let text = "";
+  if (lang === "en") {
+    text = descriptionEN || descriptionFull;
+  } else {
+    // Hindi display but Hinglish voice
+    text = hindiToHinglish(descriptionHI || descriptionFull);
+  }
+
+  if (!text || !text.trim()) {
     alert("Generate report first.");
     return;
   }
 
-  const testVoices = synth.getVoices();
-  if (!testVoices || !testVoices.length) {
-    alert("Voice not available on this device/browser right now. Try another browser or desktop.");
+  const englishVoice = getEnglishVoice();
+  if (!englishVoice) {
+    alert("No English voice found on this device.");
     return;
   }
 
-  t = cleanText(t);
-
   if (currentUtter) synth.cancel();
 
-  const utter = new SpeechSynthesisUtterance(t);
-  utter.lang = (lang === "en") ? "en-IN" : "hi-IN";
-  utter.rate = (lang === "hi") ? 0.9 : 1.0;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.voice = englishVoice;
+  utter.lang = "en-IN";
+  utter.rate = 1.0;
   utter.pitch = 1.0;
-
-  const v = getVoiceFor(utter.lang);
-  if (v) utter.voice = v;
 
   currentUtter = utter;
   synth.speak(utter);
 }
 
+/* BUTTON HANDLERS */
 document.getElementById("voicePlay").onclick = () => {
   if (!synth) {
-    alert("Voice not supported in this browser.");
+    alert("Voice not supported.");
     return;
   }
   if (synth.paused && currentUtter) synth.resume();
   else speakNow();
 };
+
 document.getElementById("voicePause").onclick = () => {
   if (synth && synth.speaking) synth.pause();
 };
+
 document.getElementById("voiceStop").onclick = () => {
   if (synth) synth.cancel();
   currentUtter = null;
