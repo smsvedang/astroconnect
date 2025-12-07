@@ -2,8 +2,37 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>AstroConnect</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AstroEra – AI Powered Vedic Astrology</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="vMQeKXKG1Tik-KT3r47NCOf6LVaDQ8K9FpktamJr3T0" />
+<!-- Google tag (gtag.js) --><!--Analytics-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EYKZW2JHVR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EYKZW2JHVR');
+</script>
+
+<!-- ===========================
+     SEO OPTIMIZATION
+     =========================== -->
+
+<meta name="description" content="AstroEra – Get AI-powered Vedic Astrology insights. Generate your Kundli-based personality report in English or Hindi instantly. Talk to astrologers directly.">
+<meta name="keywords" content="AstroEra, kundli, astrology, vedic astrology, horoscope, rashifal, janam kundli, AI kundli, birth chart, astrology report, hindi astrology">
+
+<!-- Social Sharing -->
+<meta property="og:title" content="AstroEra – AI Powered Vedic Astrology" />
+<meta property="og:description" content="Generate AI-powered English & Hindi Kundli reports instantly. Talk to astrologers directly on WhatsApp." />
+<meta property="og:image" content="https://astroera.com/preview.jpg" />
+<meta property="og:type" content="website" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="AstroEra – Vedic Astrology Reinvented" />
+<meta name="twitter:description" content="AI based Vedic Astrology report generator with English/Hindi support." />
+
+<meta name="theme-color" content="#4f46e5" />
 
 <style>
 
@@ -37,8 +66,7 @@ body.light {
    =========================================================== */
 
 * {
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
 }
@@ -47,115 +75,97 @@ body {
   background: var(--bg);
   color: var(--fg);
   min-height: 100vh;
+  padding: 20px;
   display: flex;
   justify-content: center;
-  padding: 20px;
-  transition: background 0.3s, color 0.3s;
+  transition: .3s;
   overflow-x: hidden;
 }
 
 /* ===========================================================
-   INTRO SCREEN (AURA CLOUDS + TAP TO ENTER)
+   INTRO SCREEN (Tap to Enter)
    =========================================================== */
 
 #intro-screen {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at center, #0a0f2a, #000);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999999;
+  background: radial-gradient(circle, #0a0f2a, #000);
+  display: flex; justify-content:center; align-items:center;
   overflow: hidden;
+  z-index: 999999;
 }
 
-/* Aura clouds */
+/* AURA CLOUDS */
 .intro-aura {
   position: absolute;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(120, 120, 255, 0.45), transparent 70%);
-  filter: blur(60px);
-  animation: auraFloat 9s infinite ease-in-out;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(120,120,255,0.45), transparent 70%);
+  filter: blur(65px);
+  animation: auraMove 9s ease-in-out infinite;
 }
+
 .aura2 {
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(255, 80, 180, 0.45), transparent 70%);
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(255,80,180,0.45), transparent 70%);
   animation-duration: 12s;
 }
 
-@keyframes auraFloat {
-  0%   { transform: translate(-80px, -80px) scale(1); }
-  50%  { transform: translate(120px, 90px) scale(1.25); }
-  100% { transform: translate(-80px, -80px) scale(1); }
+@keyframes auraMove {
+  0% { transform: translate(-90px,-90px); }
+  50% { transform: translate(130px,100px); }
+  100% { transform: translate(-90px,-90px); }
 }
 
-/* Center content */
-.intro-center {
-  position: relative;
-  text-align: center;
-  z-index: 10;
-}
-
+.intro-center { text-align:center; z-index:10; }
 .intro-om {
-  font-size: 80px;
-  font-weight: 900;
-  color: #fbbf24;
-  text-shadow: 0 0 25px #fbbf24;
+  font-size:85px;
+  font-weight:900;
+  color:#fbbf24;
+  text-shadow:0 0 30px #fbbf24cc;
   animation: omGlow 2s infinite ease-in-out;
+  cursor:pointer;
 }
-
 @keyframes omGlow {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.15); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.8; }
+  0% { transform:scale(1); opacity:.8; }
+  50% { transform:scale(1.15); opacity:1; }
+  100% { transform:scale(1); opacity:.8; }
 }
 
 .tap-text {
-  margin-top: 15px;
+  margin-top: 12px;
   font-size: 18px;
-  letter-spacing: 1px;
-  color: #ffffffcc;
-  animation: textPulse 1.8s infinite ease-in-out;
+  color: #ffffffaa;
+  animation: tapPulse 1.8s infinite;
 }
 
-@keyframes textPulse {
-  0% { opacity: 0.4; }
-  50% { opacity: 1; }
-  100% { opacity: 0.4; }
+@keyframes tapPulse {
+  0%{opacity:.4;} 50%{opacity:1;} 100%{opacity:.4;}
 }
 
-/* INTRO EXIT */
-.intro-exit {
-  animation: introFadeOut 0.8s ease-out forwards;
-}
+.intro-exit { animation: introFade .8s forwards ease-out; }
 
-@keyframes introFadeOut {
-  to { opacity: 0; visibility: hidden; }
-}
+@keyframes introFade { to{ opacity:0; visibility:hidden; } }
 
 /* ===========================================================
-   MAIN APP
+   MAIN APP WRAPPER
    =========================================================== */
 
 .app {
-  width: 100%;
-  max-width: 1200px;
+  width:100%; max-width:1200px;
   background: var(--glass);
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border:1px solid var(--border);
   backdrop-filter: blur(var(--blur));
-  overflow: hidden;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+  overflow:hidden;
+  box-shadow:0 20px 40px rgba(0,0,0,.45);
   opacity: 0;
-  transform: translateY(30px);
-  transition: 0.6s ease-out;
+  transform: translateY(40px);
+  transition: .6s ease-out;
 }
 
 .app.visible {
-  opacity: 1;
-  transform: translateY(0);
+  opacity:1;
+  transform:translateY(0);
 }
 
 /* ===========================================================
@@ -164,77 +174,47 @@ body {
 
 header {
   background: linear-gradient(to right, var(--grad1), var(--grad2));
-  padding: 18px 24px;
-  display: flex;
-  justify-content: space-between;
-  color: #fff;
+  padding:18px 24px;
+  display:flex; justify-content:space-between; align-items:center;
+  color:white;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
+.brand { display:flex; align-items:center; gap:12px; }
 .brand-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #fbbf24;
-  color: #000;
-  font-weight: 900;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width:42px; height:42px;
+  border-radius:50%;
+  background:#fbbf24;
+  color:black; font-weight:900;
+  display:flex; justify-content:center; align-items:center;
 }
 
-.theme-toggle {
-  font-size: 28px;
-  cursor: pointer;
+.theme-toggle { font-size:26px; cursor:pointer; }
+
+/* ===========================================================
+   LAYOUT
+   =========================================================== */
+
+main { display:flex; flex-wrap:wrap; }
+.left, .right { width:100%; padding:24px; }
+
+@media(min-width:850px){
+  .left, .right { width:50%; }
+  .left { border-right:1px solid var(--border); }
 }
 
 /* ===========================================================
-   LAYOUT PANELS
+   FORM ELEMENTS
    =========================================================== */
 
-main {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.left, .right {
-  width: 100%;
-  padding: 24px;
-}
-
-@media (min-width: 850px) {
-  .left, .right {
-    width: 50%;
-  }
-  .left {
-    border-right: 1px solid var(--border);
-  }
-}
-
-/* ===========================================================
-   FORM INPUTS
-   =========================================================== */
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+form { display:flex; flex-direction:column; gap:16px; }
 
 input, textarea, select {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid var(--border);
+  width:100%; padding:12px;
   border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.15);
+  border:1px solid var(--border);
+  background: rgba(255,255,255,0.13);
   color: var(--fg);
-  outline: none;
-  transition: 0.25s;
+  transition:.25s;
 }
 
 input:focus, textarea:focus, select:focus {
@@ -242,27 +222,19 @@ input:focus, textarea:focus, select:focus {
   transform: scale(1.02);
 }
 
-/* FIX SELECT OPTIONS */
+/* Fix selects appearing white */
 select { background: rgba(0,0,0,0.3); }
-body.light select { background: rgba(255,255,255,0.7); color:#111; }
+body.light select { background: rgba(255,255,255,0.8); color:#111; }
 
-select option {
-  background: #0f172a;
-  color: white;
-}
-body.light select option {
-  background: white;
-  color: #111;
-}
+select option { background:#0f172a; color:white; }
+body.light select option { background:white; color:#111; }
 
 .btn-primary {
-  padding: 14px;
-  background: linear-gradient(to right, var(--grad1), var(--grad2));
-  border: none;
-  color: white;
-  font-weight: 600;
-  border-radius: 999px;
-  cursor: pointer;
+  padding:14px;
+  background:linear-gradient(to right, var(--grad1), var(--grad2));
+  border:none; border-radius:999px;
+  color:white; font-weight:600;
+  cursor:pointer;
 }
 
 /* ===========================================================
@@ -270,12 +242,12 @@ body.light select option {
    =========================================================== */
 
 .result-card {
-  min-height: 260px;
-  background: var(--card);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 16px;
-  white-space: pre-wrap;
+  min-height:260px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px;
+  white-space:pre-wrap;
 }
 
 /* ===========================================================
@@ -283,122 +255,112 @@ body.light select option {
    =========================================================== */
 
 .loader {
-  width: 90px;
-  height: 90px;
-  margin: 25px auto;
-  position: relative;
+  width:90px; height:90px;
+  margin:30px auto;
+  position:relative;
 }
-
 .sun {
-  width: 26px;
-  height: 26px;
+  width:26px; height:26px;
   background: radial-gradient(circle, #ffd86b, #fbbf24);
-  border-radius: 50%;
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 20px #fbbf24aa;
+  border-radius:50%;
+  position:absolute;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  box-shadow:0 0 18px #fbbf24aa;
 }
-
 .orbit {
-  position: absolute;
-  border: 2px solid rgba(255,255,255,0.18);
-  border-radius: 50%;
+  position:absolute;
+  border:2px solid rgba(255,255,255,0.18);
+  border-radius:50%;
   animation: spin 6s linear infinite;
 }
-
-.orbit1 { width: 55px; height: 55px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
-.orbit2 { width: 75px; height: 75px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-duration: 9s; }
-.orbit3 { width: 95px; height: 95px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-duration: 12s; }
+.orbit1 { width:55px; height:55px; top:50%; left:50%; transform:translate(-50%,-50%); }
+.orbit2 { width:75px; height:75px; top:50%; left:50%; transform:translate(-50%,-50%); animation-duration:8s; }
+.orbit3 { width:95px; height:95px; top:50%; left:50%; transform:translate(-50%,-50%); animation-duration:10s; }
 
 .planet {
-  width: 10px;
-  height: 10px;
-  background: var(--grad1);
-  border-radius: 50%;
-  position: absolute;
-  top: 50%; left: -5px;
+  width:10px; height:10px;
+  position:absolute;
+  top:50%; left:-5px;
+  border-radius:50%;
+  background:var(--grad1);
 }
+.orbit2 .planet { background:var(--grad2); width:12px; height:12px; }
+.orbit3 .planet { background:#38bdf8; width:8px; height:8px; }
 
-.orbit2 .planet { background: var(--grad2); width: 12px; height: 12px; }
-.orbit3 .planet { background: #38bdf8; width: 8px; height: 8px; }
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
+@keyframes spin { to{ transform:rotate(360deg); } }
 
 /* ===========================================================
-   CITY SUGGESTIONS
+   IOS BOTTOM SHEET CITY PICKER
    =========================================================== */
 
-#city-suggestions {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: #1e293b;        /* solid dark background */
-  color: white;
-  border-radius: var(--radius);
-  max-height: 260px;
-  overflow-y: auto;
-  display: none;
-  border: 1px solid var(--border);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-  z-index: 1000;
+#city-sheet {
+  position: fixed;
+  left:0; right:0; bottom:-100%;
+  height:70vh;
+  background:var(--card);
+  border-radius:20px 20px 0 0;
+  border:1px solid var(--border);
+  backdrop-filter: blur(15px);
+  box-shadow:0 -8px 35px rgba(0,0,0,0.4);
+  transition: .4s ease-out;
+  z-index:99999;
+  display:flex;
+  flex-direction:column;
 }
 
-/* Light theme support */
-body.light #city-suggestions {
-  background: #ffffff;
-  color: #111827;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+#city-sheet.visible { bottom:0; }
+
+.sheet-header {
+  padding:15px;
+  text-align:center;
+  font-weight:600;
+  font-size:18px;
 }
 
-.city-suggestion-item {
-  padding: 12px;
-  cursor: pointer;
-  font-size: 15px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+.sheet-search {
+  padding:10px 15px;
 }
 
-body.light .city-suggestion-item {
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+#sheet-search-input {
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,0.15);
+  color:var(--fg);
 }
 
-.city-suggestion-item:hover {
-  background: rgba(255,255,255,0.12);
+.sheet-body {
+  overflow-y:auto;
+  padding-bottom:20px;
 }
 
-body.light .city-suggestion-item:hover {
-  background: rgba(0,0,0,0.06);
+.sheet-item {
+  padding:12px 18px;
+  cursor:pointer;
+  border-bottom:1px solid var(--border);
+  font-size:16px;
 }
-
+.sheet-item:hover {
+  background:rgba(255,255,255,0.1);
+}
 
 /* ===========================================================
    FLOATING ACTION BAR
    =========================================================== */
 
 .floating-bar {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: var(--glass);
-  border-top: 1px solid var(--border);
-  backdrop-filter: blur(10px);
-  padding: 10px;
-  display: flex;
-  justify-content: space-around;
+  position:fixed;
+  bottom:0; left:0; right:0;
+  background:var(--glass);
+  border-top:1px solid var(--border);
+  backdrop-filter:blur(10px);
+  padding:10px;
+  display:flex;
+  justify-content:space-around;
 }
-
-.action-btn {
-  text-align: center;
-  color: var(--fg);
-  cursor: pointer;
-}
-.action-btn span {
-  font-size: 22px;
-  display: block;
-}
+.action-btn { text-align:center; cursor:pointer; }
+.action-btn span { font-size:22px; display:block; }
 
 </style>
 </head>
@@ -406,7 +368,7 @@ body.light .city-suggestion-item:hover {
 <body>
 
 <!-- ===========================================================
-     INTRO SCREEN (Tap to Enter)
+     INTRO SCREEN
      =========================================================== -->
 
 <div id="intro-screen">
@@ -414,7 +376,7 @@ body.light .city-suggestion-item:hover {
   <div class="intro-aura aura2"></div>
 
   <div class="intro-center">
-    <div class="intro-om" id="enterOm">ॐ</div>
+    <div id="enterOm" class="intro-om">ॐ</div>
     <div class="tap-text">Tap to Enter</div>
   </div>
 </div>
@@ -428,15 +390,15 @@ body.light .city-suggestion-item:hover {
 <header>
   <div class="brand">
     <div class="brand-icon">ॐ</div>
-    <h2>AstroConnect</h2>
+    <h2>AstroEra</h2>
   </div>
   <div id="themeToggle" class="theme-toggle">🌙</div>
 </header>
 
 <main>
 
+<!-- LEFT SECTION -->
 <section class="left">
-
   <h2>Enter Birth Details</h2>
 
   <form id="astro-form">
@@ -466,35 +428,34 @@ body.light .city-suggestion-item:hover {
       <input type="time" id="tob" required />
     </div>
 
-    <div style="position:relative;">
+    <!-- CITY PICKER TRIGGER -->
+    <div>
       <label>City</label>
-      <input id="city" autocomplete="off" required />
-      <div id="city-suggestions"></div>
+      <input id="city" readonly placeholder="Select City" />
     </div>
 
     <div>
       <label>State</label>
-      <input id="state" required />
+      <input id="state" />
     </div>
 
     <div>
       <label>Country</label>
-      <input id="country" value="India" required />
+      <input id="country" value="India" />
     </div>
 
     <div>
       <label>Specific Concern</label>
-      <textarea id="notes" rows="2"></textarea>
+      <textarea id="notes"></textarea>
     </div>
 
     <button class="btn-primary">🔮 Generate Report</button>
 
   </form>
-
 </section>
 
+<!-- RIGHT SECTION -->
 <section class="right">
-
   <h2>Your Astro Report</h2>
 
   <select id="report-lang">
@@ -503,22 +464,38 @@ body.light .city-suggestion-item:hover {
   </select>
 
   <div id="result-card" class="result-card">
-    Fill details and generate your report…
+    Your report will appear here…
   </div>
 
-  <a
-    id="whatsapp-button"
-    class="btn-primary"
-    target="_blank"
-    style="margin-top:10px;display:inline-block;"
-    >💬 Talk to Astrologer</a>
-
+  <a id="whatsapp-button"
+     class="btn-primary"
+     target="_blank"
+     style="margin-top:10px;display:inline-block;">
+     💬 Talk to Astrologer
+  </a>
 </section>
 
 </main>
 </div>
 
-<!-- BOTTOM BAR -->
+<!-- ===========================================================
+     IOS BOTTOM-SHEET CITY PICKER
+     =========================================================== -->
+
+<div id="city-sheet">
+  <div class="sheet-header">Select City</div>
+
+  <div class="sheet-search">
+    <input id="sheet-search-input" placeholder="Search city..." />
+  </div>
+
+  <div class="sheet-body" id="sheet-body"></div>
+</div>
+
+<!-- ===========================================================
+     FLOATING BAR
+     =========================================================== -->
+
 <div class="floating-bar">
   <div class="action-btn" id="copyReport"><span>📄</span>Copy</div>
   <div class="action-btn" id="shareReport"><span>📤</span>Share</div>
@@ -528,19 +505,20 @@ body.light .city-suggestion-item:hover {
 <script>
 
 /* ===========================================================
-   INTRO TAP TO ENTER
+   INTRO TAP HANDLER
    =========================================================== */
 
 document.getElementById("enterOm").addEventListener("click", () => {
-  document.getElementById("intro-screen").classList.add("intro-exit");
+  const intro = document.getElementById("intro-screen");
+  intro.classList.add("intro-exit");
   setTimeout(() => {
-    document.getElementById("intro-screen").remove();
+    intro.remove();
     document.getElementById("mainApp").classList.add("visible");
   }, 900);
 });
 
 /* ===========================================================
-   THEME TOGGLE
+   THEME SWITCH
    =========================================================== */
 
 const themeToggle = document.getElementById("themeToggle");
@@ -564,7 +542,7 @@ themeToggle.onclick = () => {
 };
 
 /* ===========================================================
-   CITY DATA LOAD
+   LOAD CITIES
    =========================================================== */
 
 let citiesFlat = [];
@@ -572,8 +550,8 @@ let citiesFlat = [];
   const res = await fetch("/cities.json");
   const json = await res.json();
 
-  for (const [state, districts] of Object.entries(json)) {
-    for (const [district, places] of Object.entries(districts)) {
+  for (const [state, dists] of Object.entries(json)) {
+    for (const [dist, places] of Object.entries(dists)) {
       for (const city of Object.keys(places)) {
         citiesFlat.push({ city, state });
       }
@@ -581,97 +559,91 @@ let citiesFlat = [];
   }
 })();
 
-/* FUZZY SEARCH */
-function fuzzyMatch(q, t) {
-  q = q.toLowerCase();
-  t = t.toLowerCase();
+/* ===========================================================
+   OPEN BOTTOM SHEET
+   =========================================================== */
 
-  if (t.startsWith(q)) return 3;
-  if (t.includes(q)) return 2;
-
-  if (q.split("").every((c) => t.includes(c))) return 1;
-
-  return 0;
-}
-
-/* City Input Handling */
 const cityInput = document.getElementById("city");
-const stateInput = document.getElementById("state");
-const suggestions = document.getElementById("city-suggestions");
+const sheet = document.getElementById("city-sheet");
+const sheetBody = document.getElementById("sheet-body");
+const searchInput = document.getElementById("sheet-search-input");
 
-cityInput.addEventListener("input", () => {
-  const q = cityInput.value.trim();
+cityInput.onclick = () => {
+  sheet.classList.add("visible");
+  searchInput.value = "";
+  renderCities(citiesFlat);
+};
 
-  if (q.length < 2) {
-    suggestions.style.display = "none";
-    return;
+/* ===========================================================
+   CLOSE ON OUTSIDE TAP (optional)
+   =========================================================== */
+
+sheet.addEventListener("click", (e) => {
+  if (e.target === sheet) {
+    sheet.classList.remove("visible");
   }
+});
 
-  const matches = citiesFlat
-    .map((c) => ({ ...c, score: fuzzyMatch(q, c.city) }))
-    .filter((c) => c.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 20);
+/* ===========================================================
+   RENDER CITY LIST
+   =========================================================== */
 
-  suggestions.innerHTML = "";
+function renderCities(list) {
+  sheetBody.innerHTML = "";
 
-  if (!matches.length) {
-    suggestions.style.display = "none";
-    return;
-  }
-
-  matches.forEach((c) => {
+  list.forEach((c) => {
     const div = document.createElement("div");
-    div.className = "city-suggestion-item";
+    div.className = "sheet-item";
     div.textContent = `${c.city}, ${c.state}`;
     div.onclick = () => {
       cityInput.value = c.city;
-      stateInput.value = c.state;
-      suggestions.style.display = "none";
+      document.getElementById("state").value = c.state;
+      sheet.classList.remove("visible");
     };
-    suggestions.appendChild(div);
+    sheetBody.appendChild(div);
   });
+}
 
-  suggestions.style.display = "block";
-});
+/* ===========================================================
+   SEARCH INSIDE BOTTOM SHEET
+   =========================================================== */
 
-document.addEventListener("mousedown", (e) => {
-  if (!suggestions.contains(e.target) && e.target !== cityInput) {
-    suggestions.style.display = "none";
-  }
-});
+searchInput.oninput = () => {
+  const q = searchInput.value.toLowerCase();
+  const filtered = citiesFlat.filter((c) =>
+    c.city.toLowerCase().includes(q)
+  );
+  renderCities(filtered);
+};
 
 /* ===========================================================
    ASTRO LOGIC
    =========================================================== */
 
 function getZodiac(m, d) {
-  if ((m === 2 && d >= 21) || (m === 3 && d <= 19)) return "Aries";
-  if ((m === 3 && d >= 20) || (m === 4 && d <= 20)) return "Taurus";
-  if ((m === 4 && d >= 21) || (m === 5 && d <= 20)) return "Gemini";
-  if ((m === 5 && d >= 21) || (m === 6 && d <= 22)) return "Cancer";
-  if ((m === 6 && d >= 23) || (m === 7 && d <= 22)) return "Leo";
-  if ((m === 7 && d >= 23) || (m === 8 && d <= 22)) return "Virgo";
-  if ((m === 8 && d >= 23) || (m === 9 && d <= 22)) return "Libra";
-  if ((m === 9 && d >= 23) || (m === 10 && d <= 21)) return "Scorpio";
-  if ((m === 10 && d >= 22) || (m === 11 && d <= 21)) return "Sagittarius";
-  if ((m === 11 && d >= 22) || (m === 0 && d <= 19)) return "Capricorn";
-  if ((m === 0 && d >= 20) || (m === 1 && d <= 18)) return "Aquarius";
+  if ((m ===2&&d>=21)||(m===3&&d<=19))return"Aries";
+  if ((m===3&&d>=20)||(m===4&&d<=20))return"Taurus";
+  if ((m===4&&d>=21)||(m===5&&d<=20))return"Gemini";
+  if ((m===5&&d>=21)||(m===6&&d<=22))return"Cancer";
+  if ((m===6&&d>=23)||(m===7&&d<=22))return"Leo";
+  if ((m===7&&d>=23)||(m===8&&d<=22))return"Virgo";
+  if ((m===8&&d>=23)||(m===9&&d<=22))return"Libra";
+  if ((m===9&&d>=23)||(m===10&&d<=21))return"Scorpio";
+  if ((m===10&&d>=22)||(m===11&&d<=21))return"Sagittarius";
+  if ((m===11&&d>=22)||(m===0&&d<=19))return"Capricorn";
+  if ((m===0&&d>=20)||(m===1&&d<=18))return"Aquarius";
   return "Pisces";
 }
 
-function getLifePathNumber(date) {
-  let sum = [...(date.getFullYear() + "" + (date.getMonth() + 1) + date.getDate())]
-    .reduce((a, b) => a + +b, 0);
-
-  while (sum > 9)
-    sum = [...("" + sum)].reduce((x, y) => x + +y, 0);
-
-  return sum;
+function getLifePath(date) {
+  let n = [...(date.getFullYear()+""+(date.getMonth()+1)+date.getDate())]
+          .reduce((a,b)=>a+ +b,0);
+  while(n>9) n=[...(""+n)].reduce((x,y)=>x+ +y,0);
+  return n;
 }
 
 /* ===========================================================
-   ENGLISH + HINDI SPLIT (FIXED)
+   SPLIT ENGLISH + HINDI
    =========================================================== */
 
 function splitDescription(text) {
@@ -685,10 +657,7 @@ function splitDescription(text) {
     return { en: text.trim(), hi: "" };
 
   if (hiIndex === -1)
-    return {
-      en: text.replace(enTag, "").trim(),
-      hi: ""
-    };
+    return { en: text.replace(enTag,"").trim(), hi:"" };
 
   return {
     en: text.slice(enIndex + enTag.length, hiIndex).trim(),
@@ -697,58 +666,40 @@ function splitDescription(text) {
 }
 
 /* ===========================================================
-   FORM SUBMISSION
+   SUBMIT FORM
    =========================================================== */
 
-let descriptionFull = "",
-    descriptionEN = "",
-    descriptionHI = "";
+let descriptionFull="", descriptionEN="", descriptionHI="";
 
-const resultCard = document.getElementById("result-card");
-
-document.getElementById("astro-form").addEventListener("submit", async (e) => {
+document.getElementById("astro-form").onsubmit = async (e)=>{
   e.preventDefault();
 
-  resultCard.innerHTML = `
-    <div class="loader">
-      <div class="sun"></div>
-      <div class="orbit orbit1"><div class="planet"></div></div>
-      <div class="orbit orbit2"><div class="planet"></div></div>
-      <div class="orbit orbit3"><div class="planet"></div></div>
-    </div>
-  `;
+  document.getElementById("result-card").innerHTML =
+  `<div class="loader">
+     <div class="sun"></div>
+     <div class="orbit orbit1"><div class="planet"></div></div>
+     <div class="orbit orbit2"><div class="planet"></div></div>
+     <div class="orbit orbit3"><div class="planet"></div></div>
+   </div>`;
 
   const name = document.getElementById("name").value;
   const gender = document.getElementById("gender").value;
   const dob = document.getElementById("dob").value;
   const tob = document.getElementById("tob").value;
-  const city = cityInput.value;
-  const state = stateInput.value;
+  const city = document.getElementById("city").value;
+  const state = document.getElementById("state").value;
   const country = document.getElementById("country").value;
   const notes = document.getElementById("notes").value;
 
   const date = new Date(dob);
   const zodiac = getZodiac(date.getMonth(), date.getDate());
-  const lifePath = getLifePathNumber(date);
+  const lifePath = getLifePath(date);
 
-  const payload = {
-    name,
-    gender,
-    dob,
-    tob,
-    city,
-    state,
-    country,
-    notes,
-    zodiac,
-    lifePath
-  };
+  const payload = {name,gender,dob,tob,city,state,country,notes,zodiac,lifePath};
 
   const res = await fetch("/api/astro", {
-    method: "POST",
-    headers: { 
-      "Content-Type": "application/json" 
-    },
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
     body: JSON.stringify(payload)
   });
 
@@ -756,34 +707,30 @@ document.getElementById("astro-form").addEventListener("submit", async (e) => {
   const text = data.description;
 
   descriptionFull = text;
-
   const parts = splitDescription(text);
   descriptionEN = parts.en;
   descriptionHI = parts.hi;
 
-  // Default = English
-resultCard.textContent = descriptionEN;
-document.getElementById("report-lang").value = "en";
-
+  document.getElementById("result-card").textContent = descriptionEN;
+  document.getElementById("report-lang").value = "en";
 
   document.getElementById("whatsapp-button").href =
     "https://wa.me/917974517991?text=" + encodeURIComponent(text);
-});
+};
 
 /* ===========================================================
-   LANGUAGE SWITCH (FIXED)
+   LANGUAGE SWITCH
    =========================================================== */
 
-document.getElementById("report-lang").addEventListener("change", () => {
+document.getElementById("report-lang").onchange = () => {
   const lang = document.getElementById("report-lang").value;
 
-if (lang === "en") {
-    resultCard.textContent = descriptionEN || "Please fill details to generate report and tap Generate Report.";
-} else if (lang === "hi") {
-    resultCard.textContent = descriptionHI || "रिपोर्ट बनाने के लिए कृपया डिटेल्स भरें और 'Generate Report' पर टैप करें।";
-}
-
-});
+  if (lang === "en") {
+    document.getElementById("result-card").textContent = descriptionEN;
+  } else {
+    document.getElementById("result-card").textContent = descriptionHI;
+  }
+};
 
 /* ===========================================================
    COPY / SHARE / PDF
@@ -796,7 +743,7 @@ document.getElementById("copyReport").onclick = () => {
 
 document.getElementById("shareReport").onclick = () => {
   if (navigator.share) {
-    navigator.share({ title: "Astro Report", text: descriptionFull });
+    navigator.share({ title:"AstroEra Report", text:descriptionFull });
   } else {
     navigator.clipboard.writeText(descriptionFull);
     alert("Copied!");
@@ -805,7 +752,7 @@ document.getElementById("shareReport").onclick = () => {
 
 document.getElementById("downloadPDF").onclick = () => {
   const w = window.open("", "_blank");
-  w.document.write(`<pre>${descriptionFull.replace(/</g, "&lt;")}</pre>`);
+  w.document.write(`<pre>${descriptionFull.replace(/</g,"&lt;")}</pre>`);
   w.print();
 };
 
