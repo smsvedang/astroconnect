@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>AstroEra – AI Powered Vedic Astrology | by Vedang Soni</title>
+<title>AstroEra – AI Powered Vedic Astrology </title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 <meta name="google-site-verification" content="vMQeKXKG1Tik-KT3r47NCOf6LVaDQ8K9FpktamJr3T0" />
 <!-- Google tag (gtag.js) --><!--Analytics-->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EYKZW2JHVR"></script>
@@ -16,19 +15,16 @@
   gtag('config', 'G-EYKZW2JHVR');
 </script>
 
-<!-- ===========================
-     SEO
-=========================== -->
-<meta name="description" content="AstroEra – Get AI-powered Vedic Astrology insights. Generate your Kundli-based personality report in English or Hindi instantly. Talk to astrologers directly.">
-<meta name="keywords" content="AstroEra, kundli, astrology, vedic astrology, horoscope, rashifal, janam kundli, AI kundli, birth chart, astrology report, hindi astrology">
+<!-- SEO -->
+<meta name="description" content="AstroEra – AI-powered Vedic Astrology insights. Generate your Kundli-based personality report instantly.">
+<meta name="keywords" content="AstroEra, kundli, astrology, vedic, horoscope, AI kundli, birth chart, astro report">
 <meta property="og:title" content="AstroEra – AI Powered Vedic Astrology" />
-<meta property="og:description" content="Generate AI-powered English & Hindi Kundli reports instantly. Talk to astrologers directly on WhatsApp." />
+<meta property="og:description" content="Generate AI-powered English & Hindi Kundli reports instantly." />
 <meta property="og:type" content="website" />
-<meta name="twitter:card" content="summary_large_image" />
 <meta name="theme-color" content="#4f46e5" />
 
 <style>
-/* ================= ROOT ================= */
+/* ROOT VARIABLES */
 :root {
   --bg: #020617;
   --fg: #ffffff;
@@ -38,25 +34,20 @@
   --primary: #6366f1;
   --grad1: #4f46e5;
   --grad2: #ec4899;
-  --radius: 18px;
+  --radius: 20px;
   --blur: 18px;
 }
 
 body.light {
-  --bg: #e2e8f0;
+  --bg: #f1f5f9;
   --fg: #111827;
-  --glass: rgba(255,255,255,0.85);
-  --card: rgba(255,255,255,0.95);
+  --glass: rgba(255,255,255,0.7);
+  --card: rgba(255,255,255,0.9);
   --border: rgba(0,0,0,0.18);
 }
 
-/* ================= GLOBAL ================= */
-* {
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:"Inter",sans-serif;
-}
+/* GLOBAL */
+* {margin:0;padding:0;box-sizing:border-box;font-family:"Inter",sans-serif;}
 
 body {
   background:var(--bg);
@@ -65,297 +56,280 @@ body {
   padding:20px;
   display:flex;
   justify-content:center;
-  transition:.3s;
   overflow-x:hidden;
+  transition:0.4s;
 }
 
-/* ================= INTRO (Tap to Enter) ================= */
-#intro-screen{
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle,#0a0f2a,#000);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
+/* INTRO SCREEN */
+#intro-screen {
+  position:fixed; inset:0;
+  display:flex; justify-content:center; align-items:center;
+  background:radial-gradient(circle,#0f172a,#000);
   z-index:9999;
 }
-.intro-aura{
+
+.intro-aura {
   position:absolute;
-  width:320px;height:320px;
-  background:radial-gradient(circle,rgba(120,120,255,0.45),transparent 70%);
-  filter:blur(65px);
-  animation:auraMove 9s ease-in-out infinite;
+  width:320px; height:320px;
+  background:radial-gradient(circle,rgba(120,120,255,0.4),transparent 70%);
+  filter:blur(60px);
+  animation:auraMove 8s infinite ease-in-out;
 }
-.aura2{
-  width:380px;height:380px;
+.aura2 { 
+  width:360px; height:360px;
   background:radial-gradient(circle,rgba(255,80,180,0.45),transparent 70%);
-  animation-duration:12s;
-}
-@keyframes auraMove{
-  0%{transform:translate(-90px,-90px);}
-  50%{transform:translate(130px,100px);}
-  100%{transform:translate(-90px,-90px);}
-}
-.intro-center{text-align:center;z-index:10;}
-.intro-om{
-  font-size:85px;
-  font-weight:900;
-  color:#fbbf24;
-  text-shadow:0 0 30px #fbbf24cc;
-  animation:omGlow 2s ease-in-out infinite;
-  cursor:pointer;
-}
-@keyframes omGlow{
-  0%{transform:scale(1);opacity:.85;}
-  50%{transform:scale(1.15);opacity:1;}
-  100%{transform:scale(1);opacity:.85;}
-}
-.tap-text{
-  margin-top:12px;
-  font-size:18px;
-  color:#ffffffaa;
-  animation:tapPulse 2s infinite;
-}
-@keyframes tapPulse{
-  0%{opacity:.4;}50%{opacity:1;}100%{opacity:.4;}
-}
-.intro-exit{
-  animation:introFade .7s forwards ease-out;
-}
-@keyframes introFade{
-  to{opacity:0;visibility:hidden;}
+  animation-duration:11s;
 }
 
-/* ================= MAIN APP ================= */
-.app{
+@keyframes auraMove {
+  0% {transform:translate(-60px,-60px);}
+  50% {transform:translate(110px,90px);}
+  100% {transform:translate(-60px,-60px);}
+}
+
+.intro-om {
+  font-size:90px;
+  font-weight:900;
+  color:#fbbf24;
+  text-shadow:0 0 32px #fbbf24aa;
+  cursor:pointer;
+  animation:omPulse 2s infinite ease-in-out;
+}
+
+@keyframes omPulse {
+  0% {transform:scale(1);}
+  50% {transform:scale(1.2);}
+  100% {transform:scale(1);}
+}
+
+.tap-text {
+  margin-top:12px;
+  font-size:17px;
+  color:#ffffffaa;
+  animation:tapBlink 2s infinite;
+}
+
+@keyframes tapBlink {
+  0% {opacity:.4;}
+  50% {opacity:1;}
+  100% {opacity:.4;}
+}
+
+.intro-exit {
+  animation:introFade .6s forwards;
+}
+
+@keyframes introFade {
+  to {opacity:0; visibility:hidden;}
+}
+
+/* MAIN APP */
+.app {
   width:100%;
   max-width:1200px;
   background:var(--glass);
   border-radius:var(--radius);
   border:1px solid var(--border);
-  backdrop-filter:blur(var(--blur));
-  overflow:hidden;
-  box-shadow:0 20px 45px rgba(0,0,0,.45);
-  opacity:0;
-  transform:translateY(40px);
-  transition:.6s ease-out;
+  backdrop-filter:blur(14px);
+  opacity:0; transform:translateY(40px);
+  transition:0.6s;
 }
-.app.visible{
-  opacity:1;
-  transform:translateY(0);
-}
+.app.visible {opacity:1; transform:translateY(0);}
 
-/* ================= HEADER ================= */
-header{
+/* HEADER */
+header {
   background:linear-gradient(to right,var(--grad1),var(--grad2));
-  padding:18px 24px;
+  padding:18px 25px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  color:#fff;
+  color:white;
 }
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-.brand-icon{
-  width:42px;
-  height:42px;
-  border-radius:50%;
+
+.brand {display:flex; gap:12px; align-items:center;}
+.brand-icon {
+  width:45px;height:45px;
   background:#fbbf24;
-  color:#000;
+  color:black;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-weight:900;
+  border-radius:50%;
   font-size:22px;
-}
-.theme-toggle{
-  font-size:26px;
-  cursor:pointer;
+  font-weight:900;
 }
 
-/* ================= LAYOUT ================= */
-main{
-  display:flex;
-  flex-wrap:wrap;
+.theme-toggle {font-size:28px; cursor:pointer;}
+
+/* LAYOUT */
+main {
+  display:flex; flex-wrap:wrap;
 }
-.left,.right{
+.left, .right {
   width:100%;
   padding:24px;
 }
 @media(min-width:850px){
-  .left,.right{width:50%;}
-  .left{border-right:1px solid var(--border);}
+  .left, .right { width:50%; }
+  .left { border-right:1px solid var(--border); }
 }
 
-/* ================= FORM ================= */
-form{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-}
-input,textarea,select{
-  width:100%;
+/* FORM */
+form {display:flex; flex-direction:column; gap:15px;}
+
+input, textarea, select {
   padding:12px;
+  background:rgba(255,255,255,0.14);
   border-radius:var(--radius);
   border:1px solid var(--border);
-  background:rgba(255,255,255,0.12);
   color:var(--fg);
-  transition:.25s;
+  transition:0.25s;
 }
-input:focus,textarea:focus,select:focus{
+input:focus, textarea:focus, select:focus {
   border-color:var(--primary);
   transform:scale(1.02);
 }
-select{
-  background:rgba(0,0,0,0.35);
-}
-body.light select{
-  background:rgba(255,255,255,0.85);
-  color:#111;
-}
-select option{
-  background:#0f172a;
-  color:white;
-}
-body.light select option{
-  background:#fff;
-  color:#111;
-}
-.btn-primary{
-  padding:14px;
+
+.btn-primary {
+  padding:13px;
   border:none;
   border-radius:999px;
-  background:linear-gradient(to right,var(--grad1),var(--grad2));
-  color:#fff;
-  font-weight:600;
   cursor:pointer;
+  background:linear-gradient(to right, var(--grad1), var(--grad2));
+  color:white;
+  font-weight:600;
 }
 
-/* ================= CITY SUGGESTIONS ================= */
-#city-suggestions{
+/* CITY DROPDOWN */
+#city-suggestions {
   position:absolute;
-  top:100%;
-  left:0;
-  right:0;
-  max-height:260px;
+  top:100%; left:0; right:0;
+  background:#0f172a;
+  max-height:250px;
   overflow-y:auto;
-  background:#111827;
-  color:white;
   border-radius:var(--radius);
   border:1px solid var(--border);
-  box-shadow:0 8px 20px rgba(0,0,0,0.35);
   display:none;
-  z-index:1000;
-}
-body.light #city-suggestions{
-  background:#ffffff;
-  color:#111827;
-  box-shadow:0 8px 20px rgba(0,0,0,0.15);
-}
-.city-suggestion-item{
-  padding:10px 12px;
-  cursor:pointer;
-  font-size:14px;
-  border-bottom:1px solid rgba(255,255,255,0.12);
-}
-body.light .city-suggestion-item{
-  border-bottom:1px solid rgba(0,0,0,0.08);
-}
-.city-suggestion-item:hover{
-  background:rgba(255,255,255,0.12);
-}
-body.light .city-suggestion-item:hover{
-  background:rgba(0,0,0,0.06);
+  z-index:500;
 }
 
-/* ================= RESULT + VOICE ================= */
-.result-card{
+/* RESULT CARD */
+.result-card {
+  min-height:260px;
+  padding:18px;
   background:var(--card);
   border-radius:var(--radius);
   border:1px solid var(--border);
-  padding:16px;
-  min-height:260px;
   white-space:pre-wrap;
 }
 
-/* VOICE CONTROLS – better styling */
-.voice-controls{
-  margin:12px 0 14px;
+/* VOICE BUTTONS */
+.voice-controls {
   display:flex;
   gap:10px;
+  margin:12px 0;
   flex-wrap:wrap;
 }
-.voice-btn{
-  padding:6px 14px;
+.voice-btn {
+  padding:8px 16px;
   border-radius:999px;
+  background:linear-gradient(to right,var(--grad1),var(--grad2));
   border:1px solid var(--border);
-  background:linear-gradient(to right, var(--grad1), var(--grad2));
-  color:#fff;
-  font-size:13px;
+  color:white;
   display:flex;
   align-items:center;
   gap:6px;
   cursor:pointer;
-  box-shadow:0 4px 12px rgba(0,0,0,0.25);
-}
-.voice-btn span{
   font-size:14px;
 }
-body.light .voice-btn{
-  color:#fff;
-}
 
-/* ================= SIMPLE LOADER ================= */
-.loader{
-  width:44px;
-  height:44px;
+/* SIMPLE SPINNER */
+.loader {
+  width:42px;
+  height:42px;
   border-radius:50%;
-  border:4px solid rgba(255,255,255,0.18);
+  border:4px solid rgba(255,255,255,0.25);
   border-top-color:var(--primary);
-  margin:24px auto;
-  animation:spin 0.7s linear infinite;
+  animation:spin .8s linear infinite;
+  margin:20px auto;
 }
-@keyframes spin{
-  to{transform:rotate(360deg);}
-}
+@keyframes spin {to{transform:rotate(360deg);}}
 
-/* ================= FLOATING BAR ================= */
-.floating-bar{
+/* FLOATING BAR */
+.floating-bar {
   position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
+  bottom:0; left:0; right:0;
   padding:10px;
-  display:flex;
-  justify-content:space-around;
   background:var(--glass);
   border-top:1px solid var(--border);
+  display:flex; justify-content:space-around;
   backdrop-filter:blur(10px);
-  z-index:500;
-}
-.action-btn{
-  text-align:center;
-  cursor:pointer;
-}
-.action-btn span{
-  font-size:22px;
-  display:block;
+  z-index:900;
 }
 
-/* ================= FOOTER ================= */
-footer{
-  width:100%;
+.action-btn {cursor:pointer; text-align:center;}
+.action-btn span {font-size:22px; display:block;}
+
+/* FOOTER */
+footer {
   text-align:center;
   font-size:12px;
   opacity:.6;
   padding:20px 16px 90px;
-  border-top:1px solid var(--border);
   color:var(--fg);
+  border-top:1px solid var(--border);
 }
+
+/* =================== PRINT STYLING (P2 PROFESSIONAL) ==================== */
+@media print {
+
+  body {
+    background:white !important;
+    color:black !important;
+    padding:0;
+  }
+  .floating-bar, header, footer, #intro-screen {
+    display:none !important;
+  }
+  #mainApp {
+    box-shadow:none !important;
+    border:none !important;
+    padding:0 !important;
+  }
+
+  #print-container {
+    display:block !important;
+    padding:40px;
+    border:2px solid #00000033;
+    border-radius:16px;
+    font-size:16px;
+    line-height:1.6;
+  }
+
+  .print-header {
+    text-align:center;
+    padding-bottom:12px;
+    border-bottom:2px solid #000;
+    margin-bottom:20px;
+  }
+  .print-header h1 {
+    font-size:32px;
+    margin-bottom:4px;
+  }
+  .print-header h3 {
+    font-size:18px;
+    opacity:0.7;
+  }
+
+  .print-footer {
+    text-align:center;
+    margin-top:25px;
+    padding-top:10px;
+    border-top:1px solid #000;
+    font-size:12px;
+  }
+}
+
 </style>
 </head>
 
@@ -365,13 +339,14 @@ footer{
 <div id="intro-screen">
   <div class="intro-aura"></div>
   <div class="intro-aura aura2"></div>
+
   <div class="intro-center">
     <div id="enterOm" class="intro-om">ॐ</div>
     <div class="tap-text">Tap to Enter</div>
   </div>
 </div>
 
-<!-- APP -->
+<!-- MAIN APP -->
 <div class="app" id="mainApp">
 
 <header>
@@ -383,9 +358,10 @@ footer{
 </header>
 
 <main>
-  <!-- LEFT -->
+  <!-- LEFT SIDE -->
   <section class="left">
     <h2>Enter Birth Details</h2>
+
     <form id="astro-form">
 
       <div>
@@ -415,7 +391,7 @@ footer{
 
       <div style="position:relative;">
         <label>City</label>
-        <input id="city" autocomplete="off" placeholder="Start typing city..." required>
+        <input id="city" placeholder="Start typing..." autocomplete="off" required>
         <div id="city-suggestions"></div>
       </div>
 
@@ -437,13 +413,14 @@ footer{
       <button class="btn-primary">🔮 Generate Report</button>
 
     </form>
+
   </section>
 
-  <!-- RIGHT -->
+
+  <!-- RIGHT SIDE -->
   <section class="right">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <h2>Your Astro Report</h2>
-    </div>
+
+    <h2>Your Astro Report</h2>
 
     <div style="margin:10px 0;">
       <select id="report-lang">
@@ -452,61 +429,55 @@ footer{
       </select>
     </div>
 
-    <!-- VOICE CONTROLS -->
+    <!-- VOICE -->
     <div class="voice-controls">
-      <button type="button" class="voice-btn" id="voicePlay">
-        <span>▶</span> Play
-      </button>
-      <button type="button" class="voice-btn" id="voicePause">
-        <span>⏸</span> Pause
-      </button>
-      <button type="button" class="voice-btn" id="voiceStop">
-        <span>⏹</span> Stop
-      </button>
+      <button class="voice-btn" id="voicePlay"><span>▶</span> Play</button>
+      <button class="voice-btn" id="voicePause"><span>⏸</span> Pause</button>
+      <button class="voice-btn" id="voiceStop"><span>⏹</span> Stop</button>
     </div>
 
-    <div id="result-card" class="result-card">
-      Your report will appear here…
-    </div>
+    <!-- RESULT -->
+    <div id="result-card" class="result-card">Your report will appear here…</div>
 
-    <a id="whatsapp-button"
-       class="btn-primary"
-       target="_blank"
-       style="margin-top:10px;display:inline-block;">
+    <a id="whatsapp-button" class="btn-primary" target="_blank" style="margin-top:12px;display:inline-block;">
       💬 Talk to Astrologer
     </a>
+
   </section>
 </main>
 
-<!-- FOOTER INSIDE APP -->
 <footer>
   © 2025 <strong>AstroEra</strong> by <strong>Vedang Soni</strong>. All Rights Reserved.
 </footer>
 
-</div> <!-- end .app -->
+</div>
 
-<!-- FLOATING BAR -->
+<!-- FLOAT BAR -->
 <div class="floating-bar">
   <div class="action-btn" id="copyReport"><span>📄</span>Copy</div>
   <div class="action-btn" id="shareReport"><span>📤</span>Share</div>
   <div class="action-btn" id="downloadPDF"><span>📥</span>PDF</div>
 </div>
 
+<!-- PRINT CONTAINER (Hidden) -->
+<div id="print-container" style="display:none;"></div>
 <script>
-/* INTRO TAP */
+/* ===================== INTRO TAP ====================== */
 document.getElementById("enterOm").onclick = () => {
   const intro = document.getElementById("intro-screen");
   intro.classList.add("intro-exit");
   setTimeout(() => {
     intro.remove();
     document.getElementById("mainApp").classList.add("visible");
-  }, 700);
+  }, 650);
 };
 
-/* THEME */
+
+/* ===================== THEME TOGGLE ===================== */
 const themeToggle = document.getElementById("themeToggle");
 let theme = localStorage.getItem("theme") || "dark";
 applyTheme();
+
 function applyTheme(){
   if(theme === "light"){
     document.body.classList.add("light");
@@ -516,33 +487,41 @@ function applyTheme(){
     themeToggle.textContent = "🌙";
   }
 }
+
 themeToggle.onclick = () => {
   theme = theme === "dark" ? "light" : "dark";
   localStorage.setItem("theme", theme);
   applyTheme();
 };
 
-/* CITY SEARCH (fast old system) */
+
+/* ===================== CITY SEARCH ===================== */
+// cities.json format (same as your previous setup)
 let citiesFlat = [];
+
 (async () => {
-  try{
+  try {
     const res = await fetch("/cities.json");
-    const json = await res.json();
-    for(const [state,dists] of Object.entries(json)){
-      for(const [dist,places] of Object.entries(dists)){
-        for(const city of Object.keys(places)){
-          citiesFlat.push({city,state});
+    const data = await res.json();
+
+    for (const [state, distObj] of Object.entries(data)) {
+      for (const [dist, cityObj] of Object.entries(distObj)) {
+        for (const city of Object.keys(cityObj)) {
+          citiesFlat.push({ city, state });
         }
       }
     }
-  }catch(e){console.error("City load error",e);}
+  } catch (e) {
+    console.error("City load error:", e);
+  }
 })();
 
-function fuzzyMatch(q,t){
-  q=q.toLowerCase(); t=t.toLowerCase();
-  if(t.startsWith(q)) return 3;
-  if(t.includes(q)) return 2;
-  if(q.split("").every(c=>t.includes(c))) return 1;
+function fuzzyMatch(q, t){
+  q = q.toLowerCase();
+  t = t.toLowerCase();
+  if (t.startsWith(q)) return 3;
+  if (t.includes(q)) return 2;
+  if (q.split("").every(c => t.includes(c))) return 1;
   return 0;
 }
 
@@ -552,20 +531,20 @@ const citySug = document.getElementById("city-suggestions");
 
 cityInput.addEventListener("input", () => {
   const q = cityInput.value.trim();
-  if(q.length < 2 || !citiesFlat.length){
+  if (q.length < 2 || !citiesFlat.length) {
     citySug.style.display = "none";
     return;
   }
 
   const results = citiesFlat
-    .map(c => ({...c,score:fuzzyMatch(q,c.city)}))
+    .map(c => ({...c, score:fuzzyMatch(q, c.city)}))
     .filter(c => c.score > 0)
     .sort((a,b)=>b.score-a.score)
-    .slice(0,25);
+    .slice(0, 25);
 
   citySug.innerHTML = "";
-  if(!results.length){
-    citySug.style.display="none";
+  if (!results.length) {
+    citySug.style.display = "none";
     return;
   }
 
@@ -576,7 +555,7 @@ cityInput.addEventListener("input", () => {
     div.onclick = () => {
       cityInput.value = c.city;
       stateInput.value = c.state;
-      citySug.style.display="none";
+      citySug.style.display = "none";
     };
     citySug.appendChild(div);
   });
@@ -584,48 +563,68 @@ cityInput.addEventListener("input", () => {
   citySug.style.display = "block";
 });
 
-document.addEventListener("mousedown", e => {
-  if(!citySug.contains(e.target) && e.target !== cityInput){
-    citySug.style.display="none";
+document.addEventListener("mousedown", (e) => {
+  if (!citySug.contains(e.target) && e.target !== cityInput) {
+    citySug.style.display = "none";
   }
 });
 
-/* ASTRO HELPERS */
-function getZodiac(m,d){
-  if((m===2&&d>=21)||(m===3&&d<=19))return"Aries";
-  if((m===3&&d>=20)||(m===4&&d<=20))return"Taurus";
-  if((m===4&&d>=21)||(m===5&&d<=20))return"Gemini";
-  if((m===5&&d>=21)||(m===6&&d<=22))return"Cancer";
-  if((m===6&&d>=23)||(m===7&&d<=22))return"Leo";
-  if((m===7&&d>=23)||(m===8&&d<=22))return"Virgo";
-  if((m===8&&d>=23)||(m===9&&d<=22))return"Libra";
-  if((m===9&&d>=23)||(m===10&&d<=21))return"Scorpio";
-  if((m===10&&d>=22)||(m===11&&d<=21))return"Sagittarius";
-  if((m===11&&d>=22)||(m===0&&d<=19))return"Capricorn";
-  if((m===0&&d>=20)||(m===1&&d<=18))return"Aquarius";
+
+/* ===================== ASTRO HELPERS ===================== */
+function getZodiac(month, day){
+  if((month===2&&day>=21)||(month===3&&day<=19)) return "Aries";
+  if((month===3&&day>=20)||(month===4&&day<=20)) return "Taurus";
+  if((month===4&&day>=21)||(month===5&&day<=20)) return "Gemini";
+  if((month===5&&day>=21)||(month===6&&day<=22)) return "Cancer";
+  if((month===6&&day>=23)||(month===7&&day<=22)) return "Leo";
+  if((month===7&&day>=23)||(month===8&&day<=22)) return "Virgo";
+  if((month===8&&day>=23)||(month===9&&day<=22)) return "Libra";
+  if((month===9&&day>=23)||(month===10&&day<=21)) return "Scorpio";
+  if((month===10&&day>=22)||(month===11&&day<=21)) return "Sagittarius";
+  if((month===11&&day>=22)||(month===0&&day<=19)) return "Capricorn";
+  if((month===0&&day>=20)||(month===1&&day<=18)) return "Aquarius";
   return "Pisces";
 }
-function getLifePath(date){
-  let s=[...(date.getFullYear()+""+(date.getMonth()+1)+date.getDate())]
-    .reduce((a,b)=>a+ +b,0);
-  while(s>9) s=[...(""+s)].reduce((x,y)=>x+ +y,0);
-  return s;
-}
-function splitDescription(text){
-  const enTag="[ENGLISH]", hiTag="[हिन्दी]";
-  const enIndex=text.indexOf(enTag);
-  const hiIndex=text.indexOf(hiTag);
 
-  if(enIndex===-1 && hiIndex===-1) return {en:text.trim(),hi:""};
-  if(hiIndex===-1) return {en:text.replace(enTag,"").trim(),hi:""};
+function getLifePath(date){
+  let num = [...(date.getFullYear()+""+(date.getMonth()+1)+date.getDate())]
+              .reduce((a,b)=>a + +b, 0);
+  while(num > 9){
+    num = [...(""+num)].reduce((x,y)=>x + +y, 0);
+  }
+  return num;
+}
+
+function splitDescription(text){
+  const enTag = "[ENGLISH]";
+  const hiTag = "[हिन्दी]";
+  const enIndex = text.indexOf(enTag);
+  const hiIndex = text.indexOf(hiTag);
+
+  if(enIndex === -1 && hiIndex === -1){
+    return {en: text.trim(), hi:""};
+  }
+  if(hiIndex === -1){
+    return {en: text.replace(enTag,"").trim(), hi:""};
+  }
   return {
-    en:text.slice(enIndex+enTag.length,hiIndex).trim(),
-    hi:text.slice(hiIndex+hiTag.length).trim()
+    en: text.slice(enIndex + enTag.length, hiIndex).trim(),
+    hi: text.slice(hiIndex + hiTag.length).trim()
   };
 }
 
-/* FORM SUBMIT */
-let descriptionFull="", descriptionEN="", descriptionHI="";
+function cleanText(txt){
+  return txt
+    .replace(/\*/g, "")        // remove *
+    .replace(/_/g, "")         // remove _
+    .replace(/\s{2,}/g, " ");  // clean spacing
+}
+
+
+/* ===================== REPORT GENERATION ===================== */
+let descriptionFull = "";
+let descriptionEN = "";
+let descriptionHI = "";
 const resultCard = document.getElementById("result-card");
 
 document.getElementById("astro-form").onsubmit = async (e) => {
@@ -642,95 +641,141 @@ document.getElementById("astro-form").onsubmit = async (e) => {
   const country=document.getElementById("country").value;
   const notes=document.getElementById("notes").value;
 
-  const d=new Date(dob);
-  const zodiac=getZodiac(d.getMonth(),d.getDate());
-  const lifePath=getLifePath(d);
+  const d = new Date(dob);
+  const zodiac = getZodiac(d.getMonth(), d.getDate());
+  const lifePath = getLifePath(d);
 
   const payload={name,gender,dob,tob,city,state,country,notes,zodiac,lifePath};
 
-  const res=await fetch("/api/astro",{
+  const res = await fetch("/api/astro",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify(payload)
   });
-  const data=await res.json();
-  const text=data.description;
 
-  descriptionFull=text;
-  const parts=splitDescription(text);
-  descriptionEN=parts.en;
-  descriptionHI=parts.hi;
+  const data = await res.json();
+  let text = data.description || "";
 
-  document.getElementById("report-lang").value="en";
-  resultCard.textContent=descriptionEN || descriptionFull;
+  // CLEAN unwanted symbols
+  text = cleanText(text);
+  descriptionFull = text;
 
-  document.getElementById("whatsapp-button").href=
-    "https://wa.me/917974517991?text="+encodeURIComponent(text);
+  const parts = splitDescription(text);
+  descriptionEN = cleanText(parts.en);
+  descriptionHI = cleanText(parts.hi);
+
+  // DEFAULT → English
+  document.getElementById("report-lang").value = "en";
+  resultCard.textContent = descriptionEN || descriptionFull;
+
+  document.getElementById("whatsapp-button").href =
+    "https://wa.me/917974517991?text=" + encodeURIComponent(text);
 };
 
-/* LANGUAGE SWITCH */
+
+/* ===================== LANGUAGE SWITCH ===================== */
 document.getElementById("report-lang").onchange = () => {
   const lang=document.getElementById("report-lang").value;
   if(lang==="en"){
-    resultCard.textContent=descriptionEN || descriptionFull;
+    resultCard.textContent = descriptionEN || descriptionFull;
   } else {
-    resultCard.textContent=descriptionHI || descriptionFull;
+    resultCard.textContent = descriptionHI || descriptionFull;
   }
 };
 
-/* VOICE READER */
-let synth=window.speechSynthesis;
-let currentUtter=null;
 
-function speak(){
-  if(!synth){alert("Voice not supported");return;}
+/* ===================== VOICE READER (Hindi FIXED) ===================== */
+let synth = window.speechSynthesis;
+let currentUtter = null;
+
+function getVoiceFor(lang){
+  const voices = synth.getVoices();
+  let voice = voices.find(v => v.lang.toLowerCase() === lang.toLowerCase());
+  if(voice) return voice;
+
+  if(lang.startsWith("hi")){
+    voice = voices.find(v => v.lang.toLowerCase().includes("hi"));
+    if(voice) return voice;
+  }
+
+  return voices[0];
+}
+
+function speakNow(){
   const lang=document.getElementById("report-lang").value;
-  const text=lang==="en"?(descriptionEN||descriptionFull):(descriptionHI||descriptionFull);
-  if(!text){alert("Generate report first.");return;}
+  let t = lang==="en" ? (descriptionEN || descriptionFull)
+                      : (descriptionHI || descriptionFull);
 
-  if(currentUtter){synth.cancel();currentUtter=null;}
+  if(!t){
+    alert("Generate report first.");
+    return;
+  }
 
-  const utter=new SpeechSynthesisUtterance(text);
-  utter.lang=lang==="en"?"en-IN":"hi-IN";
-  const voices=synth.getVoices();
-  const v=voices.find(v=>v.lang===utter.lang)||voices[0];
-  if(v) utter.voice=v;
-  utter.rate=0.95;
-  utter.pitch=1.0;
-  currentUtter=utter;
+  t = cleanText(t);
+
+  if(currentUtter) synth.cancel();
+
+  const utter = new SpeechSynthesisUtterance(t);
+  utter.lang = lang==="en" ? "en-IN" : "hi-IN";
+  utter.rate = lang==="hi" ? 0.90 : 1.0;
+  utter.pitch = 1.0;
+  utter.voice = getVoiceFor(utter.lang);
+
+  currentUtter = utter;
   synth.speak(utter);
 }
 
-document.getElementById("voicePlay").onclick=()=>{
-  if(!synth){alert("Voice not supported");return;}
-  if(synth.paused && currentUtter) synth.resume(); else speak();
+document.getElementById("voicePlay").onclick = () => {
+  if(synth.paused && currentUtter){
+    synth.resume();
+  } else {
+    speakNow();
+  }
 };
-document.getElementById("voicePause").onclick=()=>{
-  if(synth && synth.speaking) synth.pause();
-};
-document.getElementById("voiceStop").onclick=()=>{
-  if(synth){synth.cancel();currentUtter=null;}
-};
+document.getElementById("voicePause").onclick = () => synth.pause();
+document.getElementById("voiceStop").onclick = () => { synth.cancel(); currentUtter=null; };
 
-/* COPY / SHARE / PDF */
-document.getElementById("copyReport").onclick=()=>{
+
+/* ===================== COPY / SHARE ===================== */
+document.getElementById("copyReport").onclick = () => {
   navigator.clipboard.writeText(descriptionFull || "");
   alert("Copied!");
 };
-document.getElementById("shareReport").onclick=()=>{
+
+document.getElementById("shareReport").onclick = () => {
   if(navigator.share){
-    navigator.share({title:"AstroEra Report",text:descriptionFull||""});
-  }else{
-    navigator.clipboard.writeText(descriptionFull||"");
+    navigator.share({title:"AstroEra Report", text:descriptionFull});
+  } else {
+    navigator.clipboard.writeText(descriptionFull || "");
     alert("Copied!");
   }
 };
-document.getElementById("downloadPDF").onclick=()=>{
-  const w=window.open("","_blank");
-  w.document.write(`<pre>${(descriptionFull||"").replace(/</g,"&lt;")}</pre>`);
-  w.print();
+
+
+/* ===================== PRINT (ONLY SELECTED LANGUAGE) ===================== */
+document.getElementById("downloadPDF").onclick = () => {
+  const lang = document.getElementById("report-lang").value;
+  const text = lang==="en" ? descriptionEN : descriptionHI;
+
+  const container = document.getElementById("print-container");
+
+  container.innerHTML = `
+    <div class="print-header">
+      <h1>ASTROERA REPORT</h1>
+      <h3>AI Vedic Astrology Analysis</h3>
+    </div>
+
+    <div class="print-body">
+      <pre style="white-space:pre-wrap; font-size:16px;">${text}</pre>
+    </div>
+
+    <div class="print-footer">
+      © 2025 AstroEra by Vedang Soni — All Rights Reserved.
+    </div>
+  `;
+
+  window.print();
 };
 </script>
-
 </body>
 </html>
