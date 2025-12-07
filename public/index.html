@@ -754,11 +754,11 @@ document.getElementById("report-lang").addEventListener("change", () => {
   const lang = document.getElementById("report-lang").value;
 
   if (lang === "both") {
-    resultCard.textContent = descriptionFull;
+    resultCard.textContent = descriptionFull || "Please fill details to generate report and tap Generate Report. + रिपोर्ट बनाने के लिए कृपया डिटेल्स भरें और 'Generate Report' पर टैप करें।";
   } else if (lang === "en") {
-    resultCard.textContent = descriptionEN || "English section unavailable.";
+    resultCard.textContent = descriptionEN || "Please fill details to generate report and tap Generate Report.";
   } else if (lang === "hi") {
-    resultCard.textContent = descriptionHI || "हिंदी सेक्शन उपलब्ध नहीं है।";
+    resultCard.textContent = descriptionHI || "रिपोर्ट बनाने के लिए कृपया डिटेल्स भरें और 'Generate Report' पर टैप करें।";
   }
 });
 
