@@ -14,6 +14,7 @@
 
   gtag('config', 'G-EYKZW2JHVR');
 </script>
+
 <!-- SEO -->
 <meta name="description" content="AstroEra – AI-powered Vedic Astrology insights. Generate your Kundli-based personality report instantly.">
 <meta name="keywords" content="AstroEra, kundli, astrology, vedic, horoscope, AI kundli, birth chart, astro report">
@@ -83,6 +84,7 @@ body {
   50% {transform:translate(110px,90px);}
   100% {transform:translate(-60px,-60px);}
 }
+.intro-center { text-align:center; z-index:10; }
 .intro-om {
   font-size:90px;
   font-weight:900;
@@ -289,7 +291,7 @@ footer {
   border-top:1px solid var(--border);
 }
 
-/* PRINT (not used now for jsPDF, but kept for future) */
+/* PRINT (kept for future, jsPDF now used) */
 @media print {
   body {background:white !important; color:black !important; padding:0;}
   .floating-bar, header, footer, #intro-screen {display:none !important;}
@@ -431,10 +433,33 @@ footer {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/3pIWfQxQ7JxSUSSYIYwPxwlUPXmWgO0H1YtGCFfKijPltP7GXBpFQ8ef9OHn2xl6F+xyPVq0jzQp0hVFU7CwA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+/* ====== GLOBAL VOICE STATE ====== */
+let synth = window.speechSynthesis;
+let currentUtter = null;
+let voicesLoaded = false;
+
+function loadVoicesOnce() {
+  if (!synth) return;
+  const voices = synth.getVoices();
+  if (voices && voices.length) {
+    voicesLoaded = true;
+  }
+  synth.onvoiceschanged = () => {
+    const v = synth.getVoices();
+    if (v && v.length) {
+      voicesLoaded = true;
+    }
+  };
+}
+
 /* INTRO TAP */
 document.getElementById("enterOm").onclick = () => {
   const intro = document.getElementById("intro-screen");
   intro.classList.add("intro-exit");
+
+  // Init voices inside user gesture (important for mobile)
+  loadVoicesOnce();
+
   setTimeout(() => {
     intro.remove();
     document.getElementById("mainApp").classList.add("visible");
@@ -445,6 +470,7 @@ document.getElementById("enterOm").onclick = () => {
 const themeToggle = document.getElementById("themeToggle");
 let theme = localStorage.getItem("theme") || "dark";
 applyTheme();
+
 function applyTheme(){
   if(theme === "light"){
     document.body.classList.add("light");
@@ -454,6 +480,7 @@ function applyTheme(){
     themeToggle.textContent = "🌙";
   }
 }
+
 themeToggle.onclick = () => {
   theme = theme === "dark" ? "light" : "dark";
   localStorage.setItem("theme", theme);
@@ -477,6 +504,7 @@ let citiesFlat = [];
     console.error("City load error:", e);
   }
 })();
+
 function fuzzyMatch(q,t){
   q=q.toLowerCase(); t=t.toLowerCase();
   if(t.startsWith(q)) return 3;
@@ -484,9 +512,11 @@ function fuzzyMatch(q,t){
   if(q.split("").every(c=>t.includes(c))) return 1;
   return 0;
 }
+
 const cityInput = document.getElementById("city");
 const stateInput = document.getElementById("state");
 const citySug = document.getElementById("city-suggestions");
+
 cityInput.addEventListener("input", () => {
   const q = cityInput.value.trim();
   if(q.length < 2 || !citiesFlat.length){
@@ -513,6 +543,7 @@ cityInput.addEventListener("input", () => {
   });
   citySug.style.display="block";
 });
+
 document.addEventListener("mousedown",e=>{
   if(!citySug.contains(e.target) && e.target!==cityInput){
     citySug.style.display="none";
@@ -534,12 +565,16 @@ function getZodiac(m,d){
   if((m===0&&d>=20)||(m===1&&d<=18))return"Aquarius";
   return"Pisces";
 }
+
 function getLifePath(date){
   let num=[...(date.getFullYear()+""+(date.getMonth()+1)+date.getDate())]
     .reduce((a,b)=>a+ +b,0);
-  while(num>9){num=[...(""+num)].reduce((x,y)=>x+ +y,0);}
+  while(num>9){
+    num=[...(""+num)].reduce((x,y)=>x+ +y,0);
+  }
   return num;
 }
+
 function splitDescription(text){
   const enTag="[ENGLISH]", hiTag="[हिन्दी]";
   const enIndex=text.indexOf(enTag);
@@ -551,16 +586,22 @@ function splitDescription(text){
     hi:text.slice(hiIndex+hiTag.length).trim()
   };
 }
+
 function cleanText(txt){
-  return txt.replace(/\*/g,"").replace(/_/g,"").replace(/\s{2,}/g," ");
+  return txt
+    .replace(/\*/g,"")
+    .replace(/_/g,"")
+    .replace(/\s{2,}/g," ");
 }
 
 /* REPORT GENERATION */
 let descriptionFull="", descriptionEN="", descriptionHI="";
 const resultCard=document.getElementById("result-card");
+
 document.getElementById("astro-form").onsubmit=async(e)=>{
   e.preventDefault();
   resultCard.innerHTML=`<div class="loader"></div>`;
+
   const name=document.getElementById("name").value;
   const gender=document.getElementById("gender").value;
   const dob=document.getElementById("dob").value;
@@ -569,24 +610,31 @@ document.getElementById("astro-form").onsubmit=async(e)=>{
   const state=stateInput.value;
   const country=document.getElementById("country").value;
   const notes=document.getElementById("notes").value;
+
   const d=new Date(dob);
   const zodiac=getZodiac(d.getMonth(),d.getDate());
   const lifePath=getLifePath(d);
+
   const payload={name,gender,dob,tob,city,state,country,notes,zodiac,lifePath};
+
   const res=await fetch("/api/astro",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify(payload)
   });
+
   const data=await res.json();
   let text=data.description||"";
   text=cleanText(text);
   descriptionFull=text;
+
   const parts=splitDescription(text);
   descriptionEN=cleanText(parts.en);
   descriptionHI=cleanText(parts.hi);
+
   document.getElementById("report-lang").value="en";
   resultCard.textContent=descriptionEN||descriptionFull;
+
   document.getElementById("whatsapp-button").href=
     "https://wa.me/917974517991?text="+encodeURIComponent(text);
 };
@@ -598,45 +646,86 @@ document.getElementById("report-lang").onchange=()=>{
   else resultCard.textContent=descriptionHI||descriptionFull;
 };
 
-/* VOICE READER */
-let synth=window.speechSynthesis;
-let currentUtter=null;
-function getVoiceFor(lang){
-  const voices=synth.getVoices();
-  let v=voices.find(v=>v.lang.toLowerCase()===lang.toLowerCase());
-  if(v) return v;
-  if(lang.startsWith("hi")){
-    v=voices.find(v=>v.lang.toLowerCase().includes("hi"));
-    if(v) return v;
+/* ===== FIXED VOICE READER (MOBILE FRIENDLY) ===== */
+function getVoiceFor(lang) {
+  if (!synth) return null;
+  const voices = synth.getVoices();
+  if (!voices || !voices.length) return null;
+
+  let v = voices.find(v => v.lang.toLowerCase() === lang.toLowerCase());
+  if (v) return v;
+
+  if (lang.startsWith("hi")) {
+    v = voices.find(v => v.lang.toLowerCase().includes("hi"));
+    if (v) return v;
   }
-  return voices[0];
+  return voices[0] || null;
 }
-function speakNow(){
-  const lang=document.getElementById("report-lang").value;
-  let t=lang==="en"?(descriptionEN||descriptionFull):(descriptionHI||descriptionFull);
-  if(!t){alert("Generate report first.");return;}
-  t=cleanText(t);
-  if(currentUtter) synth.cancel();
-  const utter=new SpeechSynthesisUtterance(t);
-  utter.lang=lang==="en"?"en-IN":"hi-IN";
-  utter.rate=lang==="hi"?0.9:1.0;
-  utter.pitch=1.0;
-  utter.voice=getVoiceFor(utter.lang);
-  currentUtter=utter;
+
+function speakNow() {
+  if (!synth) {
+    alert("Your browser does not support voice.");
+    return;
+  }
+
+  if (!voicesLoaded) {
+    loadVoicesOnce();
+  }
+
+  const lang = document.getElementById("report-lang").value;
+  let t = lang === "en"
+    ? (descriptionEN || descriptionFull)
+    : (descriptionHI || descriptionFull);
+
+  if (!t) {
+    alert("Generate report first.");
+    return;
+  }
+
+  const testVoices = synth.getVoices();
+  if (!testVoices || !testVoices.length) {
+    alert("Voice not available on this device/browser right now. Try another browser or desktop.");
+    return;
+  }
+
+  t = cleanText(t);
+
+  if (currentUtter) synth.cancel();
+
+  const utter = new SpeechSynthesisUtterance(t);
+  utter.lang = (lang === "en") ? "en-IN" : "hi-IN";
+  utter.rate = (lang === "hi") ? 0.9 : 1.0;
+  utter.pitch = 1.0;
+
+  const v = getVoiceFor(utter.lang);
+  if (v) utter.voice = v;
+
+  currentUtter = utter;
   synth.speak(utter);
 }
-document.getElementById("voicePlay").onclick=()=>{
-  if(synth.paused && currentUtter) synth.resume();
+
+document.getElementById("voicePlay").onclick = () => {
+  if (!synth) {
+    alert("Voice not supported in this browser.");
+    return;
+  }
+  if (synth.paused && currentUtter) synth.resume();
   else speakNow();
 };
-document.getElementById("voicePause").onclick=()=>synth.pause();
-document.getElementById("voiceStop").onclick=()=>{synth.cancel();currentUtter=null;};
+document.getElementById("voicePause").onclick = () => {
+  if (synth && synth.speaking) synth.pause();
+};
+document.getElementById("voiceStop").onclick = () => {
+  if (synth) synth.cancel();
+  currentUtter = null;
+};
 
 /* COPY / SHARE */
 document.getElementById("copyReport").onclick=()=>{
   navigator.clipboard.writeText(descriptionFull||"");
   alert("Copied!");
 };
+
 document.getElementById("shareReport").onclick=()=>{
   if(navigator.share){
     navigator.share({title:"AstroEra Report",text:descriptionFull});
@@ -652,9 +741,11 @@ document.getElementById("downloadPDF").onclick=()=>{
   const text=(lang==="en"?descriptionEN:descriptionHI)||"";
   if(!text){alert("Generate report first.");return;}
   if(!window.jspdf){alert("PDF library load error.");return;}
+
   const { jsPDF }=window.jspdf;
   const doc=new jsPDF({unit:"pt",format:"a4"});
   const pageWidth=doc.internal.pageSize.getWidth();
+  const pageHeight=doc.internal.pageSize.getHeight();
   const marginX=40;
   let y=60;
 
@@ -672,14 +763,23 @@ document.getElementById("downloadPDF").onclick=()=>{
   doc.line(marginX, y, pageWidth-marginX, y);
   y+=24;
 
-  // Body
+  // Body text with wrapping and page break
   doc.setFontSize(12);
   const maxWidth=pageWidth-marginX*2;
   const lines=doc.splitTextToSize(text, maxWidth);
-  doc.text(lines, marginX, y);
+  const lineHeight=16;
 
-  // Footer
-  const footerY=doc.internal.pageSize.getHeight()-40;
+  lines.forEach(line=>{
+    if(y > pageHeight-60){
+      doc.addPage();
+      y=60;
+    }
+    doc.text(line, marginX, y);
+    y+=lineHeight;
+  });
+
+  // Footer last page
+  const footerY=pageHeight-40;
   doc.setFontSize(9);
   doc.text("© 2025 AstroEra by Vedang Soni — All Rights Reserved.", marginX, footerY);
 
