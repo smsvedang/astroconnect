@@ -6,81 +6,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
 /* ===========================================================
-   STYLE-C MOTION UI + GLASSMORPHISM THEME
+   ROOT THEME VARIABLES
    =========================================================== */
 
 :root {
   --bg: #020617;
-  --bg-glass: rgba(255,255,255,0.05);
   --fg: #ffffff;
-  --card: rgba(255,255,255,0.08);
+  --glass: rgba(255,255,255,0.07);
+  --card: rgba(255,255,255,0.10);
   --border: rgba(255,255,255,0.18);
   --primary: #6366f1;
   --grad1: #4f46e5;
   --grad2: #ec4899;
-  --radius: 18px;
+  --radius: 16px;
   --blur: 20px;
-  --transition: 0.3s ease;
 }
 
-.light {
+body.light {
   --bg: #e2e8f0;
-  --bg-glass: rgba(255,255,255,0.6);
   --fg: #111827;
-  --card: rgba(255,255,255,0.7);
-  --border: rgba(0,0,0,0.1);
-  --primary: #4f46e5;
-  --grad1: #6366f1;
-  --grad2: #ec4899;
+  --glass: rgba(255,255,255,0.55);
+  --card: rgba(255,255,255,0.75);
+  --border: rgba(0,0,0,0.2);
 }
 
-* {
-  margin:0; padding:0; box-sizing:border-box;
-  font-family: "Inter", system-ui, sans-serif;
-  transition: background var(--transition), color var(--transition);
-}
+/* ===========================================================
+   BASE STYLES
+   =========================================================== */
+
+* {margin:0; padding:0; box-sizing:border-box; font-family: "Inter", sans-serif;}
 
 body {
   background: var(--bg);
-  background-size:cover;
   color: var(--fg);
-  padding: 18px;
   min-height: 100vh;
   display:flex;
   justify-content:center;
-  animation: fadeIn 0.6s ease-out;
+  padding: 20px;
+  transition: background .3s, color .3s;
 }
 
-@keyframes fadeIn {
-  from{ opacity:0; transform: translateY(20px); }
-  to{ opacity:1; transform: translateY(0); }
-}
+/* ===========================================================
+   GLASS APP CONTAINER
+   =========================================================== */
 
 .app {
   width:100%;
   max-width:1200px;
-  background: var(--bg-glass);
-  border-radius: var(--radius);
+  background: var(--glass);
   border:1px solid var(--border);
+  border-radius: var(--radius);
   backdrop-filter: blur(var(--blur));
   overflow:hidden;
-  box-shadow: 0 15px 45px rgba(0,0,0,0.35);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.4);
+  animation: fadeIn .5s ease-out;
 }
 
-/* HEADER ------------------------------------------------------- */
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(20px);}
+  to {opacity:1; transform: translateY(0);}
+}
+
+/* ===========================================================
+   HEADER
+   =========================================================== */
+
 header {
   background: linear-gradient(to right, var(--grad1), var(--grad2));
-  padding:15px 22px;
+  padding: 18px 24px;
   display:flex;
   justify-content:space-between;
   align-items:center;
   color:#fff;
-  animation: slideDown 0.6s ease-out;
-}
-@keyframes slideDown {
-  from{ transform: translateY(-20px); opacity:0; }
-  to{ transform: translateY(0); opacity:1; }
 }
 
 .brand {
@@ -90,74 +89,75 @@ header {
   width:42px; height:42px;
   border-radius:50%;
   background:#fbbf24;
-  color:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:900;
-  font-size:20px;
-  box-shadow:0 0 18px #fbbf24aa;
-  transform:scale(0.8);
-  animation: popIn 0.5s ease-out forwards;
-}
-@keyframes popIn {
-  0%{ transform: scale(0.6); opacity:0; }
-  100%{ transform: scale(1); opacity:1; }
+  display:flex; align-items:center; justify-content:center;
+  font-weight:900; font-size:20px; color:#000;
 }
 
 .theme-toggle {
-  cursor:pointer;
-  font-size:26px;
-  user-select:none;
-  transition:0.2s;
-}
-.theme-toggle:hover {
-  transform:rotate(15deg);
+  font-size:26px; cursor:pointer;
 }
 
-/* LAYOUT -------------------------------------------------------- */
-main {
-  display:flex;
-  flex-wrap:wrap;
-}
-.left, .right {
-  width:100%;
-  padding:24px;
-}
+/* ===========================================================
+   PANELS
+   =========================================================== */
+
+main { display:flex; flex-wrap:wrap; }
+
+.left, .right { width:100%; padding:24px; }
+
 @media(min-width:850px){
   .left, .right { width:50%; }
   .left { border-right:1px solid var(--border); }
 }
 
-/* FORM ---------------------------------------------------------- */
-form {
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  animation: fadeIn 0.8s ease-out;
-}
+/* ===========================================================
+   FORM INPUTS STYLE
+   =========================================================== */
 
-label {
-  font-size:14px;
-  opacity:0.8;
-}
+form { display:flex; flex-direction:column; gap:16px; }
 
 input, textarea, select {
+  width:100%;
   padding:12px;
   border-radius: var(--radius);
   border:1px solid var(--border);
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.12);
   color: var(--fg);
+  font-size:14px;
   outline:none;
   backdrop-filter: blur(10px);
-  transition: 0.25s ease;
+  transition: .2s;
 }
 
 input:focus, textarea:focus, select:focus {
   border-color: var(--primary);
   transform: scale(1.02);
-  background: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.22);
 }
+
+/* FIXED SELECT DROPDOWN ISSUE */
+select {
+  background-color: rgba(0,0,0,0.35);
+}
+
+body.light select {
+  background-color: rgba(230,230,230,0.8);
+  color:#111;
+}
+
+select option {
+  background-color: #0f172a;
+  color: #fff;
+}
+
+body.light select option {
+  background-color: #ffffff;
+  color: #111;
+}
+
+/* ===========================================================
+   BUTTON
+   =========================================================== */
 
 .btn-primary {
   padding:14px;
@@ -165,18 +165,16 @@ input:focus, textarea:focus, select:focus {
   border:none;
   border-radius:999px;
   color:#fff;
-  font-weight:600;
-  font-size:15px;
   cursor:pointer;
-  box-shadow:0 6px 20px rgba(79,70,229,0.3);
-  transition:0.3s;
+  font-weight:600;
+  transition:.25s;
 }
+.btn-primary:hover {transform:scale(1.03);}
 
-.btn-primary:hover {
-  transform: translateY(-2px) scale(1.03);
-}
+/* ===========================================================
+   RESULT BOX
+   =========================================================== */
 
-/* RESULT AREA ------------------------------------------------- */
 .result-card {
   min-height:260px;
   background: var(--card);
@@ -184,74 +182,30 @@ input:focus, textarea:focus, select:focus {
   border-radius: var(--radius);
   padding:16px;
   white-space:pre-wrap;
-  animation: fadeInUp 0.6s ease-out;
-}
-@keyframes fadeInUp {
-  from{ opacity:0; transform: translateY(20px); }
-  to{ opacity:1; transform: translateY(0); }
 }
 
-/* LOADER ------------------------------------------------------ */
-.loader {
-  width:45px; height:45px;
-  border-radius:50%;
-  border:4px solid #ffffff33;
-  border-top-color: var(--primary);
-  animation: spin 0.7s linear infinite;
-  margin:20px auto;
-}
-@keyframes spin { to{ transform:rotate(360deg);} }
+/* ===========================================================
+   FLOATING MOBILE BAR
+   =========================================================== */
 
-/* CITY DROPDOWN ---------------------------------------------- */
-.city-field { position:relative; }
-
-#city-suggestions {
-  position:absolute;
-  top:100%; left:0; right:0;
-  background: var(--bg-glass);
-  border:1px solid var(--border);
-  border-radius: var(--radius);
-  max-height:250px;
-  overflow-y:auto;
-  display:none;
-  backdrop-filter: blur(12px);
-  animation: fadeIn 0.2s ease-out;
-}
-
-.city-suggestion-item {
-  padding:12px;
-  cursor:pointer;
-  border-bottom:1px solid var(--border);
-  transition:0.2s;
-}
-.city-suggestion-item:hover {
-  background: rgba(255,255,255,0.12);
-  transform:scale(1.02);
-}
-
-/* FLOATING ACTION BAR ---------------------------------------- */
 .floating-bar {
   position:fixed;
   bottom:0; left:0; right:0;
-  background: var(--bg-glass);
-  backdrop-filter: blur(15px);
+  background: var(--glass);
   border-top:1px solid var(--border);
-  padding:10px;
+  backdrop-filter: blur(10px);
   display:flex;
   justify-content:space-around;
+  padding:10px;
   z-index:100;
 }
 
 .action-btn {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  font-size:12px;
+  text-align:center;
   color:var(--fg);
   cursor:pointer;
-  text-decoration:none;
 }
-.action-btn span { font-size:22px; }
+.action-btn span { font-size:22px; display:block; }
 
 </style>
 </head>
@@ -259,22 +213,20 @@ input:focus, textarea:focus, select:focus {
 <body>
 <div class="app">
 
-<!-- HEADER ---------------------------------------------------- -->
+<!-- HEADER -->
 <header>
   <div class="brand">
     <div class="brand-icon">ॐ</div>
-    <div><h2>AstroConnect</h2></div>
+    <h2>AstroConnect</h2>
   </div>
-
   <div id="themeToggle" class="theme-toggle">🌙</div>
 </header>
 
 <main>
 
-<!-- LEFT PANEL ------------------------------------------------ -->
+<!-- LEFT SIDE -->
 <section class="left">
-
-  <h2 style="margin-bottom:10px;">Enter Your Birth Details</h2>
+  <h2>Enter Birth Details</h2>
 
   <form id="astro-form">
 
@@ -286,7 +238,7 @@ input:focus, textarea:focus, select:focus {
     <div>
       <label>Gender</label>
       <select id="gender" required>
-        <option value="">Select</option>
+        <option value="">Select Gender</option>
         <option>Male</option>
         <option>Female</option>
         <option>Other</option>
@@ -303,7 +255,7 @@ input:focus, textarea:focus, select:focus {
       <input type="time" id="tob" required>
     </div>
 
-    <div class="city-field">
+    <div>
       <label>City</label>
       <input id="city" autocomplete="off" required>
       <div id="city-suggestions"></div>
@@ -320,49 +272,49 @@ input:focus, textarea:focus, select:focus {
     </div>
 
     <div>
-      <label>Specific Concern</label>
-      <textarea id="notes" rows="2"></textarea>
+      <label>Specific Concern (optional)</label>
+      <textarea id="notes"></textarea>
     </div>
 
     <button class="btn-primary">🔮 Generate Report</button>
 
   </form>
-
 </section>
 
-<!-- RIGHT PANEL ------------------------------------------------ -->
+<!-- RIGHT SIDE -->
 <section class="right">
   <h2>Your Astro Report</h2>
 
-  <select id="report-lang" style="margin:10px 0;">
+  <select id="report-lang">
     <option value="both">English + Hindi</option>
     <option value="en">English Only</option>
     <option value="hi">Hindi Only</option>
   </select>
 
   <div id="result-card" class="result-card">
-    <p style="opacity:.6;">Your report will appear here…</p>
+    Fill your details to generate report…
   </div>
 
-  <a id="whatsapp-button" class="btn-primary" target="_blank" style="margin-top:15px;display:inline-block;">
-    💬 Chat with Astrologer
+  <a id="whatsapp-button" class="btn-primary" style="display:inline-block;margin-top:10px;" target="_blank">
+    💬 Talk to Astrologer
   </a>
 </section>
 
 </main>
 </div>
 
-<!-- FLOATING BAR ---------------------------------------------- -->
+<!-- FLOATING BAR -->
 <div class="floating-bar">
   <a class="action-btn" id="copyReport"><span>📄</span>Copy</a>
   <a class="action-btn" id="shareReport"><span>📤</span>Share</a>
   <a class="action-btn" id="downloadPDF"><span>📥</span>PDF</a>
 </div>
 
-<!-- SCRIPT ===================================================== -->
 <script>
 
-/* ---------- THEME TOGGLE ---------- */
+/* ================================
+   THEME SWITCH
+================================ */
 const themeToggle=document.getElementById("themeToggle");
 let theme=localStorage.getItem("theme") || "dark";
 applyTheme();
@@ -370,13 +322,15 @@ function applyTheme(){
   if(theme==="light"){document.body.classList.add("light"); themeToggle.textContent="☀️";}
   else{document.body.classList.remove("light"); themeToggle.textContent="🌙";}
 }
-themeToggle.onclick = () => {
-  theme = theme==="dark"?"light":"dark";
+themeToggle.onclick=()=>{
+  theme = theme==="dark" ? "light" : "dark";
   localStorage.setItem("theme",theme);
   applyTheme();
 };
 
-/* --------- LOAD CITIES ----------- */
+/* ================================
+   CITY SEARCH (same as before — works)
+================================ */
 let citiesFlat=[];
 (async ()=>{
   const res=await fetch("/cities.json");
@@ -390,23 +344,22 @@ let citiesFlat=[];
   }
 })();
 
-/* ---------- FUZZY MATCH ---------- */
 function fuzzyMatch(q,t){
-  q=q.toLowerCase(); t=t.toLowerCase();
+  q=q.toLowerCase();
+  t=t.toLowerCase();
   if(t.startsWith(q)) return 3;
   if(t.includes(q)) return 2;
   if(q.split("").every(c=>t.includes(c))) return 1;
   return 0;
 }
 
-/* ---------- CITY AUTOCOMPLETE ---------- */
 const cityInput=document.getElementById("city");
 const stateInput=document.getElementById("state");
-const citySuggestions=document.getElementById("city-suggestions");
+const suggestions=document.getElementById("city-suggestions");
 
 cityInput.addEventListener("input",()=>{
   const q=cityInput.value.trim();
-  if(q.length<2){citySuggestions.style.display="none"; return;}
+  if(q.length<2){suggestions.style.display="none"; return;}
 
   const matches=citiesFlat
     .map(c=>({...c,score:fuzzyMatch(q,c.city)}))
@@ -414,34 +367,34 @@ cityInput.addEventListener("input",()=>{
     .sort((a,b)=>b.score-a.score)
     .slice(0,20);
 
-  citySuggestions.innerHTML="";
-  if(!matches.length){ citySuggestions.style.display="none"; return; }
+  suggestions.innerHTML="";
+  if(!matches.length){suggestions.style.display="none"; return;}
 
   matches.forEach(c=>{
-    const item=document.createElement("div");
-    item.className="city-suggestion-item";
-    item.innerHTML=`<strong>${c.city}</strong><small>${c.state}</small>`;
-    item.addEventListener("mousedown",e=>{
-      e.preventDefault();
+    const div=document.createElement("div");
+    div.textContent=`${c.city}, ${c.state}`;
+    div.className="city-suggestion-item";
+    div.onclick=()=>{
       cityInput.value=c.city;
       stateInput.value=c.state;
-      citySuggestions.style.display="none";
-    });
-    citySuggestions.appendChild(item);
+      suggestions.style.display="none";
+    };
+    suggestions.appendChild(div);
   });
 
-  citySuggestions.style.display="block";
+  suggestions.style.display="block";
 });
 
-document.addEventListener("mousedown",e=>{
-  if(!citySuggestions.contains(e.target) && e.target!==cityInput){
-    citySuggestions.style.display="none";
+document.addEventListener("click",e=>{
+  if(!suggestions.contains(e.target) && e.target !== cityInput){
+    suggestions.style.display="none";
   }
 });
 
-
-/* ---------- ZODIAC ---------- */
-function getZodiacSign(m,d){
+/* ================================
+   ZODIAC + LIFE PATH
+================================ */
+function getZodiac(m,d){
   if((m===2&&d>=21)||(m===3&&d<=19))return"Aries";
   if((m===3&&d>=20)||(m===4&&d<=20))return"Taurus";
   if((m===4&&d>=21)||(m===5&&d<=20))return"Gemini";
@@ -456,14 +409,16 @@ function getZodiacSign(m,d){
   return"Pisces";
 }
 
-/* ---------- LIFE PATH ---------- */
-function getLifePath(d){
-  let s=[...(d.getFullYear()+""+(d.getMonth()+1)+d.getDate())].reduce((x,y)=>x+ +y,0);
+function lifePath(d){
+  let s=[...(d.getFullYear()+""+(d.getMonth()+1)+d.getDate())]
+    .reduce((a,b)=>a+ +b,0);
   while(s>9) s=[...(""+s)].reduce((a,b)=>a+ +b,0);
   return s;
 }
 
-/* ---------- SPLIT EN/HINDI ---------- */
+/* ================================
+   SPLIT DESCRIPTION
+================================ */
 function splitDescription(text){
   const enTag="[ENGLISH]";
   const hiTag="[हिन्दी]";
@@ -473,42 +428,39 @@ function splitDescription(text){
 
   if(enIndex===-1 && hiIndex===-1) return {en:text, hi:""};
 
-  if(hiIndex===-1){
-    return {en:text.replace(enTag,"").trim(), hi:""};
-  }
+  if(hiIndex===-1) return {en:text.replace(enTag,""), hi:""};
 
-  const en=text.slice(enIndex+enTag.length, hiIndex).trim();
-  const hi=text.slice(hiIndex+hiTag.length).trim();
-
-  return {en, hi};
+  return {
+    en:text.slice(enIndex+enTag.length, hiIndex).trim(),
+    hi:text.slice(hiIndex+hiTag.length).trim()
+  };
 }
 
-/* ---------- GENERATE REPORT ---------- */
+/* ================================
+   REPORT GENERATION
+================================ */
 let descriptionFull="", descriptionEN="", descriptionHI="";
 const resultCard=document.getElementById("result-card");
 
-document.getElementById("astro-form").addEventListener("submit", async e=>{
+document.getElementById("astro-form").onsubmit=async(e)=>{
   e.preventDefault();
 
-  resultCard.innerHTML = `
-    <div class="loader"></div>
-    <p style="text-align:center;opacity:.7;">Generating your report…</p>
-  `;
+  resultCard.innerHTML='<div class="loader"></div>';
 
   const name=document.getElementById("name").value;
   const gender=document.getElementById("gender").value;
   const dob=document.getElementById("dob").value;
   const tob=document.getElementById("tob").value;
-  const notes=document.getElementById("notes").value;
   const city=cityInput.value;
   const state=stateInput.value;
   const country=document.getElementById("country").value;
+  const notes=document.getElementById("notes").value;
 
   const d=new Date(dob);
-  const zodiac=getZodiacSign(d.getMonth(),d.getDate());
-  const lifePath=getLifePath(d);
+  const zodiac=getZodiac(d.getMonth(),d.getDate());
+  const lp=lifePath(d);
 
-  const payload={name,gender,dob,tob,city,state,country,notes,zodiac,lifePath};
+  const payload={name,gender,dob,tob,city,state,country,notes,zodiac,lifePath:lp};
 
   const res=await fetch("/api/astro",{
     method:"POST",
@@ -524,25 +476,30 @@ document.getElementById("astro-form").addEventListener("submit", async e=>{
   descriptionEN=parts.en;
   descriptionHI=parts.hi;
 
-  resultCard.textContent=text;
-});
+  resultCard.textContent=descriptionFull;
+};
 
-/* ---------- LANGUAGE SWITCH ---------- */
-document.getElementById("report-lang").addEventListener("change",()=>{
+/* ================================
+   LANGUAGE SWITCH
+================================ */
+document.getElementById("report-lang").onchange=()=>{
   const lang=document.getElementById("report-lang").value;
 
   if(lang==="both") resultCard.textContent=descriptionFull;
-  else if(lang==="en") resultCard.textContent=descriptionEN || "English section not available.";
-  else if(lang==="hi") resultCard.textContent=descriptionHI || "हिंदी सेक्शन उपलब्ध नहीं है।";
-});
-
-/* ---------- WHATSAPP ---------- */
-document.getElementById("whatsapp-button").onclick = () => {
-  const msg=encodeURIComponent(descriptionFull);
-  window.open("https://wa.me/917974517991?text="+msg);
+  if(lang==="en") resultCard.textContent=descriptionEN || "No English section.";
+  if(lang==="hi") resultCard.textContent=descriptionHI || "हिंदी उपलब्ध नहीं।";
 };
 
-/* ---------- COPY / SHARE / PDF ---------- */
+/* ================================
+   WHATSAPP
+================================ */
+document.getElementById("whatsapp-button").onclick=()=>{
+  window.open("https://wa.me/917974517991?text="+encodeURIComponent(descriptionFull));
+};
+
+/* ================================
+   COPY / SHARE / PDF
+================================ */
 document.getElementById("copyReport").onclick=()=>{
   navigator.clipboard.writeText(descriptionFull);
   alert("Copied!");
@@ -553,7 +510,7 @@ document.getElementById("shareReport").onclick=()=>{
     navigator.share({title:"Astro Report", text:descriptionFull});
   } else {
     navigator.clipboard.writeText(descriptionFull);
-    alert("Sharing not supported. Copied!");
+    alert("Copied!");
   }
 };
 
