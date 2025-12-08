@@ -224,6 +224,7 @@ input:focus,textarea:focus,select:focus{
   border:1px solid var(--border);
   display:none;
   z-index:999;
+  color:#e5e7eb;
 }
 .city-suggestion-item{
   padding:10px 12px;
@@ -232,6 +233,19 @@ input:focus,textarea:focus,select:focus{
 }
 .city-suggestion-item:hover{
   background:rgba(255,255,255,0.2);
+}
+
+/* Light mode city dropdown fix */
+body.light #city-suggestions{
+  background:#ffffff;
+  color:#111827;
+  border-color:rgba(0,0,0,0.18);
+}
+body.light .city-suggestion-item{
+  border-bottom:1px solid #e5e7eb;
+}
+body.light .city-suggestion-item:hover{
+  background:#f3f4f6;
 }
 
 /* FLOAT BAR */
@@ -597,23 +611,40 @@ document.getElementById("report-lang").onchange=()=>{
   }
 };
 
-/* ===== COPY ===== */
+/* ===== COPY (optimized: sirf selected language) ===== */
 document.getElementById("copyReport").onclick=()=>{
-  navigator.clipboard.writeText(descriptionFull);
+  const lang=document.getElementById("report-lang").value;
+  const text=lang==="en"
+    ? (descriptionEN||descriptionFull)
+    : (descriptionHI||descriptionFull);
+  if(!text){
+    alert("Generate report first.");
+    return;
+  }
+  navigator.clipboard.writeText(text);
   alert("Copied!");
 };
 
-/* ===== SHARE ===== */
+/* ===== SHARE (optimized: sirf selected language) ===== */
 document.getElementById("shareReport").onclick=()=>{
+  const lang=document.getElementById("report-lang").value;
+  const text=lang==="en"
+    ? (descriptionEN||descriptionFull)
+    : (descriptionHI||descriptionFull);
+  if(!text){
+    alert("Generate report first.");
+    return;
+  }
+
   if(navigator.share){
-    navigator.share({title:"AstroEr Astro Report",text:descriptionFull});
+    navigator.share({title:"AstroEr Astro Report",text});
   }else{
-    navigator.clipboard.writeText(descriptionFull);
+    navigator.clipboard.writeText(text);
     alert("Copied!");
   }
 };
 
-/* ===== PREMIUM PDF v2 (English = jsPDF, Hindi = System PDF) ===== */
+/* ===== PREMIUM PDF v2 (English = jsPDF, Hindi = system PDF with headings) ===== */
 document.getElementById("downloadPDF").onclick = async () => {
   const lang = document.getElementById("report-lang").value;
   const textEn = descriptionEN || descriptionFull;
@@ -659,6 +690,13 @@ document.getElementById("downloadPDF").onclick = async () => {
     height: 2px;
     background: linear-gradient(to right, #fbbf24, #f97316);
   }
+  .section-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 6px;
+    color: #374151;
+  }
   .footer {
     margin-top: 32px;
     font-size: 11px;
@@ -681,7 +719,16 @@ document.getElementById("downloadPDF").onclick = async () => {
     <div class="header-sub">AI se taiyaar ki gayi vyaktigat jyotishiya samajh (Hindi)</div>
   </div>
   <div class="divider"></div>
+
+  <div class="section-title">• स्वभाव, सोच और भावनाएँ</div>
+  <div class="section-title">• करियर और शिक्षा की दिशा</div>
+  <div class="section-title">• धन, स्थिरता और जिम्मेदारी</div>
+  <div class="section-title">• रिश्ते, परिवार और भावनात्मक जुड़ाव</div>
+  <div class="section-title">• स्वास्थ्य से जुड़ी सामान्य प्रवृत्तियाँ</div>
+  <div class="section-title">• संतुलन और ग्रोथ के लिए सुझाव</div>
+
   <pre>${safeHi}</pre>
+
   <div class="footer">
     AstroEr by Vedang Soni — All Rights Reserved.
   </div>
