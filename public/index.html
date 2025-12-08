@@ -266,6 +266,42 @@ body.light .city-suggestion-item:hover{
   background:#f3f4f6;
 }
 
+/* DOB PICKER (3-column scroll) */
+.dob-picker{
+  margin-top:6px;
+  display:flex;
+  gap:6px;
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:6px;
+  border:1px solid var(--border);
+}
+.dob-col{
+  flex:1;
+  max-height:160px;
+  overflow-y:auto;
+  scrollbar-width:thin;
+}
+.dob-item{
+  padding:8px 6px;
+  border-radius:12px;
+  text-align:center;
+  font-size:14px;
+  cursor:pointer;
+  opacity:0.8;
+}
+.dob-item.active{
+  background:linear-gradient(to bottom right,#fbbf24,#f97316);
+  color:#111827;
+  opacity:1;
+  font-weight:600;
+}
+.dob-display{
+  margin-top:6px;
+  font-size:13px;
+  opacity:0.8;
+}
+
 /* FLOAT BAR */
 .floating-bar{
   position:fixed;
@@ -356,12 +392,15 @@ footer{
 
     <div>
       <label>Date of Birth</label>
-      <input type="date" id="dob" required>
-    </div>
-
-    <div>
-      <label>Time of Birth</label>
-      <input type="time" id="tob" required>
+      <!-- real value stored here -->
+      <input type="hidden" id="dob" />
+      <!-- custom 3-column picker -->
+      <div id="dob-picker" class="dob-picker">
+        <div class="dob-col" id="dob-days"></div>
+        <div class="dob-col" id="dob-months"></div>
+        <div class="dob-col" id="dob-years"></div>
+      </div>
+      <div id="dob-display" class="dob-display">Select your date of birth</div>
     </div>
 
     <div style="position:relative;">
@@ -406,7 +445,7 @@ footer{
     Your report will appear here…
   </div>
 
-  <a id="whatsapp-button" class="btn-primary" target="_blank" style="margin-top:12px;display:inline-block;">
+  <a id="whatsapp-button" class="btn-primary" href="#" style="margin-top:12px;display:inline-block;">
     💬 Talk to Astrologer
   </a>
 </section>
@@ -425,7 +464,7 @@ footer{
   <div class="action-btn" id="downloadPDF"><span>📥</span>PDF</div>
 </div>
 
-<!-- PWA libs + html2canvas + jsPDF -->
+<!-- html2canvas + jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -528,6 +567,96 @@ document.addEventListener("mousedown",e=>{
   }
 });
 
+/* ===== DOB PICKER LOGIC ===== */
+const dobHidden = document.getElementById("dob");
+const dobDaysCol = document.getElementById("dob-days");
+const dobMonthsCol = document.getElementById("dob-months");
+const dobYearsCol = document.getElementById("dob-years");
+const dobDisplay = document.getElementById("dob-display");
+
+let selectedDay = null;
+let selectedMonthIndex = null; // 0-11
+let selectedYear = null;
+
+const MONTHS = [
+  "Jan","Feb","Mar","Apr","May","Jun",
+  "Jul","Aug","Sep","Oct","Nov","Dec"
+];
+const currentYear = new Date().getFullYear();
+const startYear = 1950;
+const endYear = currentYear; // you can change if needed
+
+function createDobColumns(){
+  // Days 1-31 by default
+  dobDaysCol.innerHTML = "";
+  for(let d=1; d<=31; d++){
+    const div = document.createElement("div");
+    div.className = "dob-item";
+    div.textContent = d;
+    div.dataset.value = d;
+    div.addEventListener("click", ()=> selectDay(d));
+    dobDaysCol.appendChild(div);
+  }
+
+  // Months
+  dobMonthsCol.innerHTML = "";
+  MONTHS.forEach((m,idx)=>{
+    const div = document.createElement("div");
+    div.className = "dob-item";
+    div.textContent = m;
+    div.dataset.value = idx;
+    div.addEventListener("click", ()=> selectMonth(idx));
+    dobMonthsCol.appendChild(div);
+  });
+
+  // Years
+  dobYearsCol.innerHTML = "";
+  for(let y=endYear; y>=startYear; y--){
+    const div = document.createElement("div");
+    div.className = "dob-item";
+    div.textContent = y;
+    div.dataset.value = y;
+    div.addEventListener("click", ()=> selectYear(y));
+    dobYearsCol.appendChild(div);
+  }
+}
+
+function highlightSelection(colEl, value){
+  Array.from(colEl.children).forEach(ch=>{
+    ch.classList.toggle("active", ch.dataset.value == value);
+  });
+}
+
+function updateDobValue(){
+  if(selectedDay && selectedMonthIndex !== null && selectedYear){
+    const monthNum = selectedMonthIndex + 1;
+    const day = selectedDay.toString().padStart(2,"0");
+    const month = monthNum.toString().padStart(2,"0");
+    const iso = `${selectedYear}-${month}-${day}`;
+    dobHidden.value = iso;
+    dobDisplay.textContent = `Selected: ${day} ${MONTHS[selectedMonthIndex]} ${selectedYear}`;
+  }
+}
+
+function selectDay(d){
+  selectedDay = d;
+  highlightSelection(dobDaysCol,d);
+  updateDobValue();
+}
+function selectMonth(idx){
+  selectedMonthIndex = idx;
+  highlightSelection(dobMonthsCol,idx);
+  updateDobValue();
+}
+function selectYear(y){
+  selectedYear = y;
+  highlightSelection(dobYearsCol,y);
+  updateDobValue();
+}
+
+// init columns
+createDobColumns();
+
 /* ===== ASTRO HELPERS ===== */
 function getZodiac(m,d){
   if((m===2&&d>=21)||(m===3&&d<=19))return"Aries";
@@ -576,18 +705,24 @@ document.getElementById("astro-form").onsubmit=async(e)=>{
 
   const name=document.getElementById("name").value;
   const gender=document.getElementById("gender").value;
-  const dob=document.getElementById("dob").value;
+  const dobValue=dobHidden.value;
   const tob=document.getElementById("tob").value;
   const city=cityInput.value;
   const state=stateInput.value;
   const country=document.getElementById("country").value;
   const notes=document.getElementById("notes").value;
 
-  const d=new Date(dob);
+  if(!dobValue){
+    alert("Please select your date of birth.");
+    resultCard.textContent = "Please select your date of birth and try again.";
+    return;
+  }
+
+  const d=new Date(dobValue);
   const zodiac=getZodiac(d.getMonth(),d.getDate());
   const lifePath=getLifePath(d);
 
-  const payload={name,gender,dob,tob,city,state,country,notes,zodiac,lifePath};
+  const payload={name,gender,dob:dobValue,tob,city,state,country,notes,zodiac,lifePath};
 
   const res=await fetch("/api/astro",{
     method:"POST",
@@ -605,17 +740,6 @@ document.getElementById("astro-form").onsubmit=async(e)=>{
 
   document.getElementById("report-lang").value="en";
   resultCard.textContent=descriptionEN||descriptionFull;
-
-  const whatsappText =
-    `Name: ${name}\n` +
-    `Gender: ${gender}\n` +
-    `DOB: ${dob}\n` +
-    `Time: ${tob}\n` +
-    `Place: ${city}, ${state}, ${country}\n` +
-    `Concern: ${notes || "Not specified"}`;
-
-  document.getElementById("whatsapp-button").href =
-    "https://wa.me/917974517991?text=" + encodeURIComponent(whatsappText);
 };
 
 /* ===== LANGUAGE SWITCH ===== */
@@ -661,6 +785,31 @@ document.getElementById("shareReport").onclick=()=>{
     alert("Copied!");
   }
 };
+
+/* ===== TALK TO ASTROLOGER ===== */
+document.getElementById("whatsapp-button").addEventListener("click", (e) => {
+  e.preventDefault();
+
+  const name   = (document.getElementById("name").value   || "Not specified").trim();
+  const gender = (document.getElementById("gender").value || "Not specified").trim();
+  const dob    = (dobHidden.value                         || "Not specified").trim();
+  const tob    = (document.getElementById("tob").value    || "Not specified").trim();
+  const city   = (document.getElementById("city").value   || "Not specified").trim();
+  const state  = (document.getElementById("state").value  || "Not specified").trim();
+  const country= (document.getElementById("country").value|| "Not specified").trim();
+  const notes  = (document.getElementById("notes").value  || "Not specified").trim();
+
+  const msg =
+    `Name: ${name}\n` +
+    `Gender: ${gender}\n` +
+    `DOB: ${dob}\n` +
+    `Time: ${tob}\n` +
+    `Place: ${city}, ${state}, ${country}\n` +
+    `Concern: ${notes}`;
+
+  const url = "https://wa.me/917974517991?text=" + encodeURIComponent(msg);
+  window.open(url, "_blank");
+});
 
 /* ===== PREMIUM PDF v2 (EN = text, HI = canvas image) ===== */
 document.getElementById("downloadPDF").onclick = async () => {
