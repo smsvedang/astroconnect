@@ -392,15 +392,21 @@ footer{
 
     <div>
       <label>Date of Birth</label>
-      <!-- real value stored here -->
+      <!-- hidden real value -->
       <input type="hidden" id="dob" />
-      <!-- custom 3-column picker -->
+      <!-- 3-column custom picker -->
       <div id="dob-picker" class="dob-picker">
         <div class="dob-col" id="dob-days"></div>
         <div class="dob-col" id="dob-months"></div>
         <div class="dob-col" id="dob-years"></div>
       </div>
       <div id="dob-display" class="dob-display">Select your date of birth</div>
+    </div>
+
+    <!-- ✅ Time of Birth added back -->
+    <div>
+      <label>Time of Birth</label>
+      <input type="time" id="tob" required>
     </div>
 
     <div style="position:relative;">
@@ -584,10 +590,9 @@ const MONTHS = [
 ];
 const currentYear = new Date().getFullYear();
 const startYear = 1950;
-const endYear = currentYear; // you can change if needed
+const endYear = currentYear;
 
 function createDobColumns(){
-  // Days 1-31 by default
   dobDaysCol.innerHTML = "";
   for(let d=1; d<=31; d++){
     const div = document.createElement("div");
@@ -598,7 +603,6 @@ function createDobColumns(){
     dobDaysCol.appendChild(div);
   }
 
-  // Months
   dobMonthsCol.innerHTML = "";
   MONTHS.forEach((m,idx)=>{
     const div = document.createElement("div");
@@ -609,7 +613,6 @@ function createDobColumns(){
     dobMonthsCol.appendChild(div);
   });
 
-  // Years
   dobYearsCol.innerHTML = "";
   for(let y=endYear; y>=startYear; y--){
     const div = document.createElement("div");
@@ -654,7 +657,6 @@ function selectYear(y){
   updateDobValue();
 }
 
-// init columns
 createDobColumns();
 
 /* ===== ASTRO HELPERS ===== */
@@ -909,11 +911,9 @@ document.getElementById("downloadPDF").onclick = async () => {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
 
-  // GOLD HEADER
   doc.setFillColor(251,191,36);
   doc.rect(0,0,pageWidth,90,"F");
 
-  // LOGO
   try{
     const logoBase64=await getBase64Image("/logo.png");
     doc.addImage(logoBase64,"PNG",40,20,60,60);
@@ -921,7 +921,6 @@ document.getElementById("downloadPDF").onclick = async () => {
     console.warn("Logo load failed:",e);
   }
 
-  // TITLE
   doc.setFont("Helvetica","bold");
   doc.setTextColor(17,24,39);
   doc.setFontSize(24);
@@ -930,12 +929,10 @@ document.getElementById("downloadPDF").onclick = async () => {
   doc.setFontSize(11);
   doc.text("AI-powered Vedic Astrology Insights",120,65);
 
-  // GOLD DIVIDER
   doc.setDrawColor(251,191,36);
   doc.setLineWidth(1.2);
   doc.line(40,90,pageWidth-40,90);
 
-  // OM WATERMARK
   doc.saveGraphicsState && doc.saveGraphicsState();
   if(doc.setGState){
     const gState=doc.GState({opacity:0.06});
@@ -948,12 +945,10 @@ document.getElementById("downloadPDF").onclick = async () => {
   doc.setFontSize(12);
   doc.restoreGraphicsState && doc.restoreGraphicsState();
 
-  // WHITE CARD
   const cardTop=120;
   doc.setFillColor(255,255,255);
   doc.roundedRect(30,cardTop,pageWidth-60,pageHeight-cardTop-80,16,16,"F");
 
-  // CONTENT
   const marginX=50;
   let y=cardTop+35;
   const maxWidth=pageWidth-marginX*2;
@@ -988,14 +983,12 @@ document.getElementById("downloadPDF").onclick = async () => {
     y+=lineHeight;
   });
 
-  // FOOTER
   doc.setFont("Helvetica","italic");
   doc.setFontSize(10);
   doc.setTextColor(107,114,128);
   const footerText="AstroEr by Vedang Soni — All Rights Reserved.";
   doc.text(footerText,40,pageHeight-30);
 
-  // PAGE NUMBER
   const pageCount=doc.internal.getNumberOfPages();
   for(let i=1;i<=pageCount;i++){
     doc.setPage(i);
