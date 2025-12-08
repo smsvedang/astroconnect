@@ -407,7 +407,9 @@ footer{
   <div class="action-btn" id="downloadPDF"><span>📥</span>PDF</div>
 </div>
 
-<!-- jsPDF CDN -->
+<!-- Hindi image capture + jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
@@ -587,7 +589,7 @@ document.getElementById("astro-form").onsubmit=async(e)=>{
   document.getElementById("report-lang").value="en";
   resultCard.textContent=descriptionEN||descriptionFull;
 
-  // ✅ WhatsApp ONLY gets details + concern (no AI description)
+  // WhatsApp ONLY gets details + concern (no AI description)
   const whatsappText =
     `Name: ${name}\n` +
     `Gender: ${gender}\n` +
@@ -611,7 +613,7 @@ document.getElementById("report-lang").onchange=()=>{
   }
 };
 
-/* ===== COPY (optimized: sirf selected language) ===== */
+/* ===== COPY (selected language only) ===== */
 document.getElementById("copyReport").onclick=()=>{
   const lang=document.getElementById("report-lang").value;
   const text=lang==="en"
@@ -625,7 +627,7 @@ document.getElementById("copyReport").onclick=()=>{
   alert("Copied!");
 };
 
-/* ===== SHARE (optimized: sirf selected language) ===== */
+/* ===== SHARE (selected language only) ===== */
 document.getElementById("shareReport").onclick=()=>{
   const lang=document.getElementById("report-lang").value;
   const text=lang==="en"
@@ -644,7 +646,10 @@ document.getElementById("shareReport").onclick=()=>{
   }
 };
 
-/* ===== PREMIUM PDF v2 (English = jsPDF, Hindi = system PDF with headings) ===== */
+/* ===== PREMIUM PDF v2 =====
+   English -> jsPDF text (gold header, logo, OM watermark)
+   Hindi   -> html2canvas snapshot + jsPDF (same design, image-based)
+================================ */
 document.getElementById("downloadPDF").onclick = async () => {
   const lang = document.getElementById("report-lang").value;
   const textEn = descriptionEN || descriptionFull;
@@ -655,96 +660,6 @@ document.getElementById("downloadPDF").onclick = async () => {
     return;
   }
 
-  /* ---------- HINDI PDF: use browser print (best for Unicode) ---------- */
-  if (lang === "hi") {
-    const w = window.open("", "_blank");
-    const safeHi = (textHi || "").replace(/</g, "&lt;");
-
-    const html = `
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8" />
-<title>AstroEr Hindi Report</title>
-<style>
-  body {
-    font-family: "Noto Sans Devanagari", "Mangal", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    margin: 40px;
-    line-height: 1.6;
-    color: #111827;
-  }
-  .header {
-    text-align: center;
-    margin-bottom: 24px;
-  }
-  .header-title {
-    font-size: 22px;
-    font-weight: 700;
-  }
-  .header-sub {
-    font-size: 13px;
-    color: #4b5563;
-  }
-  .divider {
-    margin: 16px 0 24px;
-    height: 2px;
-    background: linear-gradient(to right, #fbbf24, #f97316);
-  }
-  .section-title {
-    font-size: 15px;
-    font-weight: 600;
-    margin-top: 10px;
-    margin-bottom: 6px;
-    color: #374151;
-  }
-  .footer {
-    margin-top: 32px;
-    font-size: 11px;
-    color: #6b7280;
-    border-top: 1px solid #e5e7eb;
-    padding-top: 8px;
-    text-align: right;
-  }
-  pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    font-family: inherit;
-    font-size: 14px;
-  }
-</style>
-</head>
-<body>
-  <div class="header">
-    <div class="header-title">AstroEr – Hindi Astro Report</div>
-    <div class="header-sub">AI se taiyaar ki gayi vyaktigat jyotishiya samajh (Hindi)</div>
-  </div>
-  <div class="divider"></div>
-
-  <div class="section-title">• स्वभाव, सोच और भावनाएँ</div>
-  <div class="section-title">• करियर और शिक्षा की दिशा</div>
-  <div class="section-title">• धन, स्थिरता और जिम्मेदारी</div>
-  <div class="section-title">• रिश्ते, परिवार और भावनात्मक जुड़ाव</div>
-  <div class="section-title">• स्वास्थ्य से जुड़ी सामान्य प्रवृत्तियाँ</div>
-  <div class="section-title">• संतुलन और ग्रोथ के लिए सुझाव</div>
-
-  <pre>${safeHi}</pre>
-
-  <div class="footer">
-    AstroEr by Vedang Soni — All Rights Reserved.
-  </div>
-</body>
-</html>`;
-
-    w.document.open();
-    w.document.write(html);
-    w.document.close();
-    w.focus();
-    w.print();   // user "Save as PDF" choose karega
-    return;
-  }
-
-  /* ---------- ENGLISH PDF: fancy jsPDF gold design ---------- */
-  const text = textEn;
   let jsPDFConstructor = null;
   if (window.jspdf && window.jspdf.jsPDF) jsPDFConstructor = window.jspdf.jsPDF;
   else if (window.jsPDF) jsPDFConstructor = window.jsPDF;
@@ -753,15 +668,90 @@ document.getElementById("downloadPDF").onclick = async () => {
     return;
   }
 
+  /* ---------- HINDI PDF: html2canvas + jsPDF (image-based) ---------- */
+  if (lang === "hi") {
+    if (!window.html2canvas) {
+      alert("Hindi PDF engine not loaded.");
+      return;
+    }
+
+    const container = document.createElement("div");
+    container.style.position = "fixed";
+    container.style.left = "-9999px";
+    container.style.top = "0";
+    container.style.width = "800px";
+    container.style.padding = "40px";
+    container.style.backgroundColor = "#ffffff";
+    container.style.fontFamily = '"Noto Sans Devanagari","Mangal",system-ui,-apple-system,BlinkMacSystemFont,sans-serif';
+
+    const safeHi = (textHi || "")
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;");
+    const safeHiHtml = safeHi.replace(/\n/g,"<br>");
+
+    container.innerHTML = `
+      <div style="display:flex;align-items:center;border-bottom:2px solid #fbbf24;padding-bottom:16px;margin-bottom:20px;">
+        <img src="/logo.png" style="width:60px;height:60px;object-fit:contain;margin-right:16px;" />
+        <div>
+          <div style="font-size:22px;font-weight:700;color:#111827;">AstroEr – Hindi Astro Report</div>
+          <div style="font-size:13px;color:#4b5563;">AI se taiyaar ki gayi vyaktigat jyotishiya samajh (Hindi)</div>
+        </div>
+      </div>
+      <div style="margin-bottom:12px;font-size:14px;color:#374151;">
+        • स्वभाव, सोच और भावनाएँ<br>
+        • करियर और शिक्षा की दिशा<br>
+        • धन, स्थिरता और जिम्मेदारी<br>
+        • रिश्ते, परिवार और भावनात्मक जुड़ाव<br>
+        • स्वास्थ्य से जुड़ी सामान्य प्रवृत्तियाँ<br>
+        • संतुलन और ग्रोथ के लिए सुझाव
+      </div>
+      <div style="font-size:14px;white-space:pre-wrap;line-height:1.7;color:#111827;">${safeHiHtml}</div>
+      <div style="margin-top:24px;font-size:11px;color:#6b7280;border-top:1px solid #e5e7eb;padding-top:8px;text-align:right;">
+        AstroEr by Vedang Soni — All Rights Reserved.
+      </div>
+    `;
+    document.body.appendChild(container);
+
+    try {
+      const canvas = await html2canvas(container,{scale:2});
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDFConstructor({unit:"pt",format:"a4"});
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      let imgWidth = pageWidth - 40;
+      let imgHeight = canvas.height * imgWidth / canvas.width;
+      if (imgHeight > pageHeight - 60) {
+        const ratio = (pageHeight - 60) / imgHeight;
+        imgWidth *= ratio;
+        imgHeight *= ratio;
+      }
+      const x = (pageWidth - imgWidth) / 2;
+      const y = 30;
+
+      pdf.addImage(imgData,"PNG",x,y,imgWidth,imgHeight);
+      pdf.save("astroer_report_hi.pdf");
+    } catch (err) {
+      console.error("Hindi PDF error:",err);
+      alert("Hindi PDF generate nahi ho paaya. Dubara koshish karein.");
+    } finally {
+      document.body.removeChild(container);
+    }
+    return;
+  }
+
+  /* ---------- ENGLISH PDF: fancy jsPDF gold design ---------- */
+  const text = textEn;
   const doc = new jsPDFConstructor({unit:"pt",format:"a4"});
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
 
-  /* GOLD HEADER */
+  // GOLD HEADER
   doc.setFillColor(251,191,36); // #fbbf24
   doc.rect(0,0,pageWidth,90,"F");
 
-  /* LOGO */
+  // LOGO
   try{
     const logoBase64=await getBase64Image("/logo.png");
     doc.addImage(logoBase64,"PNG",40,20,60,60);
@@ -769,7 +759,7 @@ document.getElementById("downloadPDF").onclick = async () => {
     console.warn("Logo load failed:",e);
   }
 
-  /* TITLE */
+  // TITLE
   doc.setFont("Helvetica","bold");
   doc.setTextColor(17,24,39); // almost black
   doc.setFontSize(24);
@@ -778,12 +768,12 @@ document.getElementById("downloadPDF").onclick = async () => {
   doc.setFontSize(11);
   doc.text("AI-powered Vedic Astrology Insights",120,65);
 
-  /* GOLD DIVIDER */
+  // GOLD DIVIDER
   doc.setDrawColor(251,191,36);
   doc.setLineWidth(1.2);
   doc.line(40,90,pageWidth-40,90);
 
-  /* OM WATERMARK (FAINT) */
+  // OM WATERMARK (FAINT)
   doc.saveGraphicsState && doc.saveGraphicsState();
   if(doc.setGState){
     const gState=doc.GState({opacity:0.06});
@@ -796,12 +786,12 @@ document.getElementById("downloadPDF").onclick = async () => {
   doc.setFontSize(12);
   doc.restoreGraphicsState && doc.restoreGraphicsState();
 
-  /* WHITE CARD BACKGROUND FOR CONTENT */
+  // WHITE CARD BACKGROUND FOR CONTENT
   const cardTop=120;
   doc.setFillColor(255,255,255);
   doc.roundedRect(30,cardTop,pageWidth-60,pageHeight-cardTop-80,16,16,"F");
 
-  /* CONTENT TEXT */
+  // CONTENT TEXT
   const marginX=50;
   let y=cardTop+35;
   const maxWidth=pageWidth-marginX*2;
@@ -816,7 +806,7 @@ document.getElementById("downloadPDF").onclick = async () => {
     if(y>pageHeight-80){
       doc.addPage();
 
-      /* WATERMARK AGAIN */
+      // WATERMARK AGAIN
       doc.saveGraphicsState && doc.saveGraphicsState();
       if(doc.setGState){
         const gState=doc.GState({opacity:0.06});
@@ -828,7 +818,7 @@ document.getElementById("downloadPDF").onclick = async () => {
       doc.setTextColor(17,24,39);
       doc.restoreGraphicsState && doc.restoreGraphicsState();
 
-      /* CARD BACKGROUND NEW PAGE */
+      // CARD BACKGROUND NEW PAGE
       doc.setFillColor(255,255,255);
       doc.roundedRect(30,40,pageWidth-60,pageHeight-80,16,16,"F");
 
@@ -838,14 +828,14 @@ document.getElementById("downloadPDF").onclick = async () => {
     y+=lineHeight;
   });
 
-  /* FOOTER */
+  // FOOTER
   doc.setFont("Helvetica","italic");
   doc.setFontSize(10);
   doc.setTextColor(107,114,128);
   const footerText="AstroEr by Vedang Soni — All Rights Reserved.";
   doc.text(footerText,40,pageHeight-30);
 
-  /* PAGE NUMBER */
+  // PAGE NUMBER
   const pageCount=doc.internal.getNumberOfPages();
   for(let i=1;i<=pageCount;i++){
     doc.setPage(i);
