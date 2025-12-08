@@ -1,6 +1,6 @@
 // api/astro.js
-// Vercel / Next.js style serverless (ESM)
-// Uses @google/generative-ai
+// Clean English + Hindi version
+// Uses @google/generative-ai (Vercel serverless style)
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -11,7 +11,7 @@ if (!apiKey) {
 
 const genAI = new GoogleGenerativeAI(apiKey);
 
-// Use latest fast model; if this fails on your key, change to "gemini-2.0-flash"
+// Recommended model
 const model = genAI.getGenerativeModel({
   model: "gemini-2.5-flash",
 });
@@ -31,7 +31,8 @@ function buildPrompt(payload) {
   } = payload;
 
   return `
-You are an experienced Vedic astrologer. You speak in a warm, practical and grounded tone.
+You are a highly experienced Vedic astrologer.  
+You explain things clearly, gently, and without fear-based statements.
 
 User birth details:
 - Name: ${name || "Unknown"}
@@ -40,59 +41,47 @@ User birth details:
 - Time of Birth: ${tob || "Unknown"}
 - Birth Place: ${city || "Unknown"}, ${state || ""}, ${country || ""}
 - Zodiac (Sun sign): ${zodiac || "Unknown"}
-- Life Path Number (Numerology): ${lifePath || "Unknown"}
-- Main concern / question: ${notes || "Not specified"}
+- Life Path Number: ${lifePath || "Unknown"}
+- User's main concern: ${notes || "Not specified"}
 
-VERY IMPORTANT: OUTPUT FORMAT (MUST FOLLOW EXACTLY)
-
-1) Your answer MUST have exactly two sections in this order:
+IMPORTANT — YOUR OUTPUT MUST FOLLOW THIS EXACT STRUCTURE:
 
 [ENGLISH]
-(detailed explanation in English, using English alphabet)
+(Detailed astrology explanation in English)
 
-[HINGLISH]
-(same explanation in Hindi meaning, BUT written only in English alphabet / Roman Hindi.
-Do NOT use any Hindi/Devanagari characters like क, म, ि, ा, etc. 
-Example style: "Aapka swabhav shant hai, aur aap mehnati insan ho.")
+[HINDI]
+(Write same explanation in pure Hindi Devanagari.  
+Use natural, clean Hindi.  
+Do NOT mix English words unless absolutely necessary.  
+Do NOT use bullet points.  
+Write in paragraph format.)
 
-2) In BOTH sections (English and Hinglish), cover:
-- Personality and nature
-- Emotional pattern and thinking
-- Education and career possibilities
-- Money and stability tendencies
-- Relationships and family tone
-- General health tendencies (no medical advice, just lifestyle)
-- 1–2 gentle suggestions / mindset / gratitude / habits
+BOTH sections must cover:
+- Personality & nature
+- Emotional tendencies & thinking style
+- Career & education direction
+- Money tendencies & stability
+- Relationships & family life
+- Health tendencies (general lifestyle, not medical)
+- 1–2 helpful suggestions for personal growth, balance & clarity
 
-3) DO NOT:
-- use bullet points or numbered lists
-- use asterisks (*), underscores (_) or markdown headings
-- mix English and Hinglish in the same section
-- put Hindi/Devanagari letters in the [HINGLISH] section (it MUST be pure Roman Hindi)
+Tone:
+- Positive but honest
+- Supportive, not fatalistic
+- Practical guidance, not predictions
 
-4) TONE:
-- kind, practical, non-scary
-- talk in possibilities and tendencies, not fixed destiny
-
-Now generate the answer in the format:
-
-[ENGLISH]
-...your English paragraphs...
-
-[HINGLISH]
-...your Hinglish paragraphs, Hindi meaning written in English letters only...
+Now produce the two sections:
 `;
 }
 
-// Helper: read JSON body safely
+// Safe JSON reader
 async function getBody(req) {
   if (req.body) {
     return typeof req.body === "string" ? JSON.parse(req.body) : req.body;
   }
   const chunks = [];
-  for await (const chunk of req) chunks.push(chunk);
-  const raw = Buffer.concat(chunks).toString("utf8") || "{}";
-  return JSON.parse(raw);
+  for await (const ch of req) chunks.push(ch);
+  return JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
 }
 
 export default async function handler(req, res) {
@@ -100,19 +89,9 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
+  if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") {
-    res.status(405).json({ error: "Method not allowed" });
-    return;
-  }
-
-  if (!apiKey) {
-    res.status(500).json({ error: "GEMINI_API_KEY missing on server" });
-    return;
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
@@ -123,6 +102,7 @@ export default async function handler(req, res) {
     const response = await result.response;
     let text = response.text() || "";
 
+    // Cleanup
     text = text.replace(/\*/g, "").replace(/_/g, "").trim();
 
     res.status(200).json({ description: text });
