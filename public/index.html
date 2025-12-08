@@ -15,9 +15,17 @@
   gtag('config', 'G-Z6Y3754BKY');
 </script>
 
-<!-- SEO -->
 <meta name="description" content="AstroEr – AI-powered Vedic Astrology insights. Generate your Kundli-based personality report instantly in English or Hindi.">
 <meta name="keywords" content="AstroEr, kundli, astrology, vedic, horoscope, AI kundli, birth chart, astro report">
+
+<!-- PWA META -->
+<meta name="theme-color" content="#020617" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" href="/logo.png" type="image/png" />
+<link rel="apple-touch-icon" href="/logo.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="AstroEr" />
 
 <style>
 :root {
@@ -417,9 +425,8 @@ footer{
   <div class="action-btn" id="downloadPDF"><span>📥</span>PDF</div>
 </div>
 
-<!-- Hindi image capture + jsPDF -->
+<!-- PWA libs + html2canvas + jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
@@ -599,7 +606,6 @@ document.getElementById("astro-form").onsubmit=async(e)=>{
   document.getElementById("report-lang").value="en";
   resultCard.textContent=descriptionEN||descriptionFull;
 
-  // WhatsApp ONLY gets details + concern (no AI description)
   const whatsappText =
     `Name: ${name}\n` +
     `Gender: ${gender}\n` +
@@ -623,7 +629,7 @@ document.getElementById("report-lang").onchange=()=>{
   }
 };
 
-/* ===== COPY (selected language only) ===== */
+/* ===== COPY ===== */
 document.getElementById("copyReport").onclick=()=>{
   const lang=document.getElementById("report-lang").value;
   const text=lang==="en"
@@ -637,7 +643,7 @@ document.getElementById("copyReport").onclick=()=>{
   alert("Copied!");
 };
 
-/* ===== SHARE (selected language only) ===== */
+/* ===== SHARE ===== */
 document.getElementById("shareReport").onclick=()=>{
   const lang=document.getElementById("report-lang").value;
   const text=lang==="en"
@@ -656,10 +662,7 @@ document.getElementById("shareReport").onclick=()=>{
   }
 };
 
-/* ===== PREMIUM PDF v2 =====
-   English -> jsPDF text (gold header, logo, OM watermark)
-   Hindi   -> html2canvas snapshot + jsPDF (same design, image-based)
-================================ */
+/* ===== PREMIUM PDF v2 (EN = text, HI = canvas image) ===== */
 document.getElementById("downloadPDF").onclick = async () => {
   const lang = document.getElementById("report-lang").value;
   const textEn = descriptionEN || descriptionFull;
@@ -678,7 +681,7 @@ document.getElementById("downloadPDF").onclick = async () => {
     return;
   }
 
-  /* ---------- HINDI PDF: html2canvas + jsPDF (image-based) ---------- */
+  /* ---------- HINDI PDF (html2canvas + jsPDF) ---------- */
   if (lang === "hi") {
     if (!window.html2canvas) {
       alert("Hindi PDF engine not loaded.");
@@ -751,14 +754,14 @@ document.getElementById("downloadPDF").onclick = async () => {
     return;
   }
 
-  /* ---------- ENGLISH PDF: fancy jsPDF gold design ---------- */
+  /* ---------- ENGLISH PDF: jsPDF text ---------- */
   const text = textEn;
   const doc = new jsPDFConstructor({unit:"pt",format:"a4"});
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
 
   // GOLD HEADER
-  doc.setFillColor(251,191,36); // #fbbf24
+  doc.setFillColor(251,191,36);
   doc.rect(0,0,pageWidth,90,"F");
 
   // LOGO
@@ -771,7 +774,7 @@ document.getElementById("downloadPDF").onclick = async () => {
 
   // TITLE
   doc.setFont("Helvetica","bold");
-  doc.setTextColor(17,24,39); // almost black
+  doc.setTextColor(17,24,39);
   doc.setFontSize(24);
   doc.text("ASTROER ASTROLOGY REPORT",120,45);
   doc.setFont("Helvetica","normal");
@@ -783,7 +786,7 @@ document.getElementById("downloadPDF").onclick = async () => {
   doc.setLineWidth(1.2);
   doc.line(40,90,pageWidth-40,90);
 
-  // OM WATERMARK (FAINT)
+  // OM WATERMARK
   doc.saveGraphicsState && doc.saveGraphicsState();
   if(doc.setGState){
     const gState=doc.GState({opacity:0.06});
@@ -796,12 +799,12 @@ document.getElementById("downloadPDF").onclick = async () => {
   doc.setFontSize(12);
   doc.restoreGraphicsState && doc.restoreGraphicsState();
 
-  // WHITE CARD BACKGROUND FOR CONTENT
+  // WHITE CARD
   const cardTop=120;
   doc.setFillColor(255,255,255);
   doc.roundedRect(30,cardTop,pageWidth-60,pageHeight-cardTop-80,16,16,"F");
 
-  // CONTENT TEXT
+  // CONTENT
   const marginX=50;
   let y=cardTop+35;
   const maxWidth=pageWidth-marginX*2;
@@ -816,7 +819,6 @@ document.getElementById("downloadPDF").onclick = async () => {
     if(y>pageHeight-80){
       doc.addPage();
 
-      // WATERMARK AGAIN
       doc.saveGraphicsState && doc.saveGraphicsState();
       if(doc.setGState){
         const gState=doc.GState({opacity:0.06});
@@ -828,7 +830,6 @@ document.getElementById("downloadPDF").onclick = async () => {
       doc.setTextColor(17,24,39);
       doc.restoreGraphicsState && doc.restoreGraphicsState();
 
-      // CARD BACKGROUND NEW PAGE
       doc.setFillColor(255,255,255);
       doc.roundedRect(30,40,pageWidth-60,pageHeight-80,16,16,"F");
 
@@ -873,6 +874,15 @@ function getBase64Image(url){
     };
     img.onerror=reject;
     img.src=url;
+  });
+}
+
+/* ===== SERVICE WORKER REGISTRATION ===== */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .catch(err => console.log("SW registration failed:", err));
   });
 }
 </script>
