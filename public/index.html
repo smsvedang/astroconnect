@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>AstroEr – AI Powered Vedic Astrology </title>
+<title>AstroEr – AI Powered Vedic Astrology | by Vedang Soni</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <!-- SEO -->
@@ -349,8 +349,11 @@ footer{
     </div>
 
     <div>
-      <label>Your Question (Optional)</label>
-      <textarea id="notes"></textarea>
+      <label>Your Concern (Optional)</label>
+      <textarea
+        id="notes"
+        placeholder="Yaha apna concern likhiye. Agar aap astrologer se baat / call karna chahte hain tab hi ye box bhariyega. AI report is concern ko use nahi karti, sirf aapki astrologer se baat ke liye hai."
+      ></textarea>
     </div>
 
     <button class="btn-primary">🔮 Generate Report</button>
@@ -570,8 +573,17 @@ document.getElementById("astro-form").onsubmit=async(e)=>{
   document.getElementById("report-lang").value="en";
   resultCard.textContent=descriptionEN||descriptionFull;
 
-  document.getElementById("whatsapp-button").href=
-    "https://wa.me/917974517991?text="+encodeURIComponent(descriptionEN||descriptionFull);
+  // ✅ WhatsApp ONLY gets details + concern (no AI description)
+  const whatsappText =
+    `Name: ${name}\n` +
+    `Gender: ${gender}\n` +
+    `DOB: ${dob}\n` +
+    `Time: ${tob}\n` +
+    `Place: ${city}, ${state}, ${country}\n` +
+    `Concern: ${notes || "Not specified"}`;
+
+  document.getElementById("whatsapp-button").href =
+    "https://wa.me/917974517991?text=" + encodeURIComponent(whatsappText);
 };
 
 /* ===== LANGUAGE SWITCH ===== */
