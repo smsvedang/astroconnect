@@ -613,26 +613,102 @@ document.getElementById("shareReport").onclick=()=>{
   }
 };
 
-/* ===== PREMIUM PDF v2 (Gold + Logo + OM Watermark) ===== */
-document.getElementById("downloadPDF").onclick=async()=>{
-  const lang=document.getElementById("report-lang").value;
-  const text=(lang==="en"?descriptionEN:descriptionHI)||"";
-  if(!text){
+/* ===== PREMIUM PDF v2 (English = jsPDF, Hindi = System PDF) ===== */
+document.getElementById("downloadPDF").onclick = async () => {
+  const lang = document.getElementById("report-lang").value;
+  const textEn = descriptionEN || descriptionFull;
+  const textHi = descriptionHI || descriptionFull;
+
+  if (!textEn && !textHi) {
     alert("Generate report first.");
     return;
   }
 
-  let jsPDFConstructor=null;
-  if(window.jspdf&&window.jspdf.jsPDF)jsPDFConstructor=window.jspdf.jsPDF;
-  else if(window.jsPDF)jsPDFConstructor=window.jsPDF;
-  if(!jsPDFConstructor){
+  /* ---------- HINDI PDF: use browser print (best for Unicode) ---------- */
+  if (lang === "hi") {
+    const w = window.open("", "_blank");
+    const safeHi = (textHi || "").replace(/</g, "&lt;");
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>AstroEr Hindi Report</title>
+<style>
+  body {
+    font-family: "Noto Sans Devanagari", "Mangal", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    margin: 40px;
+    line-height: 1.6;
+    color: #111827;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .header-title {
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .header-sub {
+    font-size: 13px;
+    color: #4b5563;
+  }
+  .divider {
+    margin: 16px 0 24px;
+    height: 2px;
+    background: linear-gradient(to right, #fbbf24, #f97316);
+  }
+  .footer {
+    margin-top: 32px;
+    font-size: 11px;
+    color: #6b7280;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 8px;
+    text-align: right;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: inherit;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-title">AstroEr – Hindi Astro Report</div>
+    <div class="header-sub">AI se taiyaar ki gayi vyaktigat jyotishiya samajh (Hindi)</div>
+  </div>
+  <div class="divider"></div>
+  <pre>${safeHi}</pre>
+  <div class="footer">
+    AstroEr by Vedang Soni — All Rights Reserved.
+  </div>
+</body>
+</html>`;
+
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+    w.print();   // user "Save as PDF" choose karega
+    return;
+  }
+
+  /* ---------- ENGLISH PDF: fancy jsPDF gold design ---------- */
+  const text = textEn;
+  let jsPDFConstructor = null;
+  if (window.jspdf && window.jspdf.jsPDF) jsPDFConstructor = window.jspdf.jsPDF;
+  else if (window.jsPDF) jsPDFConstructor = window.jsPDF;
+  if (!jsPDFConstructor) {
     alert("PDF library not loaded.");
     return;
   }
 
-  const doc=new jsPDFConstructor({unit:"pt",format:"a4"});
-  const pageWidth=doc.internal.pageSize.getWidth();
-  const pageHeight=doc.internal.pageSize.getHeight();
+  const doc = new jsPDFConstructor({unit:"pt",format:"a4"});
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
 
   /* GOLD HEADER */
   doc.setFillColor(251,191,36); // #fbbf24
@@ -722,7 +798,7 @@ document.getElementById("downloadPDF").onclick=async()=>{
   const footerText="AstroEr by Vedang Soni — All Rights Reserved.";
   doc.text(footerText,40,pageHeight-30);
 
-  /* PAGE NUMBER (simple) */
+  /* PAGE NUMBER */
   const pageCount=doc.internal.getNumberOfPages();
   for(let i=1;i<=pageCount;i++){
     doc.setPage(i);
